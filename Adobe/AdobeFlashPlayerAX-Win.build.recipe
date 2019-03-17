@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest Adobe Flash Player ActiveX Plugin MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.build.AdobeFlashPlayerAX-Win</string>
+    <key>ParentRecipe</key>
+    <string>com.github.NickETH.download.AdobeFlashPlayerAX-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>AdobeFlashPlayerAX</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.2.9</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerAX-Win\downloads\AdobeFlashPlayerAX.msi</string>
+                <key>mst_path</key>
+                <string>%RECIPE_REPO_DIR%\com.github.NickETH.recipes-win\Adobe\cfg-emb.mst</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerAX-Win\downloads\AdobeFlashPlayerAX.msi</string>
+                <key>flag_sinfo</key>
+                <string>/t</string>
+                <key>string_sinfo</key>
+                <string>Flash Player ActiveX %ver_major%.0.0.%ver_minor%</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerAX-Win\downloads\AdobeFlashPlayerAX.msi</string>
+                <key>flag_sinfo</key>
+                <string>/o</string>
+                <key>string_sinfo</key>
+                <string>Slightely altered version for ETHZ ID. %us_date% Nick Heim</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Adobe Flash Player ActiveX Plugin MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.AdobeFlashActiveX-Win</string>
+    <string>com.github.NickETH.download.AdobeFlashPlayerAX-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -48,15 +48,6 @@
                 <string>https://fpdownload.adobe.com/get/flashplayer/pdc/%ver_major%.0.0.%ver_minor%/install_flash_player_%ver_major%_active_x.msi</string>
                 <key>filename</key>
                 <string>%NAME%.msi</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>WindowsSignatureVerifier</string>
-            <key>Arguments</key>
-            <dict>
-                <key>input_path</key>
-                <string>%pathname%</string>
             </dict>
         </dict>
         <dict>
