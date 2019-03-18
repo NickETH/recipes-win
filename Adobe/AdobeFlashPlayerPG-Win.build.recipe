@@ -6,6 +6,7 @@
     <string>Alters latest Adobe Flash Player NPAPI MSI-file for Windows.</string>
     <key>Identifier</key>
     <string>com.github.NickETH.build.AdobeFlashPlayerPG-Win</string>
+    <key>Input</key>
     <dict>
         <key>NAME</key>
         <string>AdobeFlashPlayerPG</string>
@@ -18,7 +19,6 @@
     <string>0.2.9</string>
     <key>ParentRecipe</key>
     <string>com.github.NickETH.download.AdobeFlashPlayerPG-Win</string>
-    <key>Input</key>
     <key>Process</key>
     <array>
         <dict>

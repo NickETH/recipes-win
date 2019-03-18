@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads latest Adobe Flash Player ActiveX Plugin MSI-file for Windows.</string>
+    <string>Downloads latest Adobe Flash Player NPAPI MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.AdobeFlashPlayerAX-Win</string>
+    <string>com.github.NickETH.download.AdobeFlashPlayerPG-Win</string>
     <key>Input</key>
     <key>MinimumVersion</key>
     <string>0.2.9</string>
