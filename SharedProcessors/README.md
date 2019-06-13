@@ -7,6 +7,7 @@ AcrobatGUIDPatcher
 ------------------
 Creates a new GUID for Adobes Acrobat Pro DC and Reader DC.
 This is needed, if this products are patched offline.
+```
 Input variables:
 base_GUID, (required: True), Description: "GUID of the product's base version, required."
 new_ver, (required: True), Description: "Version string, to patch into the GUID, required."
@@ -14,7 +15,8 @@ old_hex_ver, (required: True), Description: "Old hex version string to exchange,
 ignore_errors, (required: False), Description: "Ignore any errors during the run."
 Output variables:
 newGUID, Description: "New GUID."
-			
+```
+	
 CreateNextBuild
 ---------------
 Set up a build environment for a given package.
