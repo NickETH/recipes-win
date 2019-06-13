@@ -13,23 +13,122 @@
         <key>SEARCH_URL</key>
         <string>http://fpdownload2.macromedia.com/get/flashplayer/update/current/xml/version_en_win_pl.xml</string>
         <key>DOWNLOAD_URL</key>
-        <string>https://fpdownload.adobe.com/get/flashplayer/pdc/%ver_major%.0.0.%ver_minor%/install_flash_player_%ver_major%_plugin.msi</string>
+        <string>https://fpdownload.adobe.com/get/flashplayer/pdc</string>
+        <key>DOWNLOAD_FILE</key>
+        <string>plugin.msi</string>
     </dict>
     <key>MinimumVersion</key>
-    <string>0.2.9</string>
+    <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.AdobeFlashPlayerPG-Win</string>
+    <string>com.github.NickETH.download.AdobeFlashPlayerMSI-Win</string>
     <key>Process</key>
     <array>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+    <!--
+    -->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+	<!--
+	-->
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>build_ver</key>
+                <string>%version%</string>
+                <key>pkg_dir</key>
+                <string>FlashPlayer_PG_%version%_ENU</string>
+                <key>folder_list</key>
+                <string>sourceunzipped:release:read:helpers</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-FlashPlayer.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-FlashPlayer.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AdobeFlashPlayerPG.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_PG_%version%_ENU.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_PG_%version%_ENU.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[UPDATE `Property` SET `Property`.`Value`='Flash Player ActiveX %ver_major%.0.0.%ver_minor%' WHERE `Property`.`Property`='ProductName']]></string>
+            </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerPG-Win\downloads\AdobeFlashPlayerPG.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_PG_%version%_ENU.msi</string>
                 <key>mst_path</key>
-                <string>%RECIPE_REPO_DIR%\com.github.NickETH.recipes-win\Adobe\cfg-emb.mst</string>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\cfg-emb.mst</string>
             </dict>
 		</dict>
         <dict>
@@ -38,7 +137,7 @@
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerPG-Win\downloads\AdobeFlashPlayerPG.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_PG_%version%_ENU.msi</string>
                 <key>flag_sinfo</key>
                 <string>/t</string>
                 <key>string_sinfo</key>
@@ -55,11 +154,11 @@
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%CACHE_DIR%\com.github.NickETH.build.AdobeFlashPlayerPG-Win\downloads\AdobeFlashPlayerPG.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_PG_%version%_ENU.msi</string>
                 <key>flag_sinfo</key>
                 <string>/o</string>
                 <key>string_sinfo</key>
-                <string>Slightely altered version for ETHZ ID. %us_date% Nick Heim</string>
+                <string>Slightley altered version for mass deployment</string>
             </dict>
 		</dict>
         <dict>

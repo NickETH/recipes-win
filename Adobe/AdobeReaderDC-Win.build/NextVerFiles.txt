@@ -1,0 +1,11 @@
+helpers\AcroRdrDC15UI1.mst
+helpers\ActiveSetup1.mst
+helpers\ActiveSetup64.mst
+helpers\CurrentUser1.mst
+helpers\DisExeLaunch.mst
+helpers\DisJavaScript.mst
+helpers\EnableSysCert.mst
+helpers\MUI.mst
+read\create-log-AdobeReaderDC_deu.txt
+read\readme-AdobeReaderDC_deu.txt
+sourceunzipped\AcroRdrDC1500720033_de_DE.msi

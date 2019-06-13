@@ -1,0 +1,70 @@
+19000	Version Info:
+	http://fpdownload2.macromedia.com/get/flashplayer/update/current/xml/version_en_win_ax.xml
+	Download Flashplayer MSI's:
+	https://fpdownload.adobe.com/get/flashplayer/pdc
+
+	Summary Information updated:
+	Title + Subject: 'Flash Player ActiveX 32.0.0.142'
+	Comments: 'Slightley altered version for mass deployment'
+
+	Summary Information angepasst:
+	Title + Subject: 'Flash Player Plugin 32.0.0.142'
+	Comments: 'Slightley altered version for mass deployment'
+
+
+	Changes on both MSI's:
+
+	Change in the Property table (to disable upgrade check):
+	ISCHECKFORPRODUCTUPDATES	0
+
+	http://www.itninja.com/question/how-to-disable-update-service-for-adobe-flash-11-2
+	To remove Adobe's scheduled task, just go to 'Execute Deferred' 
+	and in the line 'Execute Installed Program InstallAX.exe 
+	... just add '-au 2' so the 'Command Line Arguments' line will be: -install -msi -au 2
+
+	Create mms.cfg with content:
+	AutoUpdateDisable=1
+
+	The config file 'mms.cfg' will be inserted into the compressed Cab file config.cab.
+
+	Insert into Binary table:
+	config.cab	..\scriptspkt\config.cab
+
+	Insert into Component table:
+	ConfigFiles	{EA6CEC7B-30D3-4523-8A88-14F699D4089C}	INSTALLDIR	0		mms_cfg
+
+	Insert into FeatureComponents table:
+	FlashPlayerAXInstaller	ConfigFiles
+
+	Insert into File table:
+	mms_cfg	ConfigFiles	mms.cfg	84			16384	5
+
+	Insert into Media table:
+	2	5	2	#Binary.config.cab	
+
+	Insert into MsiFileHash table:
+	mms_cfg	0	-685636886	-103556092	124668755	1931007589
+
+	There's a bug on x64 systems, where the mms.cfg is expected in ..\System32\Macromed\Flash.
+	By default, mms.cfg is put to ..\SysWOW64\Macromed\Flash.
+	This problem is not solveable with MSI, because ..\System32 is consequently redirected to ..\SysWOW64
+	Therefore we use an xcopy command in a CA to do this.
+
+	Insert into Component table:
+	CfgFileDuplicate	{BBA2BDE6-82A7-49EE-8E7A-EADDFE8BC399}	INSTALLDIR	0	(VersionNT64)	
+
+	Insert into CustomAction table:
+	CopyCfg2x64	3170	FLASH	xcopy.exe "[FLASH]mms.cfg" "C:\Windows\System32\Macromed\Flash\" /y	
+
+	Insert into Directory table:
+	System64Folder	TARGETDIR	.:System32
+	MACROMED64	System64Folder	Macromed
+	FLASH64	MACROMED64	Flash
+
+	Insert into FeatureComponents table:
+	FlashPlayerAXInstaller	CfgFileDuplicate
+
+	Insert into InstallExecuteSequence table:
+	CopyCfg2x64	NOT REMOVE	4050
+
+190000	Released. V1.0

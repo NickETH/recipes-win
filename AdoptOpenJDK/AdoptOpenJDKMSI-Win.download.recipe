@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest AdoptOpenJDK MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.download.AdoptOpenJDKMSI-Win</string>
+    <key>Input</key>
+    <dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+				<!-- <string><![CDATA[https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk8?os=windows&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre]]></string>  -->
+                <key>re_pattern</key>
+				<string>&quot;installer_link&quot;: &quot;(?P&lt;msi_dl_link&gt;https.+msi)</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+				<!-- <string><![CDATA[https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk8?os=windows&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre]]></string>  -->
+                <key>re_pattern</key>
+				<string>&quot;semver&quot;: &quot;(?P&lt;version&gt;(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+))</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%%ver_majorminor%%ver_minor%</string>
+                <key>rename_var</key>
+                <string>version_string</string>
+            </dict>
+		</dict>
+		<!--
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>%DOWNLOAD_FILE%-JRE_hotspot_%PLATFORM%_%version%.msi</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+<!--        
+-->
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=London Jamocha Community CIC, O=London Jamocha Community CIC, L=London, C=GB</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>%version%</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

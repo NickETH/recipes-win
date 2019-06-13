@@ -1,0 +1,41 @@
+
+151028	Download MSI-package:
+	ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/1500720033/AcroRdrDC1500720033_de_DE.msi
+
+190218	get MSP-package:
+	ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/1901020091/AcroRdrDCUpd1901020091.msp
+
+	Create an administrative Installation-Image:
+	msiexec /a AcroRdrDC1500720033_de_DE.msi TARGETDIR=C:\_Projekte\MSI\AdobeReader_19.010.20091_deu\adm
+	
+	Update the AIP with Patch 19.010.20091:
+	msiexec /p AcroRdrDCUpd1901020091.msp /a AcroRdrDC1500720033_de_DE.msi TARGETDIR=C:\_Projekte\MSI\AdobeReader_19.010.20091_deu\adm
+
+	Create a new CAB-File and embed it:
+	cscript WiMkCab2.vbs AcroRdrDC1901020091_de_DE.msi Data1 /L /C /U /E
+
+
+	wmcab2.vbs is a slightly changed version of WiMakCab.vbs from the Installer-SDK.
+	The following lines where added to get the highest possible compression:
+	outStream.WriteLine ".Set CompressionLevel=7"
+	outStream.WriteLine ".Set CompressionMemory=21"
+
+	Remove the AdminProperties Stream from the package.
+	Ref: "Digital Signatures and Windows Installer" in MSI SDK Documentation
+	cscript ..\..\MSIScripts\WiStream.vbs AcroRdrDC1901020091_de_DE.msi /D AdminProperties
+
+	Reader DC hat ein leicht anderes Schema für die GUID des Productcodes. Es geht nur um den letzten Abschnitt.
+	Change the product code. Adobe converts the version string into hex and works it into the GUID!
+	Completely BS, but it is like it is..
+	Ex product code: {AC76BA86-7AD7-1031-7B44-AC0F074E4100}, ProductVersion: 15.007.20033
+	The vesion is in the last tuple, the first two chars "AC" ar constant.
+	The 3+4 Byte is the mayor version in Hex.
+	The 5+6 Byte is the mayorminor version in Hex.
+	The Bytes 7-10 are the minorminor version in Hex.
+
+	Insert a new Package Code.
+
+	See the MST-files for the config changes.
+	 
+190218	Released. V1.0.
+

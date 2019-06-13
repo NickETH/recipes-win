@@ -5,7 +5,7 @@
 # Created by Nick Heim (heim)@ethz.ch) on 2019-03-17.
 # Based on WinInstallerExtractor by Matt Hansen
 #
-# Apply a transform to an MSI-file, using msitran.exe.
+# Apply (a) transform(s) to an MSI-file, using msitran.exe.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 
 import os
@@ -19,15 +19,15 @@ __all__ = ["MSIApplyTransform"]
 
 
 class MSIApplyTransform(Processor):
-    description = "Apply a transform to MSI-file using msitran.exe."
+    description = "Apply transform(s) to an MSI-file using msitran.exe."
     input_variables = {
         "msi_path": {
             "required": True,
             "description": "Path to the msi, required",
         },
-        "mst_path": {
+        "mst_paths": {
             "required": True,
-            "description": "Path to the msi, required",
+            "description": "(Array of) Paths to the mst, required",
         },
         "ignore_errors": {
             "required": False,
@@ -35,9 +35,6 @@ class MSIApplyTransform(Processor):
         },
     }
     output_variables = {
-        "version": {
-            "description": "Version of exe found." 
-        },
     }
 
     __doc__ = description
@@ -45,33 +42,29 @@ class MSIApplyTransform(Processor):
     def main(self):
 
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
-        mst_path = self.env.get('mst_path', self.env.get('pathname'))
+        mst_paths = self.env.get('mst_paths', self.env.get('pathname'))
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
         extract_flag = 'l'
+        self.output("Working on: %s" % msi_path)
+        msitran_exe = os.path.join(self.env['TOOLS_DIR'], "msitran.exe")		
+        #msitran_exe = "msitran.exe"
 
-        self.output("Applying: %s" % mst_path)
-        cmd = ['msitran.exe', '-a', mst_path, msi_path]
+        # if recipe writer gave us a single string instead of a list of strings,
+        # convert it to a list of strings
+        if isinstance(self.env["mst_paths"], basestring):
+            self.env["mst_paths"] = [self.env["mst_paths"]]
 
-        try:
-            if verbosity > 1:
-                Output = subprocess.check_output(cmd)
-            else:
-                Output = subprocess.check_output(cmd)
-        except:
-            if ignore_errors != 'True':
-                raise
-
-        archiveVersion = ""
-        for line in Output.split("\n"):
-            if verbosity > 2:
-                print line
-            if "ProductVersion:" in line:
-                archiveVersion = line.split()[-1]
-                continue
-        
-        self.env['version'] = archiveVersion.encode('ascii', 'ignore')
-        self.output("Found Version: %s" % (self.env['version']))
+        for mst_cmnd in self.env["mst_paths"]:
+            cmd = [msitran_exe, '-a', mst_cmnd, msi_path]
+            try:
+                if verbosity > 1:
+                    Output = subprocess.check_output(cmd)
+                else:
+                    Output = subprocess.check_output(cmd)
+            except:
+                if ignore_errors != 'True':
+                    raise
 
 if __name__ == '__main__':
     processor = MSIApplyTransform()

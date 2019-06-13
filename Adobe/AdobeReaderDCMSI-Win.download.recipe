@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Adobe Reader DC Update MSP-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.download.AdobeReaderDCMSI-Win</string>
+    <key>Input</key>
+    <dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>(?P&lt;version&gt;(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+))</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%%ver_majorminor%%ver_minor%</string>
+                <key>rename_var</key>
+                <string>version_string</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%,%ver_majorminor%,%ver_minor%</string>
+                <key>rename_var</key>
+                <string>ASver</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%DOWNLOAD_URL%</string>  -->
+                <!-- <string>ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/%version_string%/AcroRdrDCUpd%version_string%.msp</string> -->
+				<string>http://ardownload.adobe.com/pub/adobe/reader/win/AcrobatDC/%version_string%/AcroRdrDCUpd%version_string%.msp</string>
+                <key>filename</key>
+                <string>AdobeReaderDCUpd%version_string%.msp</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+<!--        
+-->
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Adobe Inc., OU=Acrobat DC, O=Adobe Inc., L=San Jose, S=ca, C=US, SERIALNUMBER=2748129, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>%version%</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

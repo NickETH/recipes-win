@@ -1,0 +1,3 @@
+helpers\GChrome_ETHZchanges.mst
+read\create-log-GoogleChrome.txt
+read\readme-GoogleChrome.txt

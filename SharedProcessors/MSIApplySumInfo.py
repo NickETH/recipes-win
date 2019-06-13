@@ -6,7 +6,9 @@
 # Based on WinInstallerExtractor by Matt Hansen
 #
 # msiinfo "msi" /t "String"
-# Output needs work. Goal would be to return the exitcode/errorlevel.
+# Output needs work. Goal would be to return the string, if string_sinfo is not supplied
+# Alternative could be the msilib SummaryInformation.GetProperty(field) functions.
+# 190506 Nick Heim: This version can have multiple commands! It is NOT compatible with earlier version!
 
 import os
 import sys
@@ -25,13 +27,9 @@ class MSIApplySumInfo(Processor):
             "required": True,
             "description": "Path to the msi, required",
         },
-        "flag_sinfo": {
+        "cmnds_sinfo": {
             "required": True,
-            "description": "Suminfo Flag, required",
-        },
-        "string_sinfo": {
-            "required": True,
-            "description": "Suminfo String, required",
+            "description": "Dict of Suminfo commands to execute. Pairs of key(flag)/string are expected, required",
         },
         "ignore_errors": {
             "required": False,
@@ -39,9 +37,6 @@ class MSIApplySumInfo(Processor):
         },
     }
     output_variables = {
-        "version": {
-            "description": "Version of exe found." 
-        },
     }
 
     __doc__ = description
@@ -49,37 +44,29 @@ class MSIApplySumInfo(Processor):
     def main(self):
 
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
-        mst_path = self.env.get('mst_path', self.env.get('pathname'))
-        flag_sinfo = self.env.get('flag_sinfo', '')
-        string_sinfo = self.env.get('string_sinfo', '')
+        cmnds_sinfo = self.env.get('cmnds_sinfo', '')
+        print >> sys.stdout, "cmnds_sinfo %s" % cmnds_sinfo
+        #flag_sinfo = self.env.get('flag_sinfo', '')
+        #string_sinfo = self.env.get('string_sinfo', '')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
         extract_flag = 'l'
+        msiinfo_exe = os.path.join(self.env['TOOLS_DIR'], "msiinfo.exe")		
+        #msiinfo_exe = "msiinfo.exe"
 
-        self.output("Applying: %s" % mst_path)
-        cmd = ['msiinfo.exe', msi_path, flag_sinfo, string_sinfo]
-#        cmd = 'msitran.exe -a ' + mst_path + ' ' + msi_path
-
-        try:
-            if verbosity > 1:
-                Output = subprocess.check_output(cmd)
-            else:
-                Output = subprocess.check_output(cmd)
-        except:
-            if ignore_errors != 'True':
-                raise
-
-        archiveVersion = ""
-        for line in Output.split("\n"):
-            if verbosity > 2:
-                print line
-            if "ProductVersion:" in line:
-                archiveVersion = line.split()[-1]
-                continue
-        
-        self.env['version'] = archiveVersion.encode('ascii', 'ignore')
-        self.output("Found Version: %s" % (self.env['version']))
-        # self.output("Extracted Archive Path: %s" % extract_path)
+        for key, value in cmnds_sinfo.items():
+            self.output("Applying: %s" % msi_path)
+            cmd = [msiinfo_exe, msi_path, key, value]
+            print >> sys.stdout, "cmd %s %s" % (key, value)
+            try:
+                if verbosity > 1:
+                    Output = subprocess.check_output(cmd)
+                else:
+                    Output = subprocess.check_output(cmd)
+            except OSError, err:
+                if ignore_errors != 'True':
+                    raise ProcessorError(
+                        "Could not apply %s: %s" % (cmd, err))
 
 if __name__ == '__main__':
     processor = MSIApplySumInfo()

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Adobe Flash Player NPAPI MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.download.AdobeFlashPlayerMSI-Win</string>
+    <key>Input</key>
+    <dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>&lt;update version=&quot;(?P&lt;ver_major&gt;[0-9]+),0,0,(?P&lt;ver_minor&gt;[0-9]+)&quot;&gt;</string>
+                <!-- <string>&lt;update version=&quot;(?P&lt;match&gt;(?P&lt;ver_major&gt;[0-9]+),0,0,(?P&lt;ver_minor&gt;[0-9]+), $1\.0\.0\.$2)&quot;&gt;</string>  -->
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%match%</string>
+                <key>rename_var</key>
+                <string>pkg_path</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%.0.0.%ver_minor%</string>
+                <key>rename_var</key>
+                <string>version</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%DOWNLOAD_URL%/%ver_major%.0.0.%ver_minor%/install_flash_player_%ver_major%_%DOWNLOAD_FILE%</string>  -->
+                <string>%DOWNLOAD_URL%/%version%/install_flash_player_%ver_major%_%DOWNLOAD_FILE%</string>				
+                <key>filename</key>
+                <string>%NAME%.msi</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Adobe Systems Incorporated, OU=Flash Player, O=Adobe Systems Incorporated, L=San Jose, S=California, C=US, PostalCode=95110, STREET=345 Park Avenue, SERIALNUMBER=2748129, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, OID.2.5.4.15=Private Organization</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>%version%</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
