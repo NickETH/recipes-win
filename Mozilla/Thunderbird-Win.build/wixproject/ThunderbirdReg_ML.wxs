@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+	<?include version.wxi?>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="RegHKMU0" Guid="{3D20DD11-18E7-47A5-89A3-E3294F63DB06}" KeyPath="yes">
+				<RegistryValue Id="registry84" Root="HKMU" Key="Software\Classes\ThunderbirdEML\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry71" Root="HKMU" Key="Software\Classes\ThunderbirdEML\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; &quot;%1&quot;" Type="string" />
+                <RegistryValue Id="registry82" Root="HKMU" Key="Software\Classes\ThunderbirdEML" Value="Thunderbird Document" Type="string" />
+                <RegistryValue Id="registry83" Root="HKMU" Key="Software\Classes\ThunderbirdEML" Name="FriendlyTypeName" Value="Thunderbird Document" Type="string" />
+                <RegistryValue Id="registry80" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news" Name="EditFlags" Value="2" Type="integer" />
+                <RegistryValue Id="registry79" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news" Name="URL Protocol" Value="" Type="string" />
+                <RegistryValue Id="registry78" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news" Name="FriendlyTypeName" Value="Thunderbird (News) URL" Type="string" />
+                <RegistryValue Id="registry77" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry81" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry70" Root="HKMU" Key="Software\Classes\Thunderbird.Url.news\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -mail &quot;%1&quot;" Type="string" />
+                <RegistryValue Id="registry75" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto" Name="EditFlags" Value="2" Type="integer" />
+                <RegistryValue Id="registry74" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto" Name="URL Protocol" Value="" Type="string" />
+                <RegistryValue Id="registry73" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto" Name="FriendlyTypeName" Value="Thunderbird URL" Type="string" />
+                <RegistryValue Id="registry72" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto" Value="Thunderbird URL" Type="string" />
+				<RegistryValue Id="registry69" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -compose &quot;%1&quot;" Type="string" />
+				<RegistryValue Id="registry76" Root="HKMU" Key="Software\Classes\Thunderbird.Url.mailto\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<!-- Neu in 60.3.0 -->
+				<RegistryValue Id="registry90" Root="HKMU" Key="Software\Classes\MozillaMapi" Value="Mozilla MAPI" Type="string" />
+				<RegistryValue Id="registry91" Root="HKMU" Key="Software\Classes\MozillaMapi\CLSID" Value="{29F458BE-8866-11D5-A3DD-00B0D0F3BAA7}" Type="string" />
+				<RegistryValue Id="registry92" Root="HKMU" Key="Software\Classes\MozillaMapi\CurVer" Value="MozillaMapi.1" Type="string" />
+				<RegistryValue Id="registry93" Root="HKMU" Key="Software\Classes\MozillaMapi.1" Value="Mozilla MAPI" Type="string" />
+				<RegistryValue Id="registry94" Root="HKMU" Key="Software\Classes\MozillaMapi.1\CLSID" Value="{29F458BE-8866-11D5-A3DD-00B0D0F3BAA7}" Type="string" />
+             </Component>
+            <Component Id="RegHKLM2" Guid="{EB78ACF0-E340-4B20-97FD-0CF618D914C6}" KeyPath="yes">
+				<RegistryValue Id="registry0" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird" Value="Mozilla Thunderbird" Type="string" />
+				<RegistryValue Id="registry1" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird" Name="DLLPath" Value="[#mozMapi32_InUse.dll]" Type="string" />
+				<RegistryValue Id="registry2" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities" Name="ApplicationDescription" Value="Thunderbird is a full-featured email application. Thunderbird supports IMAP and POP mail protocols, as well as HTML mail formatting. Built-in junk mail controls, RSS capabilities, powerful quick search, spell check as you type, global inbox, and advanced message filtering round out Thunderbird's modern feature set." Type="string" />
+				<RegistryValue Id="registry3" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities" Name="ApplicationIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry4" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities" Name="ApplicationName" Value="Thunderbird" Type="string" />
+				<RegistryValue Id="registry5" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities\FileAssociations" Name=".eml" Value="ThunderbirdEML" Type="string" />
+				<RegistryValue Id="registry6" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities\FileAssociations" Name=".wdseml" Value="ThunderbirdEML" Type="string" />
+				<RegistryValue Id="registry7" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities\StartMenu" Name="Mail" Value="Mozilla Thunderbird" Type="string" />
+				<RegistryValue Id="registry8" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Capabilities\URLAssociations" Name="mailto" Value="Thunderbird.Url.mailto" Type="string" />
+				<RegistryValue Id="registry9" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry10" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\InstallInfo" Name="HideIconsCommand" Value="&quot;[#helper.exe]&quot; /HideShortcuts" Type="string" />
+				<RegistryValue Id="registry11" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\InstallInfo" Name="ShowIconsCommand" Value="&quot;[#helper.exe]&quot; /ShowShortcuts" Type="string" />
+				<RegistryValue Id="registry12" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\InstallInfo" Name="ReinstallCommand" Value="&quot;[#helper.exe]&quot; /SetAsDefaultAppGlobal" Type="string" />
+				<RegistryValue Id="registry13" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\InstallInfo" Name="IconsVisible" Value="1" Type="integer" />
+				<RegistryValue Id="registry14" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto" Value="Thunderbird URL" Type="string" />
+				<RegistryValue Id="registry15" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto" Name="FriendlyTypeName" Value="Thunderbird URL" Type="string" />
+				<RegistryValue Id="registry16" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto" Name="URL Protocol" Value="" Type="string" />
+				<RegistryValue Id="registry17" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto" Name="EditFlags" Value="2" Type="integer" />
+				<RegistryValue Id="registry18" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry19" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\Protocols\mailto\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -compose &quot;%1&quot;" Type="string" />
+				<RegistryValue Id="registry20" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -mail" Type="string" />
+				<RegistryValue Id="registry21" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\shell\properties" Value="Thunderbird &amp;Options" Type="string" />
+				<RegistryValue Id="registry22" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\shell\properties\command" Value="&quot;[#thunderbird.exe]&quot; -options" Type="string" />
+				<RegistryValue Id="registry23" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\shell\safemode" Value="Thunderbird &amp;Safe Mode" Type="string" />
+				<RegistryValue Id="registry24" Root="HKLM" Key="SOFTWARE\Clients\Mail\Mozilla Thunderbird\shell\safemode\command" Value="&quot;[#thunderbird.exe]&quot; -safe-mode" Type="string" />
+				<RegistryValue Id="registry25" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird" Value="Mozilla Thunderbird" Type="string" />
+				<RegistryValue Id="registry26" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird" Name="DLLPath" Value="[#mozMapi32_InUse.dll]" Type="string" />
+				<RegistryValue Id="registry27" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities" Name="ApplicationDescription" Value="Thunderbird is a full-featured email application. Thunderbird supports IMAP and POP mail protocols, as well as HTML mail formatting. Built-in junk mail controls, RSS capabilities, powerful quick search, spell check as you type, global inbox, and advanced message filtering round out Thunderbird's modern feature set." Type="string" />
+				<RegistryValue Id="registry28" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities" Name="ApplicationIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry29" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities" Name="ApplicationName" Value="Thunderbird (News)" Type="string" />
+				<RegistryValue Id="registry30" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities\URLAssociations" Name="nntp" Value="Thunderbird.Url.news" Type="string" />
+				<RegistryValue Id="registry31" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities\URLAssociations" Name="news" Value="Thunderbird.Url.news" Type="string" />
+				<RegistryValue Id="registry32" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Capabilities\URLAssociations" Name="snews" Value="Thunderbird.Url.news" Type="string" />
+				<RegistryValue Id="registry33" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry34" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry35" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news" Name="FriendlyTypeName" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry36" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news" Name="URL Protocol" Value="" Type="string" />
+				<RegistryValue Id="registry37" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news" Name="EditFlags" Value="2" Type="integer" />
+				<RegistryValue Id="registry38" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry39" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\news\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -mail &quot;%1&quot;" Type="string" />
+				<RegistryValue Id="registry40" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry41" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp" Name="FriendlyTypeName" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry42" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp" Name="URL Protocol" Value="" Type="string" />
+				<RegistryValue Id="registry43" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp" Name="EditFlags" Value="2" Type="integer" />
+				<RegistryValue Id="registry44" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry45" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\nntp\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -mail &quot;%1&quot;" Type="string" />
+				<RegistryValue Id="registry46" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry47" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews" Name="FriendlyTypeName" Value="Thunderbird (News) URL" Type="string" />
+				<RegistryValue Id="registry48" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews" Name="URL Protocol" Value="" Type="string" />
+				<RegistryValue Id="registry49" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews" Name="EditFlags" Value="2" Type="integer" />
+				<RegistryValue Id="registry50" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews\DefaultIcon" Value="[#thunderbird.exe],0" Type="string" />
+				<RegistryValue Id="registry51" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\Protocols\snews\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -osint -mail &quot;%1&quot;" Type="string" />
+				<RegistryValue Id="registry52" Root="HKLM" Key="SOFTWARE\Clients\News\Mozilla Thunderbird\shell\open\command" Value="&quot;[#thunderbird.exe]&quot; -mail" Type="string" />
+				<RegistryValue Id="registry53" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\thunderbird.exe" Value="[#thunderbird.exe]" Type="string" />
+				<RegistryValue Id="registry54" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\thunderbird.exe" Name="Path" Value="[INSTALLDIR]" Type="string" />
+				<RegistryValue Id="registry55" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird" Value="$(var.version)" Type="string" />
+				<RegistryValue Id="registry56" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird" Name="CurrentVersion" Value="$(var.version) (en-US)" Type="string" />
+				<RegistryValue Id="registry57" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)" Value="$(var.version) (en-US)" Type="string" />
+				<RegistryValue Id="registry58" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)\Main" Name="Install Directory" Value="[INSTALLDIR]" Type="string" />
+				<RegistryValue Id="registry59" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)\Main" Name="PathToExe" Value="[#thunderbird.exe]" Type="string" />
+				<RegistryValue Id="registry60" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)\Uninstall" Name="Description" Value="Mozilla Thunderbird ($(var.version))" Type="string" />
+				<RegistryValue Id="registry61" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird $(var.version)" Name="GeckoVer" Value="$(var.version)" Type="string" />
+				<RegistryValue Id="registry62" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird $(var.version)\bin" Name="PathToExe" Value="[#thunderbird.exe]" Type="string" />
+				<RegistryValue Id="registry63" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird $(var.version)\extensions" Name="Components" Value="[INSTALLDIR]components" Type="string" />
+				<RegistryValue Id="registry64" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird $(var.version)\extensions" Name="Plugins" Value="[INSTALLDIR]plugins" Type="string" />
+				<RegistryValue Id="registry65" Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="Thunderbird" Value="Software\Clients\Mail\Mozilla Thunderbird\Capabilities" Type="string" />
+				<RegistryValue Id="registry66" Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="Thunderbird (News)" Value="Software\Clients\News\Mozilla Thunderbird\Capabilities" Type="string" />
+			<!-- Neu in 60.3.0 -->
+				<RegistryValue Id="registry67" Root="HKLM" Key="SOFTWARE\Mozilla\Thunderbird\TaskBarIDs" Name="[INSTALLDIR]" Value="8216C80C92C4E828" Type="string" />		
+             </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="ThunderbirdRegistry">
+            <ComponentRef Id="RegHKMU0" />
+            <ComponentRef Id="RegHKLM2" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

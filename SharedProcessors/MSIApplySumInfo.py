@@ -31,7 +31,15 @@ class MSIApplySumInfo(Processor):
             "required": True,
             "description": "Dict of Suminfo commands to execute. Pairs of key(flag)/string are expected, required",
         },
-        "ignore_errors": {
+'''        "flag_sinfo": {
+            "required": True,
+            "description": "Suminfo Flag, required",
+        },
+        "string_sinfo": {
+            "required": True,
+            "description": "Suminfo String, required",
+        },
+'''        "ignore_errors": {
             "required": False,
             "description": "Ignore any errors during the extraction.",
         },
@@ -55,6 +63,7 @@ class MSIApplySumInfo(Processor):
         #msiinfo_exe = "msiinfo.exe"
 
         for key, value in cmnds_sinfo.items():
+        #for key, value in cmnds_sinfo:
             self.output("Applying: %s" % msi_path)
             cmd = [msiinfo_exe, msi_path, key, value]
             print >> sys.stdout, "cmd %s %s" % (key, value)
@@ -68,6 +77,29 @@ class MSIApplySumInfo(Processor):
                     raise ProcessorError(
                         "Could not apply %s: %s" % (cmd, err))
 
+        '''
+        try:
+            if verbosity > 1:
+                Output = subprocess.check_output(cmd)
+            else:
+                Output = subprocess.check_output(cmd)
+        except:
+            if ignore_errors != 'True':
+                raise
+        #Array example JSS-Importer
+		# https://github.com/grahampugh/JSSImporter/blob/master/JSSImporter.py 547
+        keys = self.env.get('plist_keys')
+        for key, value in request.items():
+        for SQL_string in self.env["SQL_command"]:
+            # print >> sys.stdout, "SQL_string %s" % SQL_command
+            try:
+                view = dbobject.OpenView(SQL_string)
+                rec = view.Execute(None)
+                self.output("Applying %s" % SQL_string)
+            except OSError, err:
+                raise ProcessorError(
+                    "Could not apply %s: %s" % (SQL_string, err))
+'''
 if __name__ == '__main__':
     processor = MSIApplySumInfo()
     processor.execute_shell()

@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Shared Processors for NickETH-recipes.win</string>
+    <string>Shared Processors for id-cd-win/recipes-test</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.SharedProcessors</string>
+    <string>com.github.autopkg-win.SharedProcessors</string>
     <key>Input</key>
     <dict/>
     <key>MinimumVersion</key>

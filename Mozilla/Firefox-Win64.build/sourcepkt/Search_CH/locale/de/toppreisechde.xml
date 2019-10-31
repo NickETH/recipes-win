@@ -1,0 +1,8 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>Toppreise.ch DE</ShortName>
+<Description>Toppreise.ch - Preisvergleich Schweiz</Description>
+<Image width="16" height="16">data:image/x-icon;base64,R0lGODlhEAAQALMPABkVGdnX08CiUbupkvDi4sq1kZR+afnsMtduZ8oyKrB1PIOnosHAuqgXE/z4+P///yH5BAEAAA8ALAAAAAAQABAAAAR98MnpTJg4u2AKcRnmIEiBKAIYOkLykcKhYkSCEMWwIMc3PwWDgRBg7AqOJIXE+AQchdRzQlB8CL4CIzC4SBiKLnbTfXof1YaLyDA0i1RFw/JkJMoEyYYxf44aAlgTBgAAcjYNagoMSg+FA01RLYWFCxIfKwGUBiEhBAIGIBEAOw==</Image>
+<SearchForm>http://de.toppreise.ch/index.php</SearchForm>
+<Url type="text/html" method="GET" template="http://de.toppreise.ch/index.php?search={searchTerms}&amp;sourceid=Mozilla-search">
+</Url>
+</SearchPlugin>

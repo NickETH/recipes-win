@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<project name="Thunderbird_latest_ML">
+  <property name="download-component" value="no" />
+  <!-- Hier brauchen wir die originale Versions-Nr wie 20.0 oder 20.0.1 -->
+  <property name="RealVersion" value="60.5.2" />
+  <property name="PackageVersion" value="60.5.2" />
+  <property name="ShortVersion" value="6052" />
+  <property name="xpi-maxversion" value="60.*" />
+</project>

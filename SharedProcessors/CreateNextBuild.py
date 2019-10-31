@@ -13,12 +13,24 @@
 import os
 import sys
 import subprocess
+import string
 
 from autopkglib import Processor, ProcessorError
 
 
 __all__ = ["CreateNextBuild"]
 
+def checkbool(v):
+    # makes checking a bool argument a lot easier...
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+    # end of checkbool()
 
 class CreateNextBuild(Processor):
     description = "Create the environment for the next build."
@@ -46,6 +58,11 @@ class CreateNextBuild(Processor):
         "ver_fields": {
             "required": False,
             "description": "Number of version fields divided by periods",
+        },
+        "create_AS_ver": {
+            "default": False,
+            "required": False,
+            "description": "Bool, Create a version string for an Active Setup",
         },
         "recipe_path": {
             "required": False,
@@ -104,6 +121,13 @@ class CreateNextBuild(Processor):
             ver_fields = os.path.splitext(self.env.get('ver_fields'))[0]
             cmd.extend(['-ver_fields', ver_fields])
 
+        if "create_AS_ver" in self.env:
+            create_AS_ver = self.env.get('create_AS_ver')
+            print >> sys.stdout, "create_AS_ver %s" % create_AS_ver
+            if checkbool(create_AS_ver):
+                cmd.extend(['-AS_ver', create_AS_ver])
+                print >> sys.stdout, "cmdline %s" % cmd
+
         if "recipe_path" in self.env:
             recipe_path = os.path.splitext(self.env.get('recipe_path'))[0]
             cmd.extend(['-recipe_path', recipe_path])
@@ -136,11 +160,18 @@ class CreateNextBuild(Processor):
             if verbosity > 2:
                 print line
             if "Buildversion:" in line:
-                archiveVersion = line.split()[-1]
+                if "ASversion:" in line:
+                   lineobj = line.split("|",-1)
+                   archiveVersion = lineobj[0].split()[-1]
+                   ActiveSetupVersion = lineobj[1].split()[-1]
+                   self.env['AS_ver'] = ActiveSetupVersion.encode('ascii', 'ignore')
+                else:
+                   archiveVersion = line.split()[-1]
                 continue
         
         self.env['build_ver'] = archiveVersion.encode('ascii', 'ignore')
-        self.env['build_new'] = archiveVersion.encode('ascii', 'ignore')		
+        self.env['build_new'] = archiveVersion.encode('ascii', 'ignore')
+        self.env['build_ver_short'] = string.replace(archiveVersion.encode('ascii', 'ignore'),'.','')
         self.output("New build_ver: %s" % (self.env['build_ver']))
 
 if __name__ == '__main__':

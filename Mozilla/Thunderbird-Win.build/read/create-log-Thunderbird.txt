@@ -1,0 +1,324 @@
+190301	Paketiert als WIX-Projekt
+	Todo:
+	Automatisieren wie Firefox.
+	http://www.starkandwayne.com/blog/how-to-download-the-latest-release-from-github/
+
+	Aenderungen ab V60.5.2:
+	Neue Version Exchange Calendar, exchangecalendar-v5.0.0-alpha3.xpi von:
+	https://github.com/ExchangeCalendar/exchangecalendar/releases
+
+	Aenderungen ab V60.3.0:
+	Lightning gibt es in einer aktuellen Version nur noch in Thunderbird integriert!
+	Diese ist aber leider nur noch einsprachig erhältlich!
+	Deshalb muss man die Sprachpakete für Lightning mühsam aus den Sprachspezifischen Versionen heraus schälen.
+	Das geht so:
+	TB in allen notwendigen Sprachen herunterladen, danach jeweils .\core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi extrahieren.
+	Aus dem XPI jeweils die Ordner .\chrome\calendar-de + .\chrome\lightning-de extrahieren und in die Distribution einfügen.
+	Dazu müssen noch locale-Einträge in chrome.manifest eingefügt werden. Beispiele:
+	locale calendar en-US chrome/calendar-en-US/locale/en-US/calendar/
+	locale lightning en-US chrome/lightning-en-US/locale/en-US/lightning/
+
+	Locale2MUI nicht mehr notwendig, funktioniert jetzt gleich wie bei FF!
+	pref("intl.locale.requested","");
+	gpo4ETHZ-1.0.1-fx-tb_signed.xpi nicht mehr notwedig, neu mit GPO module https://mozillagpo.sourceforge.io/
+	Siehe aktualisierte mozilla.cfg
+
+	Neue Version von Locale Switcher notwendig, die auf "intl.locale.requested" zeigt.
+	locale_switcher-40-fx-tb.xpi
+	Neue Version Exchange Calendar, exchangecalendar-v5.0.0-alpha2.xpi von:
+	https://github.com/ExchangeCalendar/exchangecalendar/releases
+
+	Aenderungen ab V52.1.0:
+	Lightning wurde für 52.x freigegeben.
+	Es wurde wieder die normale Version eingebunden.
+
+	Aenderungen ab V52.0.0:
+	Lightning wurde noch nicht für 52.x freigegeben.
+	Deshalb verwenden wir die Version 5.4 beta4
+	https://addons.mozilla.org/thunderbird/downloads/latest-beta/lightning/platform:5/addon-2313-latest.xpi
+
+	Aenderungen ab V45.7.1:
+	License Dialog ausgeschaltet.
+
+	Wichtigste Aenderungen ab V45.0.0 (gegenüber V38.1.x und früher):
+	Es kommt nun eine Version von Lightning mit TB. Leider aber nur im Distribution Ordner und nur in englisch.
+	Das würde bedeuten, dass die Extension für jeden Benutzer ins Profil installiert wird.
+	Deshalb wird diese dort gelöscht und die reguläre Extension installiert.
+	Locale Switcher musste auf die neue UI angepasst werden.
+	Diese gibt es nun in einer ETHZ-Version 3.5, aber noch nicht signiert.
+
+	Wichtigste Aenderungen ab V24.6.0 (gegenüber V24.1.x und früher):
+	Verwendet Preserve_GUID.xlt Stylesheet. 
+	Damit wird bei nicht veränderten Komponenenten die GUID aus der Vorversion übernommen.
+
+	Download von benötigten Paketen (via NANT-Script :
+	https://ftp.mozilla.org/pub/thunderbird/releases/60.5.2/win32/en-US/Thunderbird%20Setup%2060.5.2.exe
+	https://ftp.mozilla.org/pub/thunderbird/releases/60.5.2/win32/xpi/de.xpi
+	https://ftp.mozilla.org/pub/thunderbird/releases/60.5.2/win32/xpi/fr.xpi
+	https://ftp.mozilla.org/pub/thunderbird/releases/60.5.2/win32/xpi/it.xpi
+	https://ftp.mozilla.org/pub/thunderbird/releases/60.5.2/win32/xpi/rm.xpi
+
+	Dict-DE-ch: https://addons.mozilla.org/firefox/downloads/latest/9360/addon-9360-latest.xpi
+	Dict-FR-fr: https://addons.mozilla.org/firefox/downloads/latest/13371/addon-13371-latest.xpi
+	Dict-IT-it: https://addons.mozilla.org/firefox/downloads/latest/3053/addon-3053-latest.xpi
+
+	Lightning: https://addons.mozilla.org/thunderbird/downloads/latest/2313/platform:5/addon-2313-latest.xpi
+
+	https://addons.mozilla.org/firefox/downloads/file/107845/locale_switcher-3-fx.xpi
+	Ist erneut angepasst. Siehe Script-File.
+	Neue Version: locale_switcher-40-fx-tb.xpi
+
+	VCS-Support: https://addons.mozilla.org/thunderbird/downloads/latest/4721/addon-4721-latest.xpi
+
+	Dictionary Switcher: https://addons.mozilla.org/thunderbird/downloads/latest/3414/addon-3414-latest.xpi
+
+	Compact Header: https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi
+	Wird nicht mehr verwendet, da jetzt im Core: Extra Folder Columns: https://addons.mozilla.org/thunderbird/downloads/latest/9716/addon-9716-latest.xpi
+
+	Exchange Calendar: https://github.com/ExchangeCalendar/exchangecalendar/releases
+	vorher: https://github.com/Ericsson/exchangecalendar/releases
+
+	Im Auge behalten:
+	https://addons.mozilla.org/de/firefox/addon/quick-locale-switcher/
+
+	Extrahieren von Thunderbird Setup 60.5.2.exe mit 7-zip nach \wixproject
+
+	Thunderbird 60.5.2 komplett installieren. Wird nur noch für die Registry gebraucht, -->in Zukunft aus NSIS-File auslesen!
+
+	Die folgenden Extensions global installiert:
+	Zuerst die Extensions auf Kompatibilität mit V8.0 überprüfen und ev. Versionsinfo anpassen.
+	Die Installation von Extensions hat wieder geändert. 
+	Jetzt gibt es 2 Arten von Installationen.
+	Als neuer Standard wird das XPI-File in den Extension-Folder gelegt, das ist alles. 
+	Wichtig: Der Filename muss em:id von Install.rdf sein!
+	Als 2. Variante wird die Extension als Verzeichnis ausgepackt, wie in früheren Versionen.
+	Wenn dies notwendig ist, wird in Install.rdf 'unpack' auf true gesetzt.
+	<em:unpack>true</em:unpack>
+
+	Neues Extension-Format wird für die Sprachpackete verwendet.
+	Siehe Wix-Build-File. manifest.json statt install.rdf
+	
+	Ab v7 wird das install.rdf viel genauer gecheckt.
+	Die Schema-Verweise müssen zwingend wie folgt aussehen:
+	<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+	<Description rdf:about="urn:mozilla:install-manifest">
+
+
+	Language_Pack_DEU
+	..\sourcepkt\de.xpi
+	..\sourcepkt\w__rterbuch_deutsch__de-ch___hunspell-unterst__tzt-20101229-fx+tb+sm+fn.xpi
+	Language_Pack_FRA
+	..\sourcepkt\fr.xpi
+	..\sourcepkt\dictionnaire_francais_classique_reforme_1990-4.0.3-tb+fx+sm.xpi
+	Language_Pack_ITA
+	..\sourcepkt\it.xpi
+	..\sourcepkt\dizionario_italiano-3.3-tb+sm+fx.xpi
+
+	Language_Helper
+	..\sourcepkt\dictionary_switcher-1.3.1-tb.xpi
+	..\sourcepkt\locale_switcher-35-fx+tb.xpi"
+
+	Kalenderfunktion
+	..\sourcepkt\lightning.xpi
+	..\sourcepkt\.vcs_support-0.6.3.1-tb+sb.xpi
+
+	Group Policy Extension
+	GPO module https://mozillagpo.sourceforge.io/
+
+	Extras
+	..\sourcepkt\CompactHeader.xpi
+	..\sourcepkt\exchangecalendar-v3.9.0.xpi
+
+	Autoconfig mozilla.cfg file.
+	Updatefunktion permanent ausgeschaltet.
+	Defaults für einige Einstellungen gesetzt.
+	Updatefunktion für Extensions.
+	Sprache auf "folgt OS".
+
+	//
+	lockPref("app.update.auto", false);
+	lockPref("app.update.enabled", false);
+	lockPref("extensions.strictCompatibility", false);
+	lockPref("extensions.update.autoUpdateDefault", false);
+	lockPref("toolkit.telemetry.rejected", true);
+	defaultPref("intl.locale.requested","");
+	defaultPref("mail.shell.checkDefaultClient", false);
+	defaultPref("toolkit.telemetry.prompted", 2);
+	defaultPref("calendar.integration.notify", false);
+	
+	try
+	{
+
+		var io = Components.classes["@mozilla.org/network/io-service;1"]
+
+					   .getService(Components.interfaces.nsIIOService);
+		var resource = io.getProtocolHandler("resource")
+
+					 .QueryInterface(Components.interfaces.nsIResProtocolHandler);
+
+		var greDir = Components.classes["@mozilla.org/file/directory_service;1"]
+
+						   .getService(Components.interfaces.nsIProperties)
+
+						   .get("GreD", Components.interfaces.nsIFile);
+	
+		var gpoModDir = greDir.clone();
+
+		gpoModDir.append("gpo");
+
+		gpoModDir.append("modules");
+
+		var gpoAlias = io.newFileURI(gpoModDir);
+		resource.setSubstitution("gpo", gpoAlias);
+		Components.utils.import("resource://gpo/gpo.jsm");
+
+		GPO.onLoad();
+	} catch(e) {
+	  displayError("gpo.cfg", e);
+	}
+
+	try {
+		var timer = Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+
+		timer.initWithCallback(
+
+			function refreshPolicy_timer() { GPO.onLoad(); },
+			// Hourly refresh preferences from policy
+
+			60 * 60000,
+
+			timer.TYPE_REPEATING_SLACK
+
+		);
+	} catch(e) {
+		displayError("gpo.cfg timer init", e);
+	}
+
+	Danach in .\Mozilla Thunderbird\defaults\pref das File: local-settings.js erstellen.
+	Es muss diese Zeilen enthalten:
+	pref("general.config.filename", "mozilla.cfg");
+	pref("extensions.shownSelectionUI", true);
+	pref("extensions.autoDisableScopes", 11);
+
+	Dazu die Zeile:
+	user_pref("extensions.update.enabled", false);
+	zum File: C:\Program Files\Mozilla Thunderbird\defaults\profile\prefs.js
+	hinzufügen.
+
+	Features:
+	UserSettings		User Settings	Delivers user settings automatically to each profile.	1	3	INSTALLDIR	0
+	ThunderBird	UserSettings	ThunderBird	Installs the main program.	11	3	INSTALLDIR	0
+	Language_Pack_DEU	ThunderBird	Language Pack DEU	German user interface and swiss german spell checking features.	21	3		32
+	Language_Pack_FRA	ThunderBird	Language Pack FRA	French user interface and french spell checking features.	31	3		32
+	Language_Pack_ITA	ThunderBird	Language Pack ITA	Italian user interface and italian spell checking features.	41	3		32
+	Language_Pack_RUM	ThunderBird	Language_Pack RUM	Romansh user interface.	7	3		32
+	Language_Helper	ThunderBird	Language Helper	This installs dictionary and locale switcher + translator.	0	0		32
+	Administrative_Pack	ThunderBird	Administrative Pack	This installs the group policy extension and templates.	61	3		32
+	Lightning		ThunderBird	Lightning Calendar	The Lightning calendar as an extension in Tunderbird.	71	100		32
+	Extras	ThunderBird	Extras	Exchange Calendar Conn. + Compact Header	13	100		32
+
+	Die folgenden Features auf Level 100 gesetzt (Damit werden sie beim Installmode 'Typical' nicht mehr installiert, jedoch bei 'Complete'):
+	Lightning
+	Extras
+
+	Anzeige-Reihenfolge der Features geordnet mit der Display-Clumn in der Feature Table.
+
+	Folgende Zeile in Condition table eingefügt, damit 'Language_Helper' nicht installiert wird, 
+	wenn keine Language Packs installiert werden.
+	Language_Helper	3	&Language_Pack_DEU=0 AND &Language_Pack_FRA=0 AND &Language_Pack_ITA=0 AND &Language_Pack_RUM=0
+
+
+	'SHORTCUTDIR' in Directory Table auf 'Internet' gesetzt.
+
+	Neuer Registry-key 'ShortcutDirectory' in 'Uninstall\ProductCode' (damit das Shortcut-Directory bei einem erneuten Aufruf
+	des Windows-Installers das SC-Dir auslesen kann):
+	regHKLM1	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	ShortcutDirectory	[SHORTCUTDIR]	registry1
+
+	Dies geschieht mit folgendem Eintrag in 'RegLocator' table :
+	SC_Dir	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	ShortcutDirectory	2
+
+	und folgendem Eintrag in AppSearch table:
+	SHORTCUTDIR	SC_Dir
+
+;	EULA von http://www.mozilla.com/en-US/legal/eula/thunderbird-en.txt nach sourcepkt heruntergeladen
+;	User Information Dialog augeschaltet.
+;	Single Feature Destination Dialog augeschaltet.
+;	Shortcut Dialog eingeschaltet.
+;	Installation Type Dialog eingeschaltet.
+;	Select Feature Dialog eingeschaltet.
+;	Licensing Dialog eingeschaltet und thunderbird-en.txt von Sourcepkt eingefügt.
+;	Dialog Theme auf Neptun 06 umgestellt.
+
+	WIX-Mondo Dialog eingeschaltet. Die Grafiken von Wise-Neptun-Themes eingebunden.
+
+	Die DLLs AccessibleMarshal.dll, werden vom WIX-Harvester (Heat) automatisch als COM-Objekte erkannt und die entsprechenden Registry-Einträge erstellt.
+
+
+	Den folgenden Registrykey eingefügt:
+	regHKLM2	2	SOFTWARE\Mozilla\Mozilla Thunderbird\8.0 (en-US)\Main	Create Desktop Shortcut	#1	registry1
+
+	Den folgenden Registrykey gelöscht:
+	registry61	2	SOFTWARE\Mozilla\Mozilla Thunderbird\8.0 (en-US)\Main	Start Menu Folder	Mozilla Thunderbird	registry1
+
+	Die folgenden Registrykeys anpassen:
+	registry60	2	SOFTWARE\Mozilla\Mozilla Thunderbird\8.0 (en-US)\Main	Program Folder Path	[SHORTCUTDIR]	registry1
+
+	Erstellen der Komponente 'QuickLaunch_Shortcut' in Feature 'CurrentUser'
+	Erstellen der Komponente 'Desktop_Shortcut' in Feature 'ThunderBird'.
+	Erstellen der Komponente 'Add_QL_Shortcut' in Feature 'ThunderBird'.
+
+	Diese 3 separaten Komponenten sind notwendig, damit für die SC's Conditions möglich werden.
+	 
+	Der quickLaunch Shortcut muss in allen Profilen eingerichtet werden. Dazu wird ein Flag in den Uninstall-Bereich geschrieben.
+	Dies geschiet mit der folgenden Zeilen in der Registry-Table:
+	regHKLM3	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	QLinstalled	[QUICKLAUNCH_SC]	Add_QL_Shortcut
+
+	 Und mit den folgende Einträgen wird der Flag wieder ausgelesen:
+	 folgendem Eintrag in AppSearch table:
+	 QUICKLAUNCH_SC	QLinst
+
+	 Dies geschieht mit folgendem Eintrag in 'RegLocator' table :
+	 QLinst	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	QLinstalled	2
+
+	 Registry-key 'regHKCU1' (Create Quick Launch Shortcut) als Key für die 'QuickLaunch_Shortcut' Komponente.
+	 Registry-key 'regHKLM2' (Create Desktop Shortcut) als Key für die 'Desktop_Shortcut' Komponente.
+	 Einfügen der Properties 'DESKTOP_SC=1' + 'QUICKLAUNCH_SC=1' als Conditions für die 2 oben genannten Komponenten
+
+	 Die beiden Shortcuts Desktop + QuickLaunch in der Shortcut Table den entsprechenden Komponenten zugeordnet.
+	 Erstellen der Properties 'DESKTOP_SC=0' + 'QUICKLAUNCH_SC=0' für die Conditions.
+
+	 In Shortcut Table bei Links für Programm-Menü 'SHORTCUTDIR' als Directory eingetragen.
+
+	 Bei QuickLaunch Shortcut Komponente zu 'QuickLaunch_Shortcut' gewechselt, sowie Target zu [#thunderbird.exe],
+	 damit Advertising ausgeschaltet wird, sonst funktioniert er mit der Condition nicht. 
+	 Bei Desktop Shortcut Komponente zu 'Desktop_Shortcut' gewechselt, sowie Target zu [#thunderbird.exe],
+	 damit Advertising ausgeschaltet wird, sonst funktioniert er mit der Condition nicht.
+
+	 ALLUSERS=1 Property eingefügt.
+
+	 RemoveExistingProducts in InstallExecuteSequence Tabelle auf 1450 geändert.
+
+	 In ARP:
+	 -Firefox.exe-Icon hinzugefügt.
+	 -ARPCONTACT ETH Informatikdienste Helpdesk
+	 -ARPHELPTELEPHONE ++41 (0) 44 632 77 77
+	 -ARPURLINFOABOUT http://www.id.ethz.ch/support
+	 In 'General Information':
+	 -Title: ThunderBird 60.5.2 ML
+	 -Subject: Mail- and News-Reader
+	 -Author: Nick Heim, ETHZ ID
+	 -Comments: Thunderbird is one of the most popular free Email clients.
+
+	 Upgrade-Codes der früheren Neptun-Versionen eingefügt.
+	 {C8324920-394F-4DFD-918B-D08B9C47714E}	1.0.0	1.6.0		260		UPGRADE_1
+	 {FC795FE3-F090-487C-BCA7-D187EAE7A4FF}	1.0.0	1.6.0		260		UPGRADE_2
+	 {80D1434C-043A-4437-85C3-EA04607DE554}	1.0.0	1.6.0		260		UPGRADE_3
+	 {8A366F02-E1F5-4529-A4D0-6ADDDE219980}	1.0.0	1.6.0		260		UPGRADE_4
+	 {4CD59AAF-92D2-4FDA-99B4-C6CC185B391C}	1.0.0	2.1.0		260		UPGRADE_5
+	 {2D3623CC-0C57-4843-B555-5DDFF04D0092}	1.0.0	1.6.0		260		UPGRADE_6
+	 {714D0545-9208-44E6-A37D-F4C283A7FCC5}	1.0.0	1.6.0		260		UPGRADE_7
+	 {5DE9E5EE-5091-44D7-827A-A55D6EFFF9D1}	1.0.0	1.6.0		260		UPGRADE_8
+	 + SecureCustomProperties-Einträge.
+
+190301	Released.
+

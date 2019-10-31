@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<!-- <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"> -->
+	<?include version.wxi?>
+	<!-- Neu in 15.0.1
+		Es wurde ein neuer Abgleich der Registry-Einträge mit dem Original-Installer von Firefox gemacht.
+		Die Änderungen sind markiert.
+		20120912, Nick Heim
+		Ab V57.0.4: Neuer Abgleich und downtracking der Keys, 20180110, Nick Heim
+		Ab V58.0.2: Erneuter Abgleich und Bug Fixes, 20180214, Nick Heim
+		Ab V61.0: Erneuter Abgleich (StartmenuInternet), 20180628, Nick Heim
+		Ab V63.0.3: Zusätzliche Component für Policies, 20181120, Nick Heim
+	-->
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="RegHKMU0" Guid="{81F297EE-659D-47C7-B413-8670C1DF155A}" KeyPath="yes">
+			<!-- Neu in 15.0.1 -->
+				<RegistryKey Key="Software\Classes\.shtml" Root="HKMU">
+                    <RegistryValue Value="shtmlfile" Type="string" />
+                    <RegistryValue Name="Content Type" Value="text/html" Type="string" />
+			<!-- Neu in 41.0.1 -->
+                    <RegistryValue Name="PerceivedType" Value="text" Type="string" />
+
+				</RegistryKey>
+				<RegistryKey Key="Software\Classes\.xht" Root="HKMU">
+                    <RegistryValue Value="xhtfile" Type="string" />
+                    <RegistryValue Name="Content Type" Value="application/xhtml+xml" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Classes\.xhtml" Root="HKMU">
+                    <RegistryValue Value="xhtmlfile" Type="string" />
+                    <RegistryValue Name="Content Type" Value="application/xhtml+xml" Type="string" />
+                </RegistryKey>
+			<!-- -->
+				<RegistryKey Key="Software\Classes\FirefoxHTML" Root="HKMU">
+                    <RegistryValue Value="Firefox Document" Type="string" />
+                    <RegistryValue Name="FriendlyTypeName" Value="Firefox Document" Type="string" />
+			<!-- Neu in 15.0.1 -->
+                    <RegistryValue Name="EditFlags" Value="2" Type="integer" />
+			<!-- -->
+				</RegistryKey>
+				
+			<!-- Neu in 41.0.1 -->
+				<RegistryKey Key="Software\Classes\FirefoxHTML\shell" Root="HKMU">
+                    <RegistryValue Value="open" Type="string" />
+                </RegistryKey>
+
+                <RegistryKey Key="Software\Classes\FirefoxHTML\DefaultIcon" Root="HKMU">
+                    <RegistryValue Value="[#firefox.exe],1" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxHTML\shell\open\command" Root="HKMU">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -osint -url &quot;%1&quot;" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxHTML\shell\open\ddeexec" Root="HKMU" Action="create" />
+			<!-- Neu in 57.0.4 -->	
+				<RegistryKey Key="Software\Classes\FirefoxHTML-308046B0AF4A39CB" Root="HKMU">
+                    <RegistryValue Value="Firefox Document" Type="string" />
+                    <RegistryValue Name="FriendlyTypeName" Value="Firefox Document" Type="string" />
+                    <RegistryValue Name="EditFlags" Value="2" Type="integer" />
+				</RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxHTML-308046B0AF4A39CB\DefaultIcon" Root="HKMU">
+                    <RegistryValue Value="[#firefox.exe],1" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Classes\FirefoxHTML-308046B0AF4A39CB\shell" Root="HKMU">
+                    <RegistryValue Value="open" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxHTML-308046B0AF4A39CB\shell\open\command" Root="HKMU">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -osint -url &quot;%1&quot;" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Classes\FirefoxHTML-308046B0AF4A39CB\shell\open\ddeexec" Root="HKMU" Action="create">
+                </RegistryKey>
+			<!-- Ende Neu in 57.0.4 -->
+			
+				<RegistryKey Key="Software\Classes\FirefoxURL" Root="HKMU">
+                    <RegistryValue Value="Firefox URL" Type="string" />
+                    <RegistryValue Name="EditFlags" Value="2" Type="integer" />
+                    <RegistryValue Name="FriendlyTypeName" Value="Firefox URL" Type="string" />
+                    <RegistryValue Name="URL Protocol" Value="" Type="string" />
+                </RegistryKey>
+				
+			<!-- Neu in 41.0.1 -->
+                <RegistryKey Key="Software\Classes\FirefoxURL\shell" Root="HKMU">
+                    <RegistryValue Value="open" Type="string" />
+                </RegistryKey>
+			
+                <RegistryKey Key="Software\Classes\FirefoxURL\DefaultIcon" Root="HKMU">
+                    <RegistryValue Value="[#firefox.exe],1" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxURL\shell\open\command" Root="HKMU">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -osint -url &quot;%1&quot;" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxURL\shell\open\ddeexec" Root="HKMU" Action="create" />
+			<!-- Neu in 57.0.4 -->
+				<RegistryKey Key="Software\Classes\FirefoxURL-308046B0AF4A39CB" Root="HKMU">
+                    <RegistryValue Value="Firefox URL" Type="string" />
+                    <RegistryValue Name="EditFlags" Value="2" Type="integer" />
+                    <RegistryValue Name="FriendlyTypeName" Value="Firefox URL" Type="string" />
+                    <RegistryValue Name="URL Protocol" Value="" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Classes\FirefoxURL-308046B0AF4A39CB\DefaultIcon" Root="HKMU">
+                    <RegistryValue Value="[#firefox.exe],1" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxURL-308046B0AF4A39CB\shell" Root="HKMU">
+                    <RegistryValue Value="open" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxURL-308046B0AF4A39CB\shell\open\command" Root="HKMU">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -osint -url &quot;%1&quot;" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="Software\Classes\FirefoxURL-308046B0AF4A39CB\shell\open\ddeexec" Root="HKMU" Action="create">
+                </RegistryKey>				
+			<!-- Ende Neu in 57.0.4 -->		
+			
+            </Component>
+			<!-- Neu in 63.0.3 -->			
+			<Component Id="RegHKLM1" Guid="{20A1B04F-00C8-4BF6-A4F0-5F504B2FB225}">
+                <RegistryKey Key="SOFTWARE\Policies\Mozilla\Firefox" Root="HKLM">
+                    <RegistryValue Name="DisableAppUpdate" Value="1" Type="integer" KeyPath="yes"/>
+                </RegistryKey>
+			</Component>
+            <Component Id="RegHKLM2" Guid="{C5242BBD-B2B5-4CB9-931A-39E7B5D8AD12}" KeyPath="yes">
+                <RegistryKey Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\firefox.exe" Root="HKLM">
+					<RegistryValue Value="[#firefox.exe]" Type="string" />
+                    <RegistryValue Name="Path" Value="[INSTALLDIR]" Type="string" />
+                </RegistryKey>
+			<!-- Startmenu-Internet: Komplette Überarbeitung für 61.0 -->				
+                <RegistryKey Key="SOFTWARE\RegisteredApplications" Root="HKLM">
+                    <RegistryValue Name="FIREFOX.EXE" Value="Software\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\Capabilities" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB" Root="HKLM">
+                    <RegistryValue Value="Mozilla Firefox" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\DefaultIcon" Root="HKLM">
+					<RegistryValue Value="[#firefox.exe],0" Type="string" />
+                </RegistryKey>
+
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\Capabilities" Root="HKLM">
+                    <RegistryValue Name="ApplicationDescription" Value="Firefox delivers safe, easy web browsing. A familiar user interface, enhanced security features including protection from online identity theft, and integrated search let you get the most out of the web." Type="string" />
+                    <RegistryValue Name="ApplicationName" Value="Firefox" Type="string" />
+					<RegistryValue Name="ApplicationIcon" Value="[#firefox.exe],0" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\Capabilities\FileAssociations" Root="HKLM">
+                    <RegistryValue Name=".htm" Value="FirefoxHTML-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name=".html" Value="FirefoxHTML-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name=".shtml" Value="FirefoxHTML-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name=".xht" Value="FirefoxHTML-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name=".xhtml" Value="FirefoxHTML-308046B0AF4A39CB" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\Capabilities\URLAssociations" Root="HKLM">
+                    <RegistryValue Name="ftp" Value="FirefoxURL-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name="http" Value="FirefoxURL-308046B0AF4A39CB" Type="string" />
+                    <RegistryValue Name="https" Value="FirefoxURL-308046B0AF4A39CB" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\Capabilities\StartMenu" Root="HKLM">
+                    <RegistryValue Name="StartMenuInternet" Value="FIREFOX.EXE" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\InstallInfo" Root="HKLM">
+                    <RegistryValue Name="HideIconsCommand" Value="&quot;[#helper.exe]&quot; /HideShortcuts" Type="string" />
+                    <RegistryValue Name="IconsVisible" Value="1" Type="integer" />
+                    <RegistryValue Name="ReinstallCommand" Value="&quot;[#helper.exe]&quot; /SetAsDefaultAppGlobal" Type="string" />
+                    <RegistryValue Name="ShowIconsCommand" Value="&quot;[#helper.exe]&quot; /ShowShortcuts" Type="string" />
+                </RegistryKey>
+			<!-- Neu in 15.0.1 -->
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\shell\open\command" Root="HKLM">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot;" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\shell\properties" Root="HKLM">
+                    <RegistryValue Value="Firefox &amp;Options" Type="string" />
+                </RegistryKey>
+			<!-- Neu in 15.0.1 -->
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\shell\properties\command" Root="HKLM">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -preferences" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\shell\safemode" Root="HKLM">
+                    <RegistryValue Value="Firefox &amp;Safe Mode" Type="string" />
+                </RegistryKey>
+			<!-- Neu in 15.0.1 -->
+                <RegistryKey Key="SOFTWARE\Clients\StartMenuInternet\Firefox-308046B0AF4A39CB\shell\safemode\command" Root="HKLM">
+                    <RegistryValue Value="&quot;[#firefox.exe]&quot; -safe-mode" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Microsoft\MediaPlayer\ShimInclusionList\FIREFOX.EXE" Root="HKLM" Action="create">
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Microsoft\MediaPlayer\ShimInclusionList\plugin-container.exe" Root="HKLM" Action="create">
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox" Root="HKLM">
+                    <RegistryValue Value="$(var.version)" Type="string" />
+                    <RegistryValue Name="CurrentVersion" Value="$(var.version) (en-US)" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox $(var.version)" Root="HKLM">
+                    <RegistryValue Name="GeckoVer" Value="$(var.version)" Type="string" />
+                </RegistryKey>
+			<!-- Neu in 15.0.1 -->
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox $(var.version)\bin" Root="HKLM">
+                    <RegistryValue Name="PathToExe" Value="[#firefox.exe]" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox $(var.version)\extensions" Root="HKLM">
+                    <RegistryValue Name="Components" Value="[components]" Type="string" />
+                    <RegistryValue Name="Plugins" Value="[INSTALLDIR]plugins" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox\$(var.version) (en-US)" Root="HKLM">
+                    <RegistryValue Value="$(var.version) (en-US)" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox\$(var.version) (en-US)\Main" Root="HKLM">
+                    <RegistryValue Name="Install Directory" Value="[INSTALLDIR]" Type="string" />
+			<!-- Neu in 15.0.1 -->
+                    <RegistryValue Name="PathToExe" Value="[#firefox.exe]" Type="string" />
+				</RegistryKey>
+                <RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox\$(var.version) (en-US)\Uninstall" Root="HKLM">
+                    <RegistryValue Name="Description" Value="Mozilla Firefox $(var.version) (x86 en-US)" Type="string" />
+                </RegistryKey>
+			<!-- Neu in 15.0.1 -->
+                <RegistryKey Key="SOFTWARE\mozilla.org\Mozilla" Root="HKLM">
+                    <RegistryValue Name="CurrentVersion" Value="$(var.version)" Type="string" />
+                </RegistryKey>
+
+			<!-- Neu in 41.0.1
+				<RegistryKey Key="SOFTWARE\Mozilla\Mozilla Firefox\TaskBarIDs" Root="HKLM">
+				-->
+			<!-- Neu in 57.0.4 -->
+				<RegistryKey Key="SOFTWARE\Mozilla\Firefox\TaskBarIDs" Root="HKLM">
+                    <RegistryValue Name="[INSTALLDIR]" Value="308046B0AF4A39CB" Type="string" />
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="FirefoxRegistry">
+            <ComponentRef Id="RegHKMU0" />
+            <ComponentRef Id="RegHKLM1" />			
+            <ComponentRef Id="RegHKLM2" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

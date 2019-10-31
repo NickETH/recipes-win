@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest Amazon Coretto JDK 8 x64 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.build.AmazonCorettoJDK8-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Amazon Coretto JDK 8</string>
+        <key>SEARCH_URL</key>
+        <string>https://docs.aws.amazon.com/corretto/latest/corretto-8-ug/downloads-list.html</string>
+        <key>DOWNLOAD_FILE</key>
+        <string>Corretto_JDK8</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>ParentRecipe</key>
+    <string>com.github.NickETH.download.AmazonCorettoJDK8MSI-Win</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>pkg_dir</key>
+                <string>AmazonCorettoJDK_64_%version%_ML</string>
+                <key>folder_list</key>
+                <string>sourceunzipped:release:read:helpers</string>
+				<!--
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+				-->
+			</dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\%DOWNLOAD_FILE%_%PLATFORM%_%version%.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AmazonCorettoJDK_64_%version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+		<!--
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AmazonCorettoJDK_64_%version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% Nick Heim</string>
+				    <key>/j</key>
+                    <string>Amazon Coretto JDK x64 %version% ML</string>
+				    <key>/t</key>
+                    <string>Amazon Coretto JDK x64 %version% ML</string>
+				</dict>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

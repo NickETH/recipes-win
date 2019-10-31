@@ -1,0 +1,936 @@
+<?xml version="1.0"?>
+<project name="Thunderbird64_latest_ML" default="build-all">
+	<!--
+	Setup the environment.
+	Lot of variables (property).
+	-->
+	<include buildfile="global.prop"/>
+	<!--
+	Die folgenden 3 properties werden neu in "global.prop" gesetzt.	
+	<property name="download-component" value="yes" />
+	Hier brauchen wir die originale Versions-Nr wie 20.0 oder 20.0.1
+	<property name="TBVersion" value="60.3.0" />
+	<property name="xpi-maxversion" value="60.*" />
+	-->	
+	<property name="TBVersion" value="${RealVersion}" />
+	<property name="TBexe" value="Thunderbird Setup ${TBVersion}.exe" />
+	<property name="TBmsi" value="ThunderBird_64_${TBVersion}_ML.msi" />
+	<property name="TBdir" value="Mozilla Thunderbird" />
+
+	<property name="shortlang" value="en-US" />
+	<property name="ThunderbirdSRC" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/${shortlang}/Thunderbird Setup ${TBVersion}.exe" />
+	<property name="TBlpDEsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/de.xpi" />
+	<property name="TBlpDExpi" value="de.xpi" />
+	<property name="TBlpFRsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/fr.xpi" />
+	<property name="TBlpFRxpi" value="fr.xpi" />
+	<property name="TBlpITsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/it.xpi" />
+	<property name="TBlpITxpi" value="it.xpi" />
+	<property name="TBlpRMsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/rm.xpi" />
+	<property name="TBlpRMxpi" value="rm.xpi" />
+	<property name="TBdicDESRC" value="https://addons.mozilla.org/firefox/downloads/latest/9360/addon-9360-latest.xpi" />
+	<property name="TBdicDEXPI" value="woerterbuch_deutsch_de_ch_neue_rechtschreibung.xpi" />
+	<property name="TBdicFRSRC" value="https://addons.mozilla.org/firefox/downloads/latest/354872/addon-354872-latest.xpi" />
+	<property name="TBdicFRXPI" value="dictionnaire_francais_classique_reforme_1990.xpi" />
+	<property name="TBdicITSRC" value="https://addons.mozilla.org/firefox/downloads/latest/3053/platform:5/addon-3053-latest.xpi" />
+	<property name="TBdicITXPI" value="dizionario_italiano.xpi" />
+	<property name="ExchCalendarXPI" value="exchangecalendar-v5.0.0-alpha3.xpi" />
+	<property name="LocaleSwitcherXPI" value="locale_switcher-40-fx-tb.xpi" />
+	<!--
+	<property name="LocaleSwitcherSRC" value="https://addons.mozilla.org/firefox/downloads/latest/356/addon-356-latest.xpi" />
+	<property name="LocaleSwitcherXPI" value="locale_switcher.xpi" />
+	<property name="Locale2MUISRC" value="https://addons.mozilla.org/firefox/downloads/latest/5584/platform:5/addon-5584-latest.xpi" />
+	<property name="Locale2MUIXPI" value="Locale2MUI.xpi" />
+	<property name="Locale2MUIXPI" value="Locale2MUI-2.5-fx+tb.xpi" />
+	<property name="GPO4FFextXPI" value="gpo4ETHZ-1.0.1-fx-tb_signed.xpi" />
+	<property name="LightningSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/2313/platform:5/addon-2313-latest.xpi" />
+	<property name="LightningSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest-beta/lightning/platform:5/addon-2313-latest.xpi" />
+	-->
+	<property name="LightningXPI" value="lightning.xpi" />
+	<property name="QuickLocaleSwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/1333/addon-1333-latest.xpi" />
+	<property name="QuickLocaleSwitcherXPI" value="QuickLocaleSwitcher.xpi" />
+	<property name="DictionarySwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/3414/addon-3414-latest.xpi" />
+	<property name="DictionarySwitcherXPI" value="DictionarySwitcher.xpi" />
+	<property name="VCS-SupportSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/4721/addon-4721-latest.xpi" />
+	<property name="VCS-SupportXPI" value="VCS-Support.xpi" />
+	<property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" />
+	<property name="CompactHeaderXPI" value="CompactHeader.xpi" />
+<!--
+	<property name="ExtraFolColSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/9716/addon-9716-latest.xpi" />
+	<property name="ExtraFolColXPI" value="ExtraFolderColumns.xpi" />
+-->
+	<!-- <nant buildfile="Thunderbird_*_ML.build /> -->
+
+	<property name="current.dir" value="${directory::get-current-directory()}" />
+	<property name="project.dir" value="${directory::get-parent-directory(current.dir)}" />
+	<!-- WiX 3 folder -->
+	<property name="wix.dir" value="${path::combine(environment::get-variable('WIX'), 'bin')}" readonly="true" />
+	<!-- Load the WiX3 tasks -->
+	<loadtasks assembly="${wix.dir}\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
+	<!-- Tools folder -->
+	<readregistry property="TOOLS_DIR" key="SOFTWARE\AutoPkg\TOOLS_DIR" hive="CurrentUser" />
+	<echo message="Tools Dir: ${TOOLS_DIR}" />
+	<!-- 7zip path -->
+	<readregistry property="FULL_7Z_PATH" key="SOFTWARE\AutoPkg\7ZIP_PATH" hive="CurrentUser" />
+	<echo message="7zip path: ${FULL_7Z_PATH}" />
+
+    <target name="build-all">
+		<call target="instTBmain" />
+		<call target="installTBlp" />
+
+		<call target="install-Lightning" />
+		<call target="install-LocaleSwitcher" />
+
+		<call target="install-DictionarySwitcher" />
+		<call target="install-VCS-Support" />
+		<call target="install-CompactHeader" />
+		<call target="install-ExchangeCalendar" />
+		<!--
+		<call target="install-TBGPOExt" />
+		<call target="install-Locale2MUI" />		
+		<call target="install-ExtraFolderColumns" />	
+		-->		
+		<call target="TBcandle" />
+		<call target="TBlight" />
+		<call target="PostChanges"/>
+		<call target="GenerateMSTs"/>
+		<call target="disable-download"/>
+    </target>
+
+    <target name="clean">
+        <delete>
+            <fileset>
+                <include name="${TBmsi}"/>
+                <include name="*.wixobj"/>
+				<include name="TB*.wxs"/>
+				<include name=".\Extensions\"/>
+				<include name=".\lightning\"/>
+				<include name="*.zip"/>
+				</fileset>
+		</delete>
+		<delete dir="${TBdir}" />
+	</target>
+	
+	<target name="instTBmain">
+        <!-- 
+            download the Thunderbird main EXE file.
+        -->
+		<property name="DownloadSRC" value="${ThunderbirdSRC}" />
+		<property name="SourceFILE" value="${TBexe}" />
+		<echo message="${ThunderbirdSRC}"/>
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+			<move file="..\sourcepkt\${TBexe}" tofile="..\sourcepkt\Thunderbird Setup ${TBVersion}${shortlang}.exe" overwrite = "true"/>
+		</if>
+
+        <!-- 
+            unzip, install and harvest the Thunderbird main EXE file.
+        -->
+        <exec program="${FULL_7Z_PATH}">
+			<arg value="x" />
+			<arg value="-y" />
+			<arg file="..\sourcepkt\Thunderbird Setup ${TBVersion}${shortlang}.exe" />
+		</exec>
+		<move file="core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi" tofile=".\lightning-enu.zip" overwrite = "true"/>
+		<exec program="C:\Program Files\7-Zip\7z.exe" failonerror="false">
+			<arg value="x" />
+			<arg value="-y" />
+			<arg value="-tzip" />				
+			<arg value="-o.\lightning" />
+			<arg file=".\lightning-enu.zip" />
+		</exec>
+
+		<!--
+		<move todir="lightning">
+			<fileset basedir="core\distribution\extensions">
+				<include name="**/*" />
+			</fileset>
+		</move>
+		
+
+		<move todir="..\sourcepkt\">
+			<fileset basedir=".">
+				<include name="lightning.xpi" />
+			</fileset>
+		</move>		
+
+		<delete dir="lightning" />
+		
+
+		lightning is delivered with thunderbird, but without language packs!
+		We delete this and install the official one from Mozilla Addon...
+		-->
+		<delete dir="core\distribution" />
+		<move todir="${TBdir}">
+			<fileset basedir="core">
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<delete dir="core" />
+		<delete file="setup.exe" />
+        <!-- 
+           Add configuration files
+        -->
+		<copy file="..\sourcepkt\ETH\mozilla.cfg" tofile=".\${TBdir}\mozilla.cfg" />
+		<copy file="..\sourcepkt\ETH\local-settings.js" tofile=".\${TBdir}\defaults\pref\local-settings.js" />
+		<copy file="..\sourcepkt\ETH\prefs.js" tofile=".\${TBdir}\defaults\profile\prefs.js" />
+        <!-- 
+		Ab V60.x setzen wir GPO-Extension durch das GPO-Autostart-Modul
+        -->
+		<copy todir=".\${TBdir}\gpo">
+			<fileset basedir=".\..\sourcepkt\ETH\gpo">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+        <!-- 
+			harvest the main TB files.
+        -->
+		<call target="TB-harv" />
+    </target>
+	<target name="install-Lightning">
+        <!-- 
+		Install and harvest the Lightning Extension.
+		Properties:
+			IN - ExtLightningFiles
+			IN - ThunderbirdSRC
+			IN - download-component
+			OUT - CGextXPI
+			OUT - DownloadSRC
+			OUT - SourceFILE
+			"de fr it rm"
+			<property name="shortlang" value="${LightLang}" />
+		-->
+		<property name="CGextXPI" value="ExtLightningFiles" />
+
+		<property name="SourceFILE" value="${TBexe}" />
+		<foreach item="String" in="de fr it rm" delim=" " property="shortlang">
+			<echo message="${shortlang}" />
+			<property name="DownloadSRC" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/${shortlang}/Thunderbird Setup ${TBVersion}.exe" />
+			<if test="${string::contains(download-component, 'yes')}" >
+				<call target="DL-File" />
+				<move file="..\sourcepkt\${TBexe}" tofile="..\sourcepkt\Thunderbird Setup ${TBVersion}${shortlang}.exe" overwrite = "true"/>
+			</if>
+
+			<!-- 
+				P:\_Projekte\MSI\Thunderbird_60.2.1_ML\sourcepkt>"c:\Program Files\7-Zip\7z.exe" x -tzip "{e2fda1a4-762b-4020-b5ad-a41df1933103}de.xpi" -o.\lightning.deu3 chrome\* -r
+				P:\_Projekte\MSI\Thunderbird_60.2.1_ML\sourcepkt>"c:\Program Files\7-Zip\7z.exe" e "Thunderbird%20Setup%2060.2.1it.exe" -o.\ita core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi"
+			-->
+			<exec program="${FULL_7Z_PATH}">
+				<arg value="e" />
+				<arg value="-y" />
+				<arg file="..\sourcepkt\Thunderbird Setup ${TBVersion}${shortlang}.exe" />
+				<arg value="-o.\" />
+				<arg value="core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi" />
+			</exec>
+			<move file=".\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi" tofile=".\lightning-${shortlang}.zip" overwrite = "true"/>
+			<exec program="C:\Program Files\7-Zip\7z.exe" failonerror="false" >
+				<arg value="x" />
+				<arg value="-tzip" />			
+				<arg file=".\lightning-${shortlang}.zip" />
+				<arg value="-o.\lightning.${shortlang}" />
+				<arg value="chrome\*" />
+				<arg value="-r" />
+			</exec>
+			<move todir=".\lightning\chrome">
+				<fileset basedir=".\lightning.${shortlang}\chrome">
+					<include name="*-${shortlang}\" />
+				</fileset>
+			</move>
+		
+			<delete>
+				<fileset basedir=".\.">
+					<include name="*.${shortlang}\"/>
+					<include name="*-${shortlang}.zip"/>		
+				</fileset>
+			</delete>
+			<!--
+			locale calendar de chrome/calendar-de/locale/de/calendar/
+			locale lightning de chrome/lightning-de/locale/de/lightning/
+							message="${iLine}&#xa;"
+
+			-->
+			<echo
+				file=".\lightning\chrome.manifest"
+				message="locale calendar ${shortlang} chrome/calendar-${shortlang}/locale/${shortlang}/calendar/&#xa;"
+				append="true" 
+			/>
+			<echo
+				file=".\lightning\chrome.manifest"
+				message="locale lightning ${shortlang} chrome/lightning-${shortlang}/locale/${shortlang}/lightning/&#xa;"
+				append="true" 
+			/>
+		</foreach>
+		<!--
+		<call target="install-extension" />
+		-->		
+		<property name="xpi-name" value="{e2fda1a4-762b-4020-b5ad-a41df1933103}" />
+		<property name="xpi-unpack" value="true" />
+		<move todir=".\Extensions\${xpi-name}\${xpi-name}">
+			<fileset basedir=".\lightning\">
+					<include name="**/*" />
+			</fileset>
+		</move>
+		<property name="SourceFILE" value="${LightningXPI}" />
+		<call target="Ext-harv" />
+    </target>
+	
+	<target name="install-QuickLocaleSwitcher">
+        <!-- 
+            Install the Quick Locale Switcher Extension.
+        -->
+		<property name="CGextXPI" value="ExtQuickLocaleSwitcherFiles" />
+		<property name="DownloadSRC" value="${QuickLocaleSwitcherSRC}" />
+		<property name="SourceFILE" value="${QuickLocaleSwitcherXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+        <!--
+		<call target="update-extension-maxversion" />
+        -->
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-DictionarySwitcher">
+        <!-- 
+            Install the Dictionary Switcher Extension.
+        -->
+		<property name="CGextXPI" value="ExtDictionarySwitcherFiles" />
+		<property name="DownloadSRC" value="${DictionarySwitcherSRC}" />
+		<property name="SourceFILE" value="${DictionarySwitcherXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+        <!--
+		<call target="update-extension-maxversion" />
+        -->
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-VCS-Support">
+        <!-- 
+            Install the VCS-Support Extension.
+        -->
+		<property name="CGextXPI" value="ExtVCS_SupportFiles" />
+		<property name="DownloadSRC" value="${VCS-SupportSRC}" />
+		<property name="SourceFILE" value="${VCS-SupportXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+        <!--
+		<call target="update-extension-maxversion" />
+        -->
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-CompactHeader">
+        <!-- 
+            Install the Compact Header Extension.
+        -->
+		<property name="CGextXPI" value="ExtCompactHeaderFiles" />
+		<property name="DownloadSRC" value="${CompactHeaderSRC}" />
+		<property name="SourceFILE" value="${CompactHeaderXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-ExtraFolderColumns">
+        <!-- 
+            Install the Extra Folder Columns Extension.
+        -->
+		<property name="CGextXPI" value="ExtExtraFolColFiles" />
+		<property name="DownloadSRC" value="${ExtraFolColSRC}" />
+		<property name="SourceFILE" value="${ExtraFolColXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="installTBlp">
+        <!-- 
+            Install the Thunderbird DE Langpack file.
+        -->
+		<property name="CGextXPI" value="ExtlpDEFiles" />
+		<property name="DownloadSRC" value="${TBlpDEsrc}" />
+		<property name="SourceFILE" value="${TBlpDExpi}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+
+		<property name="CGextXPI" value="ExtdicDEFiles" />
+		<property name="DownloadSRC" value="${TBdicDESRC}" />
+		<property name="SourceFILE" value="${TBdicDEXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+		
+         <!-- 
+            Install the Thunderbird FR Langpack file.
+        -->
+		<property name="CGextXPI" value="ExtlpFRFiles" />
+		<property name="DownloadSRC" value="${TBlpFRsrc}" />
+		<property name="SourceFILE" value="${TBlpFRxpi}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+
+		<property name="CGextXPI" value="ExtdicFRFiles" />
+		<property name="DownloadSRC" value="${TBdicFRSRC}" />
+		<property name="SourceFILE" value="${TBdicFRXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+
+        <!-- 
+            Install the Thunderbird IT Langpack file.
+        -->
+		<property name="CGextXPI" value="ExtlpITFiles" />
+		<property name="DownloadSRC" value="${TBlpITsrc}" />
+		<property name="SourceFILE" value="${TBlpITxpi}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+
+		<property name="CGextXPI" value="ExtdicITFiles" />
+		<property name="DownloadSRC" value="${TBdicITSRC}" />
+		<property name="SourceFILE" value="${TBdicITXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+
+        <!-- 
+            Install the Thunderbird RM Langpack file.
+        -->
+		<property name="CGextXPI" value="ExtlpRMFiles" />
+		<property name="DownloadSRC" value="${TBlpRMsrc}" />
+		<property name="SourceFILE" value="${TBlpRMxpi}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+	</target>
+	<target name="install-LocaleSwitcher">
+        <!-- 
+            Install the Locale Switcher Extension.
+        -->
+		<property name="CGextXPI" value="ExtLocaleSwitcher" />
+		<property name="SourceFILE" value="${LocaleSwitcherXPI}" />
+        <!--
+		<property name="DownloadSRC" value="${LocaleSwitcherSRC}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		 -->
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+	<target name="install-Locale2MUI">
+        <!-- 
+            Install the Locale2MUI Extension.
+        -->
+		<property name="CGextXPI" value="ExtLocale2MUI" />
+		<property name="DownloadSRC" value="${Locale2MUISRC}" />
+		<property name="SourceFILE" value="${Locale2MUIXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-TBGPOExt">
+        <!-- 
+            Install the GPO Extension Extension.
+        -->
+		<property name="CGextXPI" value="ExtGPO4FF" />
+		<property name="SourceFILE" value="${GPO4FFextXPI}" />
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-ExchangeCalendar">
+        <!-- 
+            Install the Exchange Calendar Extension.
+        -->
+		<property name="CGextXPI" value="ExtExchangeCalendar" />
+		<property name="SourceFILE" value="${ExchCalendarXPI}" />
+		<call target="install-extension" />
+		<call target="Ext-harv" />
+    </target>
+	<target name="install-extension">
+        <!-- 
+		Installs an Extension to its place in the extension folder.
+		Look up the install.rdf and decide the installation procedure.
+		It decides if the XPI has to be unpacked or not and behaves acordingly.
+		Properties:
+			IN - SourceFILE
+			OUT - xpi-unpack
+			OUT - xpi-name
+		-->
+        <exec program="${FULL_7Z_PATH}">
+			<arg value="x" />
+			<arg file="..\sourcepkt\${SourceFILE}" />
+			<arg value="install.rdf" />
+			<arg value="-y" />
+		</exec>
+		<property name="xpi-name" value="" />
+		<property name="xpi-unpack" value="" />
+		<xmlpeek file="install.rdf"
+                xpath="x:RDF/x:Description/@em:unpack"
+                property="xpi-unpack"
+				failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+		</xmlpeek>
+		<if test="${string::get-length(xpi-unpack) == 0}">
+			<xmlpeek file="install.rdf"
+                xpath="x:RDF/x:Description/em:unpack"
+                property="xpi-unpack"
+				failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+			</xmlpeek>
+		</if>
+		<xmlpeek file="install.rdf"
+                xpath="x:RDF/x:Description/@em:id"
+                property="xpi-name"
+				failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+		</xmlpeek>
+		<if test="${string::get-length(xpi-name) == 0}">
+			<xmlpeek file="install.rdf"
+                xpath="x:RDF/x:Description/em:id"
+                property="xpi-name"
+				failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+			</xmlpeek>
+		</if>
+		<if test="${property::exists('xpi-name') and not string::contains(xpi-unpack, 'true')}">
+			<echo message="${xpi-name}"/>
+			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
+		</if>
+		<if test="${string::contains(xpi-unpack, 'true')}" >
+			<!-- 
+				unzip and install the unpacked Extension.
+			-->
+			<echo message="${xpi-name}"/>
+			<exec program="${FULL_7Z_PATH}">
+				<arg value="x" />
+				<arg value="-y" />
+				<arg value="-o.\Extensions\${xpi-name}\${xpi-name}" />
+				<arg file="..\sourcepkt\${SourceFILE}" />
+			</exec>
+			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
+		</if>
+
+		<delete file="install.rdf" />
+    </target>
+	<target name="install-extension-new">
+		<!-- 
+		Installs an Extension to its place in the extension folder.
+		It decides if the XPI has to be unpacked or not and behaves acordingly.
+		Properties:
+			IN - SourceFILE
+			OUT - xpi-unpack
+			OUT - xpi-name
+		-->
+        <exec program="${FULL_7Z_PATH}">
+			<arg value="x" />
+			<arg file="..\sourcepkt\${SourceFILE}" />
+			<arg value="manifest.json" />
+			<arg value="-y" />
+		</exec>
+		<property name="xpi-name" value="" />
+		<property name="xpi-name.file" value="XPI-temp.txt" />
+		<property name="xpi-unpack" value="" />
+
+		<exec program="powershell.exe" workingdir="." verbose="true" output="${xpi-name.file}">
+			<arg line="-NoProfile" />
+			<arg line="-ExecutionPolicy" />
+			<arg line="Bypass" />
+			<arg line="-Command" />
+			<arg line="&#038; ..\helpers\GetXPIVersion.ps1 'manifest.json'" />
+		</exec>
+		<loadfile file="${xpi-name.file}" property="xpi-name" />
+		<property name="xpi-name" value="${string::trim(xpi-name)}" />
+		<!--
+
+		-->
+		<if test="${property::exists('xpi-name') and not string::contains(xpi-unpack, 'true')}">
+
+			<!-- 
+				copy (install) an Extension.
+			-->
+			<echo message="${xpi-name}"/>
+			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
+		</if>
+		<if test="${string::contains(xpi-unpack, 'true')}" >
+			<!-- 
+				unzip (install) an Extension.
+			-->
+			<echo message="${xpi-name}"/>
+			<exec program="${FULL_7Z_PATH}">
+				<arg value="x" />
+				<arg value="-y" />
+				<arg value="-o.\${TBdir}\browser\Extensions\${xpi-name}\${xpi-name}" />
+				<arg file="..\sourcepkt\${SourceFILE}" />
+			</exec>
+			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
+		</if>
+		<delete file="manifest.json" />
+		<delete file="XPI-temp.txt" />
+    </target>
+	
+	<target name="TB-harv">
+
+		<copy
+			file="Prev_Ver_TBfiles.wxs"
+			tofile="Snapshot.xml"
+			overwrite="true"
+		/>
+		<exec program="${wix.dir}\heat.exe" failonerror="false">
+			<arg value="dir" />
+			<arg dir=".\${TBdir}" />
+			<arg value="-gg" />
+			<arg value="-platform" />
+			<arg value="Win64" />			
+			<arg value="-v" />
+			<arg value="-svb6" />
+			<arg value="-sfrag" />
+			<arg value="-srd" />
+			<arg value="-suid" />
+			<arg value="-dr" />
+			<arg value="INSTALLDIR" />
+			<arg value="-cg" />
+			<arg value="ThunderbirdFiles" />
+			<arg value="-var" />
+			<arg value="wix.TBSourceDir" />
+			<arg value="-out" />
+			<arg file="TBfiles.wxs" />
+			<arg value="-t" />
+			<arg file="GUID-Preserve-x64.xslt" />
+		<!--
+		-->
+		</exec>
+    </target>
+	<target name="Ext-harv">
+		<!-- 
+		Harvests the files from an Extension to "TB${SourceFILE}.wxs".
+		Preserves the GUID's from the previous version.
+		It decides if the XPI is unpacked or not and behaves acordingly.
+		Properties:
+			IN - SourceFILE
+			IN - xpi-unpack
+			IN - xpi-name
+			IN - CGextXPI
+			IN - wix.TBExtDir			
+		-->
+		<copy
+			file="Prev_Ver_TB${SourceFILE}.wxs"
+			tofile="Snapshot.xml"
+			overwrite="true"
+		/>	
+		<if test="${not string::contains(xpi-unpack, 'true')}" >
+			<exec program="${wix.dir}\heat.exe">
+				<arg value="file" />
+				<arg file=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+				<arg value="-gg" />
+			<arg value="-platform" />
+			<arg value="Win64" />				
+				<arg value="-sfrag" />
+				<arg value="-srd" />
+				<arg value="-suid" />
+				<arg value="-dr" />
+				<arg value="EXTENSIONS" />
+				<arg value="-cg" />
+				<arg value="${CGextXPI}" />
+				<arg value="-var" />
+				<arg value="wix.TBExtDir" />
+				<arg value="-out" />
+				<arg file="TB${SourceFILE}.wxs" />
+				<arg value="-t" />
+				<arg file="GUID-Preserve-x64.xslt" />				
+			</exec>
+		</if>
+		<if test="${string::contains(xpi-unpack, 'true')}" >
+			<exec program="${wix.dir}\heat.exe">
+				<arg value="dir" />
+				<arg file=".\Extensions\${xpi-name}" />
+				<arg value="-gg" />
+			<arg value="-platform" />
+			<arg value="Win64" />				
+				<arg value="-sfrag" />
+				<arg value="-srd" />
+				<!-- 
+				wir brauchen das Root Dir + Unique identifiers sonst geht nichts.
+				<arg value="-srd" />
+				<arg value="-suid" />
+				-->
+				<arg value="-dr" />
+				<arg value="EXTENSIONS" />
+				<arg value="-cg" />
+				<arg value="${CGextXPI}" />
+				<arg value="-var" />
+				<arg value="wix.TBExtDir" />
+				<arg value="-out" />
+				<arg file="TB${SourceFILE}.wxs" />
+				<arg value="-t" />
+				<arg file="GUID-Preserve-x64.xslt" />				
+			</exec>
+			<move todir=".\${TBdir}\Extensions\${xpi-name}">
+				<fileset basedir=".\Extensions\${xpi-name}\${xpi-name}">
+					<include name="**/*" />
+				</fileset>
+			</move>
+			<delete dir=".\Extensions\${xpi-name}" />
+		</if>
+	</target>
+
+	<target name="DL-File">
+		<!-- 
+			Download a file from the webserver.
+		-->
+		<get src="${DownloadSRC}" dest="..\sourcepkt\${SourceFILE}" />
+	</target>
+	
+	<target name="TBlight">
+        <!-- 
+            Builds (link) the Thunderbird Project
+       -->
+		<property name="quote" value='"' />
+		<property name="Current.Dir" value="${directory::get-current-directory()}" />
+
+		<property name="lightTBSourceDirVAR" value="${'-dTBSourceDir=' + quote + Current.Dir + '\' + TBdir + quote}" />
+		<echo message="${lightTBSourceDirVAR}"/>
+
+		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\extensions' + quote}" />
+		<echo message="${lightTBExtDirVAR}"/>
+
+		<property name="lightTBSearchDirVAR" value="${'-dTBSearchDir=' + quote + Current.Dir + '\' + TBdir + '\searchplugins' + quote}" />
+		<echo message="${lightTBSearchDirVAR}"/>
+
+        <!-- 
+			
+		-->
+		<light
+			exedir="${wix.dir}"
+			out="${TBmsi}"
+			warningsaserrors="false"
+			suppressices="ICE43;ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
+			cultures="en-us"
+			extensions="WixUIExtension"
+			rebuild="true"
+			suppresspdb="true">
+			<!-- Specify additional options -->
+			<arg line="${lightTBSourceDirVAR}" />
+			<arg line="${lightTBExtDirVAR}" />
+			<!--
+			<arg line="${lightTBSearchDirVAR}" />
+			 -->
+			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
+			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
+			<sources basedir=".\.">
+				<include name="Thunderbird_64_ML.wixobj" />
+				<include name="ThunderbirdReg_64_ML.wixobj" />
+				<include name="TB*.wixobj" />
+			</sources>
+		</light>
+    </target>
+	<target name="TBcandle">
+        <!-- 
+            Compiles the Thunderbird Project files
+        -->
+		<candle
+			exedir="${wix.dir}"
+			out=".\"
+			rebuild="true"
+			extensions="WixUIExtension;WixUtilExtension"
+			warningsaserrors="false">
+			<arg line="-sw1044" />
+			<arg line="-arch" />
+			<arg line="x64" />			
+			<sources basedir=".">
+				<include name="Thunderbird_64_ML.wxs" />
+				<include name="ThunderbirdReg_64_ML.wxs" />
+				<include name="TB*.wxs" />
+			</sources>
+		</candle>
+    </target>
+	<target name="update-extension-maxversion">
+		<!-- 
+            Updates the MaxVersion String in a extensions 'Install.rdf' file.
+        -->
+        <exec program="${FULL_7Z_PATH}">
+			<arg value="x" />
+			<arg file="..\sourcepkt\${SourceFILE}" />
+			<arg value="install.rdf" />
+			<arg value="-y" />
+		</exec>
+		<xmlpoke file="install.rdf"
+				xpath="x:RDF/x:Description/@em:targetApplication/x:Description/em:maxVersion"
+                value="${xpi-maxversion}"
+				failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+		</xmlpoke>
+		<xmlpoke file="install.rdf"
+			xpath="x:RDF/x:Description/em:targetApplication/x:Description/em:maxVersion"
+			value="${xpi-maxversion}"
+			failonerror = "false">
+                <namespaces>
+                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
+	            </namespaces>
+		</xmlpoke>
+		<exec program="${FULL_7Z_PATH}">
+			<arg value="u" />
+			<arg file="..\sourcepkt\${SourceFILE}" />
+			<arg value="install.rdf" />
+			<arg value="-y" />
+		</exec>
+		<delete file="install.rdf" />
+		<echo message="${SourceFILE} fuer Versionen bis: ${xpi-maxversion} aktualisiert" />
+    </target>
+	<target name="TBlight-DE">
+        <!-- 
+            Builds (link) the Thunderbird Project
+ 		<property name="lightTBSourceDirVAR1" value="'${path::get-full-path(${TBdir})}'" />
+		<echo message="${lightTBSourceDirVAR1}"/>
+       -->
+		<property name="quote" value='"' />
+		<property name="Current.Dir" value="${directory::get-current-directory()}" />
+
+		<property name="lightTBSourceDirVAR" value="${'-dTBSourceDir=' + quote + Current.Dir + '\' + TBdir + quote}" />
+		<echo message="${lightTBSourceDirVAR}"/>
+
+		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\extensions' + quote}" />
+		<echo message="${lightTBExtDirVAR}"/>
+
+		<property name="lightTBSearchDirVAR" value="${'-dTBSearchDir=' + quote + Current.Dir + '\' + TBdir + '\searchplugins' + quote}" />
+		<echo message="${lightTBSearchDirVAR}"/>
+
+        <!-- 
+		<property name="lightCHSearchDirVAR" value="${'-dTBSearchDir=' + quote + directory::get-parent-directory(Current.Dir) + '\sourcepkt\Search_CH' + quote}" />
+		<echo message="${lightCHSearchDirVAR}"/>
+		        -->
+		<light
+			exedir="${wix.dir}"
+			out="DE-${TBmsi}"
+			warningsaserrors="false"
+			suppressices="ICE43;ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
+			cultures="de-de;fr-fr;it-it"
+			extensions="WixUIExtension"
+			rebuild="true"
+			suppresspdb="true">
+			<!-- Specify additional options -->
+			<arg line="${lightTBSourceDirVAR}" />
+			<arg line="${lightTBExtDirVAR}" />
+			<!--
+			<arg line="${lightTBSearchDirVAR}" />
+			 -->
+			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
+			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
+			<sources basedir=".\.">
+				<include name="Thunderbird_64_ML.wixobj" />
+				<include name="ThunderbirdReg_64_ML.wixobj" />
+				<include name="TB*.wixobj" />
+			</sources>
+		</light>
+    </target>
+		<target name="disable-download">
+		<!--
+		Setzt das Attribut "download-component" in "global.prop" auf "no"
+		Damit werden beim naechsten Build keine Files mehr heruntergeladen.
+		Notwendige Properties:
+		keine
+		-->
+		<xmlpoke file="global.prop"
+				xpath="project/property[@name='download-component']/@value"
+                value="no"
+				failonerror = "false">
+		</xmlpoke>
+	</target>
+	<target name="PostChanges">
+        <!-- 
+		Move the MSI File to testmsi
+		Set the readonly attribute on the MSI File
+		Notwendige Properties:
+			IN - FFVersion
+			IN - PackageVersion
+        -->
+		<move file="${TBmsi}" tofile="..\release\Thunderbird_64_${PackageVersion}_ML.msi" overwrite = "true"/>
+		<attrib file="..\release\Thunderbird_64_${PackageVersion}_ML.msi" readonly="true" />
+    </target>
+	<target name="GenerateMSTs">
+        <!-- 
+		Erstellt die Transforms fuer unterschiedliche Beduerfnisse.
+		Notwendige Properties:
+			IN - ShortVersion
+			IN - PackageVersion
+		-->
+		<fileset id="MSTFiles" basedir="..\helpers">
+			<include name="*.mst"/>
+			<exclude name="*GP.mst"/>
+		</fileset>
+		<foreach item="File" property="fullpath">
+			<in>
+				<items refid="MSTFiles" />
+			</in>
+			<do>
+				<property name="MSTFileName" value="${path::get-file-name(fullpath)}" />
+				<echo message="Working on: ${MSTFileName}" />
+				<property name="MSTFileNameShort" value="${string::substring(MSTFileName, 0, (string::get-length(MSTFileName) - 8))}" />
+
+				<copy file="..\release\Thunderbird_64_${PackageVersion}_ML.msi" tofile="..\helpers\Thunderbird_64_${MSTFileNameShort}.msi" overwrite = "true"/>
+				<attrib file="..\helpers\Thunderbird_64_${MSTFileNameShort}.msi" readonly="false" />
+	    
+				<exec program="${TOOLS_DIR}\msitran.exe">
+					<arg value="-a" />
+					<arg file="..\helpers\${MSTFileName}" />
+					<arg file="..\helpers\Thunderbird_64_${MSTFileNameShort}.msi" />
+				</exec>
+				<delete file="..\helpers\${MSTFileName}" />
+				<exec program="${TOOLS_DIR}\msitran.exe">
+					<arg value="-g" />
+					<arg file="..\release\Thunderbird_64_${PackageVersion}_ML.msi" />
+					<arg file="..\helpers\Thunderbird_64_${MSTFileNameShort}.msi" />
+					<arg file="..\release\${MSTFileNameShort}${ShortVersion}.mst" />
+				</exec>
+				<delete file="..\helpers\Thunderbird_64_${MSTFileNameShort}.msi" />
+			</do>
+		</foreach>
+	</target>
+</project>

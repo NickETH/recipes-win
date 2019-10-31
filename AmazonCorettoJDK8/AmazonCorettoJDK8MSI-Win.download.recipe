@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Amazon Coretto JDK 8 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.download.AmazonCorettoJDK8MSI-Win</string>
+    <key>Input</key>
+    <dict>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+				<string>(?P&lt;msi_dl_link&gt;(https).*?(corretto)-(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+)\.(?P&lt;ver_build&gt;[0-9]+).*x64\.msi)(?:" target)</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%%ver_majorminor%%ver_minor%%ver_build%</string>
+                <key>rename_var</key>
+                <string>version_string</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%.%ver_majorminor%.%ver_minor%.%ver_build%</string>
+                <key>rename_var</key>
+                <string>version</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>%DOWNLOAD_FILE%_%PLATFORM%_%version%.msi</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+<!--        
+-->
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Amazon Services LLC, OU=Software Services, O=Amazon Services LLC, L=Seattle, S=Washington, C=US</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>%version%</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -1,0 +1,13 @@
+FFfiles.wxs
+FFadblock.xpi.wxs
+FFde.xpi.wxs
+FFdictionnaire_francais_classique_reforme_1990.xpi.wxs
+FFdizionario_italiano.xpi.wxs
+FFfiles.wxs
+FFfr.xpi.wxs
+FFit.xpi.wxs
+FFnoscript.xpi.wxs
+FFrm.xpi.wxs
+FFSearchplug-CH.wxs
+FFSearchplug-ETH.wxs
+FFwoerterbuch_deutsch_de_ch_neue_rechtschreibung.xpi.wxs

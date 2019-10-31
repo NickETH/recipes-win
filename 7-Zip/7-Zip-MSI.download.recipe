@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest 7-Zip MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.7-Zip-MSI</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>7-Zip</string>
+        <key>SEARCH_URL_MSI</key>
+		<!-- https://sourceforge.net/projects/sevenzip/files/7-Zip/19.00/7z1900-x64.msi/download -->
+		<string>(?P&lt;msi_dl_link&gt;https://sourceforge\.net/projects/sevenzip/files/7-Zip/(?P&lt;version&gt;[0-9]+\.[0-9]+)/7z[0-9]+-x64\.msi/download)</string>
+		<key>DOWNLOAD_FILE</key>
+        <string>7-Zip</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://sourceforge.net/api/file/index/project-id/14481/rss</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_URL_MSI%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+				<string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>%NAME%.msi</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

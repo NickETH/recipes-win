@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+  <!-- Created on Tue, 26 Jan 2010 09:24:11 GMT -->
+  <ShortName>ETH-Tel EN</ShortName>
+  <Description>People Search @ ETHZ</Description>
+  <Url type="text/html" method="get" template="https://www.bi.id.ethz.ch/personensuche/personenListe.view?lang=en&amp;order=NAME&amp;schnellSuche={searchTerms}"/>
+  <Image width="16" height="16">data:image/x-icon;base64,R0lGODlhEAAQAIABACpqs////yH5BAEAAAEALAAAAAAQABAAAAInjI+pBrDbHmrUvVohznPjGThiGFqMx5VoOrYl6IomGb9HLd9rKiUFADs=</Image>
+  <moz:SearchForm>https://www.bi.id.ethz.ch/personensuche/personenFormular.view?lang=en</moz:SearchForm>
+  <Url type="application/opensearchdescription+xml" rel="self" template="http://mycroft.mozdev.org/updateos.php/id0/.xml"/>
+  
+</OpenSearchDescription>

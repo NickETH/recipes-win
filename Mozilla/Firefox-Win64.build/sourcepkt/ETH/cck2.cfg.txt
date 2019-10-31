@@ -1,0 +1,83 @@
+// Autoconfig file written by CCK2
+lockPref("browser.startup.homepage_override.mstone", "ignore");
+lockPref("extensions.shownSelectionUI", true);
+lockPref("extensions.autoDisableScopes", 11);
+lockPref("plugins.hide_infobar_for_outdated_plugin", false);
+lockPref("xpinstall.signatures.required", false);
+lockPref("app.update.silent", true);
+lockPref("app.update.service.enabled", false);
+defaultPref("intl.locale.requested","");
+defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=www.ethz.ch");
+pref("browser.search.widget.inNavBar", true);
+pref("browser.rights.3.shown", true);
+pref("toolkit.telemetry.enabled", false);
+pref("toolkit.telemetry.prompted", 2);
+pref("browser.safebrowsing.appRepURL","");
+pref("security.tls.version.min", 1);
+pref("plugin.state.nppdf", 2);
+pref("plugin.state.np-mswmp", 2);
+pref("browser.selfsupport.url","");
+pref("browser.search.widget.inNavBar", true);
+pref("extensions.adblockplus.currentVersion", "");
+var config = {
+  "cckVersion": "2.2.9",
+  "name": "ETHZ ID",
+  "description": "Custom config 3",
+  "version": "2.7",
+  "extension": {
+    "id": "ethz-cck@id.ethz.ch",
+    "name": "ETHZ ID"
+  },
+  "noWelcomePage": true,
+  "noUpgradePage": true,
+  "displayMenuBar": true,
+  "dontCheckDefaultBrowser": true,
+  "dontUseDownloadDir": false,
+  "dontRememberPasswords": false,
+  "noMasterPassword": false,
+  "disableCrashReporter": true,
+  "disableTelemetry": true,
+  "disableFirefoxHealthReportUpload": true,
+  "disableFirefoxHealthReport": true,
+  "disableFirefoxUpdates": true,
+  "disableWebApps": true,
+  "disableHello": true,
+  "disableSharePage": true,
+  "disableHeartbeat": true,
+  "disablePocket": true,
+  "id": "ch.ethz.id.custom-config-3",
+  "certs": {
+    "ca": [
+      {
+        "url": "resource://cck2_ch.ethz.id.custom-config-3/certs/root.cer",
+        "trust": "CT,CT,CT"
+      },
+      {
+        "url": "resource://cck2_ch.ethz.id.custom-config-3/certs/class3.cer",
+        "trust": "CT,CT,CT"
+      }
+    ]
+  }
+};
+var io = Components.classes["@mozilla.org/network/io-service;1"]
+                   .getService(Components.interfaces.nsIIOService);
+var resource = io.getProtocolHandler("resource")
+                 .QueryInterface(Components.interfaces.nsIResProtocolHandler);
+var greDir = Components.classes["@mozilla.org/file/directory_service;1"]
+                       .getService(Components.interfaces.nsIProperties)
+                       .get("GreD", Components.interfaces.nsIFile);
+var cck2ModuleDir = greDir.clone();
+cck2ModuleDir.append("cck2");
+cck2ModuleDir.append("modules");
+var cck2Alias = io.newFileURI(cck2ModuleDir);
+resource.setSubstitution("cck2", cck2Alias);
+var configModuleDir = greDir.clone();
+configModuleDir.append("cck2");
+configModuleDir.append("resources");
+var configAlias = io.newFileURI(configModuleDir);
+resource.setSubstitution("cck2_ch.ethz.id.custom-config-3", configAlias);
+Components.utils.import("resource://cck2/CCK2.jsm");
+CCK2.init(config, "ä"[0], "ä");
+Components.utils.import("resource://cck2/gpo.jsm");
+GPO.onLoad();
+

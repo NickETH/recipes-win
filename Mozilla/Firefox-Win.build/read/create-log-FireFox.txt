@@ -1,0 +1,189 @@
+171126	Firefox ab Version 57.0 wurde komplett umgebaut.
+	Der Browser ist mit Multi-Threading sehr viel schneller geworden.
+	Die extremste Veränderung ist aber die Aufgabe von XUL-basierten Extensions.
+	Es werden nur noch auf Webextensions basierende Erweiterungen akzeptiert.
+
+	Dies hat für die ETHZ-Distribution einschneidende Konsequenzen.
+	Denn die Features Multi-Language und GPO-Preferences basierten auf XUL-Extensions.
+
+	Multi-Language konnte teilweise wieder hergestellt werden, indem Mozilla die Funktion "intl.locale.matchOS" in Windows gefixt hat.
+	Für eine Extension, die eine Menü-basierte Sprachumschaltung ermöglicht, wurde bei Mozilla ein Feature-Request eröffnet.
+	Siehe: https://bugzilla.mozilla.org/show_bug.cgi?id=1352884
+	Ab FF59 nochmals neu: https://groups.google.com/forum/#!topic/firefox-dev/_qtfIyuXmYU
+
+	Die GPO-Extension konnte 1:1 in Autoconfig verlagert werden! Somit ist diese Funktionalität auch ab FF 57 vorhanden.
+
+	Die wichtigen Extensions NoScript und AdblockPlus sind inzwischen als WE-Extensions erhältlich und im neuen Paket dabei.
+
+	Das ETHZ-Firefox Paket für Windows wird mit folgenden Tools erstellt:
+	NANT als XML-basiertes Make-Tool.
+	WIX als XML-basiertes Tool, um MSI-Pakete zu generieren.
+	Powershell, um einzelne Tasks zu erledigen.
+	CCK2 von Mike Kaply, siehe https://mike.kaply.com/2017/11/15/firefox-quantum-and-cck2/
+			https://github.com/mkaply/cck2wizard
+
+	- Features anpassen.
+	- Firstrun für Extensions abstellen.
+	- Default Whitelist für Noscript.
+
+190401	FF 66.0.2 https://www.mozilla.org/en-US/firefox/66.0.2/releasenotes/
+		
+	Download von benötigten Paketen:
+	http://ftp.mozilla.org/pub/firefox/releases/66.0.2/win32/en-US/Firefox%20Setup%2066.0.2.exe
+	http://ftp.mozilla.org/pub/firefox/releases/66.0.2/win32/xpi/de.xpi
+	http://ftp.mozilla.org/pub/firefox/releases/66.0.2/win32/xpi/fr.xpi
+	http://ftp.mozilla.org/pub/firefox/releases/66.0.2/win32/xpi/it.xpi
+	http://ftp.mozilla.org/pub/firefox/releases/66.0.2/win32/xpi/rm.xpi
+
+	https://addons.mozilla.org/firefox/downloads/file/121288/worterbuch_deutsch_de_ch_neue_rechtschreibung-20110525-tb+fx+fn+sm.xpi
+	https://addons.mozilla.org/firefox/downloads/file/117991/dictionnaire_francais_classique_reforme_1990-4.1-tb+sm+fx+fn.xpi
+	https://addons.mozilla.org/firefox/downloads/file/118586/dizionario_italiano-3.3.1-tb+fx+sm.xpi
+
+	Noscript: 	https://addons.mozilla.org/en-US/firefox/downloads/latest/722/
+	AdblockPlus:	https://addons.mozilla.org/firefox/downloads/latest/1865/
+
+
+	Extrahieren von Firefox Setup 66.0.2.exe mit 7-zip nach \wixproject
+
+	Firefox 66.0.2 komplett installieren. Wird nur noch für die Registry gebraucht, -->aus NSIS-File auslesen!
+	Mit FF57.0.4 wurde ein neuer Registry-Abgleich gemacht. Siehe Wix-Reg-File.
+
+	Die folgenden Extensions global installiert:
+	Zuerst die Extensions auf Kompatibilität mit V57.x (WE) überprüfen.
+	Die Installation von Extensions hat wieder geändert. 
+	Jetzt gibt es 2 Arten von Installationen.
+	Als neuer Standard wird das XPI-File in den Extension-Folder gelegt, das ist alles. 
+	Wichtig: Der Filename muss em:id von Install.rdf sein!
+	Als 2. Variante wird die Extension als Verzeichnis ausgepackt, wie in früheren Versionen.
+	Wenn dies notwendig ist, wird in Install.rdf 'unpack' auf true gesetzt.
+	<em:unpack>true</em:unpack>
+	WE-Extensions haben neu ein manifest.json file, welche die Settings enthält!
+	applications.gecko.id
+
+	Language_Pack_DEU
+	..\sourcepkt\de.xpi
+	..\sourcepkt\worterbuch_deutsch_de_ch_fur_die_rechtschreibprufung_in_mozilla_produkten_mit_hunspell_unterstutzung-20110321-fx+tb+sm+fn.xpi
+	Language_Pack_FRA
+	..\sourcepkt\fr.xpi
+	..\sourcepkt\dictionnaire_francais_classique_reforme_1990-4.0.3-tb+fx+sm.xpi
+	Language_Pack_ITA
+	..\sourcepkt\it.xpi
+	..\sourcepkt\dizionario_italiano-3.3.2-tb+fx+sm.xpi
+	Language_Pack_RUM
+	..\sourcepkt\rm.xpi
+
+	Security_Tools installieren:
+	..\sourcepkt\noscript-10.1.9.9.xpi
+;	..\sourcepkt\sslblacklist-4.0.32.xpi"
+
+	
+	Adblock Plus installieren:
+	..\sourcepkt\adblock_plus-3.3.1.xpi
+
+;	Windows Media Player Extension installieren:
+;	..\sourcepkt\wmpff.xpi
+
+
+	Folgende Dateien in Firefox Ordner kopiert:
+	Firefox.admx.zip
+	Firefox.adm.zip
+	mozilla.cfg
+
+	Feature: ETH_Search_Tools
+	In sprachspezifischen Unterverzeichnissen:
+	eth-telde.xml
+	nebisde.xml
+	swissbibde.xml
+	eth-telen.xml
+	nebisen.xml
+	swissbiben.xml
+	nebisfr.xml
+	swissbibfr.xml
+	swissbibit.xml
+
+	Feature: Swiss_Search_Tools
+	In sprachspezifischen Unterverzeichnissen:
+	anibisde.xml
+	ricardochde.xml
+	toppreisechde.xml
+	localen.xml
+	toppreisechen.xml
+	anibisfr.xml
+	localfr.xml
+	ricardochfr.xml
+	toppreisechfr.xml
+	anibisit.xml
+	localit.xml
+
+	Konfiguration wird mit CCK2 von Mike Kaply gemacht.
+	Version 2.2.9
+
+	Danach in .\Mozilla Firefox\defaults\pref das File: autoconfig.js erstellen.
+	Es muss diese Zeile enthalten:
+	pref("general.config.filename", "cck2.cfg");
+
+	Preferences siehe cck2.cfg
+
+	cck.cfg.txt mit Byteshift 13 verschlüsseln (BytShifter.ps1-->helperfiles) und cck2.cfg generieren.
+	http://home.comcast.net/~dabbink/dabbink/ByteShifter.htm
+	cck2.cfg in .\Mozilla Firefox\ einfügen.
+
+
+	Die folgenden Zeilen in cck2.cfg.txt einfügen oder kontrollieren:
+	Diese schalten den Firstrun der entsprechenden Extensions ab.
+	lockPref("app.update.auto", false);
+	lockPref("app.update.enabled", false);
+	lockPref("browser.startup.homepage_override.mstone", "ignore");
+	lockPref("extensions.update.enabled", false);
+	lockPref("extensions.shownSelectionUI", true);
+	lockPref("extensions.autoDisableScopes", 11);
+	lockPref("plugins.hide_infobar_for_outdated_plugin", false);
+	lockPref("xpinstall.signatures.required", false);
+	lockPref("app.update.silent", true);
+
+	lockPref("app.update.service.enabled", false);
+
+	defaultPref("intl.locale.requested","");
+	defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=www.ethz.ch");
+
+	pref("browser.search.widget.inNavBar", true);
+	pref("browser.rights.3.shown", true);
+	pref("toolkit.telemetry.enabled", false);
+	pref("toolkit.telemetry.prompted", 2);
+	pref("browser.safebrowsing.appRepURL","");
+	pref("security.tls.version.min", 1);
+	pref("plugin.state.nppdf", 2);
+	pref("plugin.state.np-mswmp", 2);
+	pref("browser.selfsupport.url","");
+	pref("browser.search.widget.inNavBar", true);
+	pref("extensions.adblockplus.currentVersion", "");
+	
+	  "noWelcomePage": true,
+	  "noUpgradePage": true,
+	  "displayMenuBar": true,
+	  "dontCheckDefaultBrowser": true,
+	  "dontUseDownloadDir": false,
+	  "dontRememberPasswords": false,
+	  "noMasterPassword": false,
+	  "disableCrashReporter": true,
+	  "disableTelemetry": true,
+	  "disableFirefoxHealthReportUpload": true,
+	  "disableFirefoxHealthReport": true,
+	  "disableFirefoxUpdates": true,
+	  "disableWebApps": true,
+	  "disableHello": true,
+	  "disableSharePage": true,
+	  "disableHeartbeat": true,
+	  "disablePocket": true,
+
+	Noscript Default Whitelist wird im Profil in storage-sync.sqlite gespeichert.
+	storage-sync.sqlite wird offline in SQLiteStudio geöffnet.
+	Danach auf Tabellen-collection_data-record gehen (Doppelklick) und Data / Formularansicht wählen.
+	Dann kann der Inhalt von record editiert werden.
+	storage-sync.sqlite wird in ein neues Profil mit der Default Profile Funktion von CCK2 kopiert.
+	Diese musste leicht abgeändert werden, da wird das Lookup-Property ("browser.startup.homepage_override.mstone") locken.
+	Deshalb wird das folgende Property für diesen Zweck vewendet: "browser.migration.version"
+
+	WIX-Mondo Dialog eingeschaltet. Die Grafiken von Wise-Neptun-Themes eingebunden.
+
+190423	Released v66.0.2,  Build 1

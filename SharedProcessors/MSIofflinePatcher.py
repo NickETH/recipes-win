@@ -4,13 +4,17 @@
 #
 # Created by Nick Heim (heim)@ethz.ch) on 2019-04-12.
 #
-# Apply a patch file to an MSI offline
+# Apply a patch file to an MSI offline or compact (rebuild) an MSI-file.
+# Compress an uncompressed MSI installation into a CAB-file and embed it into the MSI-file, if necessary.
 # Create folders, copy needed files from repository and/or previous build.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 # 20190520 Nick Heim: Changed the creation of "new_msi_path" right before patching.
 #					Check explicitly for "embed_cab" and "new_packcode" for boolean 'True'
 #					Added the cab_dir variable to explicit set the location of the new cabfile.
 # 20190522 Nick Heim: Added the checkbool function to handle flag/bool checking more loosely.
+# 20190702 Nick Heim: Added the compress only function (no patching). Bugfix on 'checkbool'
+# 20190815 Nick Heim: Added the compact function.
+# 20190823 Nick Heim: Fixed the patching function.
 
 import os
 import sys
@@ -58,6 +62,8 @@ def msi_suminfo_get(filepath, propery, type):
 #https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
 def checkbool(v):
     # makes checking a bool argument a lot easier...
+    if isinstance(v, bool):
+       return v
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
     elif v.lower() in ('no', 'false', 'f', 'n', '0'):
@@ -78,8 +84,13 @@ class MSIofflinePatcher(Processor):
             "description": "Path to the MSI-file, relative to pkg_dir, required",
         },
         "msp_path": {
-            "required": True,
-            "description": "Path to the MSP-file, relative to pkg_dir, required",
+            "required": False,
+            "description": "Path to the MSP-file, relative to pkg_dir, omit for cabs in or compress only",
+        },
+        "compact_msi": {
+            "default": False,
+            "required": False,
+            "description": "Compact the MSI-file",
         },
         "adm_msi_path": {
             "required": True,
@@ -120,7 +131,6 @@ class MSIofflinePatcher(Processor):
 
         pkg_dir_abs = self.env.get('pkg_dir_abs')
         msi_file = os.path.join(pkg_dir_abs, self.env.get('msi_path'))
-        msp_file = os.path.join(pkg_dir_abs, self.env.get('msp_path'))
         adm_msi_path = os.path.join(pkg_dir_abs, self.env.get('adm_msi_path'))
         new_msi_path = os.path.join(pkg_dir_abs, self.env.get('new_msi_path'))
 
@@ -142,13 +152,43 @@ class MSIofflinePatcher(Processor):
         except:
             if ignore_errors != 'True':
                 raise
-        shutil.copy(adm_msi_path, new_msi_path)
-        cmd_patch = [msiexec, '/p', msp_file, '/a', new_msi_path, target_dir, '/qn',]
-        try:
-            Output = subprocess.check_output(cmd_patch)
-        except:
-            if ignore_errors != 'True':
-                raise
+        if "compact_msi" in self.env:
+            compact_msi = self.env.get('compact_msi')
+            if checkbool(compact_msi):
+                msi_temp = os.path.join(pkg_dir_abs, 'temp')
+                if not os.path.isdir(msi_temp):			        
+                    os.mkdir(msi_temp)
+                #assembly_path = r"C:\Program Files (x86)\WiX Toolset v3.14\SDK"
+                sys.path.append(self.env['DTF_PATH'])
+                import clr
+                clr.AddReference("Microsoft.Deployment.WindowsInstaller")
+                from Microsoft.Deployment.WindowsInstaller import Database
+                from Microsoft.Deployment.WindowsInstaller import DatabaseOpenMode
+                tmode = DatabaseOpenMode.ReadOnly
+                try:
+                   WIdb = Database(adm_msi_path, tmode)
+                   WIdb.ExportAll(msi_temp)
+                   WIdb.Dispose()
+                except:
+                   pass
+                print >> sys.stdout, "end of export"
+                print >> sys.stdout, "end of export"		
+                # Create a new MSI-file.
+                tmode = DatabaseOpenMode.CreateDirect
+                WIdbnew = Database(new_msi_path, tmode)
+                WIdbnew.ImportAll(msi_temp)
+                WIdbnew.Dispose()
+            else:
+                shutil.copy(adm_msi_path, new_msi_path)
+
+        if {"msp_path"}.issubset(self.env):
+            msp_file = os.path.join(pkg_dir_abs, self.env.get('msp_path'))
+            cmd_patch = [msiexec, '/p', msp_file, '/a', new_msi_path, target_dir, '/qn',]
+            try:
+                Output = subprocess.check_output(cmd_patch)
+            except:
+                if ignore_errors != 'True':
+                    raise
         
         if {"new_msi_path", "cab_file"}.issubset(self.env):
             cab_file = self.env.get('cab_file')

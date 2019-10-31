@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- Hier brauchen wir die originale Versions-Nr wie 20.0 oder 20.0.1 -->
+  <?define version="66.0.2"?>
+  <?define upgradeversion="66.0.2"?>
+  <?define Productcode="{1F891EBB-88AF-45B0-89A9-880AFFEB1DCD}"?>
+  <?define ETHZBuildNr="1"?>
+</Include>

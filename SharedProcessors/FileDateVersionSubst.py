@@ -24,6 +24,7 @@
 import os
 import re
 import time
+import sys
 from autopkglib import Processor, ProcessorError
 
 
@@ -58,9 +59,13 @@ class FileDateVersionSubst(Processor):
         try:
             with open(self.env['file_path'], "r") as fileref:
                 content = fileref.read()
-            content_new = re.sub('[^0][1-2][0-9][0-1][0-9][0-3][0-9](?=[^\d])', us_date, content, flags = re.M)
+            # content_new = re.sub('[^0][1-2][0-9][0-1][0-9][0-3][0-9](?=[^\d])', us_date, content, flags = re.M)
+            # content_new = re.sub('(?<=\s)(19|20|21)[0-1][0-9][0-3][0-9](?!\d)', us_date, content, flags = re.M)
+            content_new = re.sub('(?:\s)[1-2][0-9][0-1][0-9][0-3][0-9](?!\d)', us_date, content, flags = re.M)
+            # print >> sys.stdout, "short date %s" % content_new
             content = content_new
-            content_new = re.sub('[2][0][1-2][0-9][0-1][0-9][0-3][0-9](?=[^\d])', us_date_lng, content, flags = re.M)
+            content_new = re.sub('20[1-2][0-9][0-1][0-9][0-3][0-9](?=[^\d])', us_date_lng, content, flags = re.M)
+            # print >> sys.stdout, "long date %s" % content_new
             if {"new_ver", "re_pattern"}.issubset(self.env):
                 new_ver = self.env.get('new_ver')
                 re_pattern = self.env.get('re_pattern')

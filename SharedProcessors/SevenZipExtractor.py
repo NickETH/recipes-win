@@ -8,6 +8,7 @@
 # Extended version of WinInstallerExtractor.
 # Added possibility to specifiy the file(s) to extract.
 # Extended by Nick Heim (heim)@ethz.ch) on 2019-03-28.
+# Changed the extract dir to an absolute path.
 
 
 import os
@@ -33,7 +34,7 @@ class SevenZipExtractor(Processor):
         },
         "extract_dir": {
             "required": True,
-            "description": "Output path for the extracted archive.",
+            "description": "Output path (absolute) for the extracted archive.",
         },
         "extract_file": {
             "required": False,
@@ -65,11 +66,12 @@ class SevenZipExtractor(Processor):
         verbosity = self.env.get('verbose', 0)
 
         extract_flag = 'x' if preserve_paths == 'True' else 'e'
-        extract_path = "%s/%s" % (working_directory, extract_directory)
+        # extract_path = ('%s' % extract_directory)
 
         sevenzipcmd = "C:\\Program Files\\7-Zip\\7z.exe"
         self.output("Extracting: %s" % exe_path)
-        cmd = [sevenzipcmd, extract_flag, '-y', '-o%s' % extract_path , exe_path]
+        # cmd = [sevenzipcmd, extract_flag, '-y', '-o%s' % extract_path , exe_path]
+        cmd = [sevenzipcmd, extract_flag, '-y', '-o%s' % extract_directory , exe_path]
 
         if extract_file:
             cmd.append('%s' % extract_file)
@@ -88,7 +90,8 @@ class SevenZipExtractor(Processor):
             if ignore_errors != 'True':
                 raise
 
-        self.output("Extracted Archive Path: %s" % extract_path)
+        # self.output("Extracted Archive Path: %s" % extract_path)
+        self.output("Extracted Archive Path: %s" % extract_directory)
 
 if __name__ == '__main__':
     processor = SevenZipExtractor()

@@ -1,0 +1,8 @@
+<SearchPlugin xmlns="http://www.mozilla.org/2006/browser/search/">
+<ShortName>NEBIS Katalog</ShortName>
+<Description>NEBIS - Katalog - Stichwortsuche</Description>
+<Image width="16" height="16">data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH1AwWFSg15PoayQAAAJhJREFUeJxj/P//PwMpgIkk1YNTAwsa/8+ffw4Om1++/IFVdUqKOrqG5ctvHz36Eqtqbm6WiAhlFCc9efKluPgkLsf09JjLy/MiNLx69d3DY/vr19gdU1mpn56ujfDD3r1PkpMPPnz4FVOplBRXX59FeLgKhMt4/PiLhQtv7t37HC3GWVgY1dX5fH0VIiNVuLgQXmUciUkDAJg7NoUXOf7OAAAAAElFTkSuQmCC</Image>
+<SearchForm>http://opac.nebis.ch/F?local_base=nebis&amp;func=option-update-lng&amp;p_con_lng=GER&amp;file_name=find-b</SearchForm>
+<Url type="text/html" method="GET" template="http://opac.nebis.ch/F?local_base=nebis&amp;con_lng=GER&amp;func=find-b&amp;find_code=WRD&amp;request={searchTerms}">
+</Url>
+</SearchPlugin>

@@ -10,6 +10,7 @@
 import os
 import sys
 import subprocess
+import time
 
 from autopkglib import Processor, ProcessorError
 
@@ -44,6 +45,8 @@ class NANTrun(Processor):
         build_cmd = self.env.get('build_cmd')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
+        ts = time.localtime()
+        us_date = time.strftime("%Y%m%d",ts)
         extract_flag = 'l'
         nant_cmd = self.env.get('NANT_PATH')
 
@@ -55,7 +58,7 @@ class NANTrun(Processor):
             build_target = os.path.splitext(self.env.get('build_target'))[0]
             cmd.extend([build_target])
 
-        cmd.extend(['-l:C:\Tools\AutoPKG.new\log\NANT.log'])
+        cmd.extend(['-l:C:\Tools\AutoPKG\log\NANT' + us_date + '.log'])
         print >> sys.stdout, "cmdline %s" % cmd
         # print >> sys.stdout, "run_folder %s" % os.getcwd()
         try:
