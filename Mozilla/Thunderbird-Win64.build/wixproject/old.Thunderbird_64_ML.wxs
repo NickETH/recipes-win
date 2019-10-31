@@ -5,8 +5,8 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 
 	<?include version.wxi?>
-    <Product Id="$(var.Productcode)" Language="1033" Manufacturer="mozilla.org" Name="Thunderbird $(var.version) ML" UpgradeCode="{49F1F11B-05B3-4DC2-8239-A856A08D51A2}" Version="$(var.version)">
-        <Package Comments="Thunderbird is one of the most popular free Email clients." Compressed="yes" Description="Mail- and News-Reader" InstallerVersion="200" Keywords="Email-Client, News-Reader" Languages="1033" Manufacturer="Nick Heim, ETHZ ID" Platform="x86"/>
+    <Product Id="$(var.Productcode)" Language="1033" Manufacturer="mozilla.org" Name="Thunderbird x64 $(var.version) ML" UpgradeCode="{49F1F11B-05B3-4DC2-8239-A856A08D51A2}" Version="$(var.version)">
+        <Package Comments="Thunderbird is one of the most popular free Email clients." Compressed="yes" Description="Mail- and News-Reader" InstallerVersion="500" Keywords="Email-Client, News-Reader" Languages="1033" Manufacturer="Nick Heim, ETHZ ID" Platform="x64"/>
         <Binary Id="SC_Scripts" SourceFile="..\sourcepkt\SC_Scripts.vbs" />
 		<Icon Id="TBIcons" SourceFile="..\sourcepkt\Thunderbird-Icons.exe" />
         <CustomAction Id="SetShortcutDir" Property="SHORTCUTDIR" Value="[ProgramMenuFolder][MENU_FOLDERID]\" />
@@ -22,28 +22,23 @@
 			<Publish Dialog="SetupTypeDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg"  Order="3">1</Publish>
 		</UI>
         <Directory Id="TARGETDIR" Name="SourceDir">
-            <Component Id="ARPentries" Guid="{BA37D439-DD3B-4EFD-B795-29E61448F366}">
+            <Component Id="ARPentries" Guid="{BA37D439-DD3B-4EFD-B795-29E61448F366}" Win64="yes">
                 <RegistryValue Id="regARP2" Root="HKMU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Value="&quot;[#thunderbird.exe]&quot;,0" Type="string" />
             </Component>
-			<Component Id="Add_QL_Shortcut" Guid="0C71F6D7-FE92-474E-862A-ED6D54694D68">
-				<RegistryValue Id="regARP3" Root="HKMU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="QLinstalled" Type="string" KeyPath="yes" Value="[QUICKLAUNCH_SC]" />
-            </Component>
-			<Component Id="StartMenu_Shortcut" Guid="{7C63A73A-4F18-46E5-9DB1-F9689F8AF17D}">
+			<Component Id="StartMenu_Shortcut" Guid="{7C63A73A-4F18-46E5-9DB1-F9689F8AF17D}" Win64="yes">
                 <RegistryValue Id="regARP1" Root="HKMU" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="ShortcutDirectory" Value="[SHORTCUTDIR]" Type="string" KeyPath="yes" />
 				<Shortcut Id="Mozilla_Thunderbird_Safe_Mode" Directory="SHORTCUTDIR" ShortName="MOZILL~1" Name="Mozilla Thunderbird (Safe Mode)" Target="[#thunderbird.exe]" Arguments="-safe-mode" Hotkey="0" Icon="TBIcons" IconIndex="1" Show="normal" WorkingDirectory="INSTALLDIR" />
-				<Shortcut Id="Mozilla_Thunderbird2" Directory="SHORTCUTDIR" ShortName="MOZILL~1" Name="Mozilla Thunderbird" Target="[#thunderbird.exe]" Hotkey="0" Icon="TBIcons" IconIndex="2" Show="normal" WorkingDirectory="INSTALLDIR" />
+				<Shortcut Id="Mozilla_Thunderbird2" Directory="SHORTCUTDIR" ShortName="MOZILL~1" Name="Mozilla Thunderbird" Target="[#thunderbird.exe]" Hotkey="0" Show="normal" WorkingDirectory="INSTALLDIR" >
+					<ShortcutProperty Key="System.AppUserModel.ID" Value="D78BF5DD33499EC2" />
+					<ShortcutProperty Key="{9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3}, 11" Value="1" />
+				</Shortcut>
 			</Component>
-            <Component Id="QuickLaunch_Shortcut" Guid="{ED074B81-E35E-43A1-A4DA-C48CB87FBF24}">
-                        <Condition>QUICKLAUNCH_SC=1</Condition>
-                        <RegistryValue Id="regHKCU1" Root="HKCU" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)\Main" Name="Create Quick Launch Shortcut" Value="[QUICKLAUNCH_SC]" Type="integer" KeyPath="yes" />
-                        <Shortcut Id="Mozilla_Thunderbird" Directory="Quick_Launch" Name="Mozilla Thunderbird" ShortName="MOZILL~1" Target="[#thunderbird.exe]" Hotkey="0" Icon="TBIcons" IconIndex="2" Show="normal" WorkingDirectory="INSTALLDIR" />
-            </Component>
-            <Component Id="Desktop_Shortcut" Guid="{28B2F8F7-2A4D-4EAC-BEB3-E91A32D3BFE3}">
+            <Component Id="Desktop_Shortcut" Guid="{28B2F8F7-2A4D-4EAC-BEB3-E91A32D3BFE3}" Win64="yes">
                         <Condition>DESKTOP_SC=1</Condition>
                         <RegistryValue Id="regHKLM2" Root="HKLM" Key="SOFTWARE\Mozilla\Mozilla Thunderbird\$(var.version) (en-US)\Main" Name="Create Desktop Shortcut" Value="[DESKTOP_SC]" Type="integer" KeyPath="yes" />
                         <Shortcut Id="Mozilla_Thunderbird1" Directory="DesktopFolder" Name="Mozilla Thunderbird" ShortName="TndrBird" Target="[#thunderbird.exe]" Hotkey="0" Icon="TBIcons" IconIndex="3" Show="normal" WorkingDirectory="INSTALLDIR" />
             </Component>
-            <Directory Id="ProgramFilesFolder" ShortSourceName="Progra~1" SourceName="Program Files">
+            <Directory Id="ProgramFiles64Folder" SourceName="Program Files">
 				<Directory Id="APPLICATIONFOLDER" Name="Mozilla Thunderbird" ShortName="THNDBIRD">
 					<Directory Id="INSTALLDIR" Name="." >
 						<Directory Id="EXTENSIONS" Name="extensions" ShortName="EXTENS~1" />
@@ -69,11 +64,10 @@
             </Directory>
         </Directory>
         <Feature Id="UserSettings" ConfigurableDirectory="INSTALLDIR" Description="Delivers user settings automatically to each profile." Display="expand" Level="3" Title="User Settings">
-            <ComponentRef Id="QuickLaunch_Shortcut" />
+            <ComponentRef Id="Desktop_Shortcut" />
 			<Feature Id="ThunderBird" ConfigurableDirectory="INSTALLDIR" Description="Installs the main program." Display="expand" Level="3" Title="ThunderBird">
 				<ComponentGroupRef Id="ThunderbirdRegistry" />
 				<ComponentRef Id="ARPentries" />
-                <ComponentRef Id="Add_QL_Shortcut" />
                 <ComponentRef Id="StartMenu_Shortcut" />
 				<ComponentRef Id="Desktop_Shortcut" />
 				<ComponentGroupRef Id="ThunderbirdFiles" />
@@ -93,20 +87,15 @@
                 <Feature Id="Language_Pack_RUM" AllowAdvertise="system" Description="Romansh user interface." Display="expand" Level="3" Title="Language_Pack RUM">
 					<ComponentGroupRef Id="ExtlpRMFiles" />
                 </Feature>
-								
-                <Feature Id="TB_Sync" AllowAdvertise="system" Description="This installs the sync manager TBSync and providers for DAV and Google" Display="expand" Level="3" Title="TBsync + providers">
-					<ComponentGroupRef Id="ExtTBSyncFiles" />
-					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
-					<ComponentGroupRef Id="ExtGoogle4TBSyncFiles" />
-					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
+				<!--				
+                <Feature Id="Administrative_Pack" AllowAdvertise="system" Description="This installs the automatic language switcher, which lets the Thunderbird language follow the system language and the group policy templates." Display="expand" Level="3" Title="Administrative Pack">
+					<ComponentGroupRef Id="ExtGPO4FF" />
+					<ComponentGroupRef Id="ExtLocale2MUI" />
 				</Feature>
-                <Feature Id="Sieve" AllowAdvertise="system" Description="This installs the ManageSieve protocol for securely managing Sieve Script on a remote IMAP server" Display="expand" Level="3" Title="Sieve protocol">
-					<ComponentGroupRef Id="ExtSieveFiles" />
-				</Feature>
-			
+				-->				
                 <Feature Id="Lightning" AllowAdvertise="system" Description="The Lightning calendar as an extension in Thunderbird." Display="expand" Level="100" Title="Lightning Calendar">
 					<ComponentGroupRef Id="ExtLightningFiles" />
-                    <!-- <ComponentGroupRef Id="ExtVCS_SupportFiles" /> -->
+                    <ComponentGroupRef Id="ExtVCS_SupportFiles" />
                 </Feature>
                 <Feature Id="Extras" AllowAdvertise="system" Description="Exchange Calendar Conn. + Compact Header" Display="expand" Level="100" Title="Extras">
 					<!--
@@ -115,11 +104,11 @@
                     <ComponentGroupRef Id="ExtCompactHeaderFiles" />
                     <ComponentGroupRef Id="ExtExchangeCalendar" />
                 </Feature>
-<!-- 				<Feature Id="Language_Helper" AllowAdvertise="system" Description="This installs dictionary and locale switcher + translator." Display="hidden" Level="3" Title="Language Helper">
+				<Feature Id="Language_Helper" AllowAdvertise="system" Description="This installs dictionary and locale switcher + translator." Display="hidden" Level="3" Title="Language Helper">
 					<ComponentGroupRef Id="ExtLocaleSwitcher" />
 					<ComponentGroupRef Id="ExtDictionarySwitcherFiles" />
                     <Condition Level="0">&amp;Language_Pack_DEU=0 AND &amp;Language_Pack_FRA=0 AND &amp;Language_Pack_ITA=0 AND &amp;Language_Pack_RUM=0</Condition>
-                </Feature> -->
+                </Feature>
 			</Feature>
         </Feature>
         <Property Id="ApplicationFolderName" Value="Mozilla Thunderbird" />
@@ -140,9 +129,6 @@
         <Property Id="UPGRADE_9" Secure="yes" />
         <Property Id="ARPHELPTELEPHONE" Value="++41 (0) 44 632 77 77" />
         <Property Id="ARPURLUPDATEINFO" Value="http://studides.ethz.ch" />
-        <Property Id="QUICKLAUNCH_SC" Value="1">
-            <RegistrySearch Id="QLinst" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="QLinstalled" Type="raw" />
-        </Property>
         <Property Id="INSTALLLEVEL" Value="3" />
         <Property Id="ARPCOMMENTS" Value="Mozilla ThunderBird" />
         <Property Id="ALLUSERS" Value="1" />

@@ -1,3 +1,2 @@
 pref("general.config.filename", "mozilla.cfg");
-pref("extensions.shownSelectionUI", true);
-pref("extensions.autoDisableScopes", 11);
+pref("general.config.sandbox_enabled", false);

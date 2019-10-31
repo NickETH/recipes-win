@@ -1,5 +1,5 @@
-read\create-log-Firefox.txt
-read\readme-Firefox.txt
+read\create-log-Firefox_VVeerrssiioonn_ML.txt
+read\readme-Firefox_VVeerrssiioonn_ML.txt
 sourcepkt\FireFox-Icons.exe
 sourcepkt\SC_Scripts.vbs
 sourcepkt\SideImage.bmp
@@ -71,8 +71,6 @@ sourcepkt\Search_ETH\locale\it\swissbibit.xml
 helpers\*.mst
 helpers\ByteShifter.ps1
 helpers\GetXPIVersion.ps1
-helpers\Release.cmd
-helpers\archive.cmd
 wixproject\version.wxi
 wixproject\global.prop
 wixproject\GUID-Preserve.xslt

@@ -87,15 +87,20 @@
                 <Feature Id="Language_Pack_RUM" AllowAdvertise="system" Description="Romansh user interface." Display="expand" Level="3" Title="Language_Pack RUM">
 					<ComponentGroupRef Id="ExtlpRMFiles" />
                 </Feature>
-				<!--				
-                <Feature Id="Administrative_Pack" AllowAdvertise="system" Description="This installs the automatic language switcher, which lets the Thunderbird language follow the system language and the group policy templates." Display="expand" Level="3" Title="Administrative Pack">
-					<ComponentGroupRef Id="ExtGPO4FF" />
-					<ComponentGroupRef Id="ExtLocale2MUI" />
+								
+                <Feature Id="TB_Sync" AllowAdvertise="system" Description="This installs the sync manager TBSync and providers for DAV and Google" Display="expand" Level="3" Title="TBsync + providers">
+					<ComponentGroupRef Id="ExtTBSyncFiles" />
+					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
+					<ComponentGroupRef Id="ExtGoogle4TBSyncFiles" />
+					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
 				</Feature>
-				-->				
+                <Feature Id="Sieve" AllowAdvertise="system" Description="This installs the ManageSieve protocol for securely managing Sieve Script on a remote IMAP server" Display="expand" Level="3" Title="Sieve protocol">
+					<ComponentGroupRef Id="ExtSieveFiles" />
+				</Feature>
+							
                 <Feature Id="Lightning" AllowAdvertise="system" Description="The Lightning calendar as an extension in Thunderbird." Display="expand" Level="100" Title="Lightning Calendar">
 					<ComponentGroupRef Id="ExtLightningFiles" />
-                    <ComponentGroupRef Id="ExtVCS_SupportFiles" />
+<!--                     <ComponentGroupRef Id="ExtVCS_SupportFiles" /> -->
                 </Feature>
                 <Feature Id="Extras" AllowAdvertise="system" Description="Exchange Calendar Conn. + Compact Header" Display="expand" Level="100" Title="Extras">
 					<!--
@@ -104,11 +109,11 @@
                     <ComponentGroupRef Id="ExtCompactHeaderFiles" />
                     <ComponentGroupRef Id="ExtExchangeCalendar" />
                 </Feature>
-				<Feature Id="Language_Helper" AllowAdvertise="system" Description="This installs dictionary and locale switcher + translator." Display="hidden" Level="3" Title="Language Helper">
+<!-- 				<Feature Id="Language_Helper" AllowAdvertise="system" Description="This installs dictionary and locale switcher + translator." Display="hidden" Level="3" Title="Language Helper">
 					<ComponentGroupRef Id="ExtLocaleSwitcher" />
 					<ComponentGroupRef Id="ExtDictionarySwitcherFiles" />
                     <Condition Level="0">&amp;Language_Pack_DEU=0 AND &amp;Language_Pack_FRA=0 AND &amp;Language_Pack_ITA=0 AND &amp;Language_Pack_RUM=0</Condition>
-                </Feature>
+                </Feature> -->
 			</Feature>
         </Feature>
         <Property Id="ApplicationFolderName" Value="Mozilla Thunderbird" />

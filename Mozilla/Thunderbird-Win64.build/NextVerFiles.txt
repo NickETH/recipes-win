@@ -1,12 +1,13 @@
-read\create-log-Thunderbird_64.txt
-read\readme-Thunderbird_64.txt
-sourcepkt\exchangecalendar-v5.0.0-alpha3.xpi
-sourcepkt\locale_switcher-40-fx-tb.xpi
+read\create-log-Thunderbird_64_VVeerrssiioonn_ML.txt
+read\readme-Thunderbird_64_VVeerrssiioonn_ML.txt
+sourcepkt\exchangecalendar-test-ethz.xpi
+sourcepkt\sieve@mozdev.org.xpi
 sourcepkt\Thunderbird-Icons.exe
 sourcepkt\SC_Scripts.vbs
 sourcepkt\SideImage.bmp
 sourcepkt\TopImage.bmp
 sourcepkt\ETH
+sourcepkt\ETH\policies.json
 sourcepkt\ETH\prefs.js
 sourcepkt\ETH\mozilla.cfg
 sourcepkt\ETH\local-settings.js
@@ -15,8 +16,6 @@ sourcepkt\ETH\gpo\modules
 sourcepkt\ETH\gpo\modules\gpo.jsm
 helpers\*.mst
 helpers\GetXPIVersion.ps1
-helpers\Release.cmd
-helpers\archive.cmd
 wixproject\version.wxi
 wixproject\global.prop
 wixproject\GUID-Preserve-x64.xslt

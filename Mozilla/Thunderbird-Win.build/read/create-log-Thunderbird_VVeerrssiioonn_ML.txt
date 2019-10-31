@@ -1,13 +1,15 @@
 190301	Paketiert als WIX-Projekt
-	Todo:
-	Automatisieren wie Firefox.
-	http://www.starkandwayne.com/blog/how-to-download-the-latest-release-from-github/
 
-	Aenderungen ab V60.5.2:
-	Neue Version Exchange Calendar, exchangecalendar-v5.0.0-alpha3.xpi von:
+	Aenderungen ab V68.2.0:
+	Neue Version Exchange Calendar, exchangecalendar-v5.0.2-beta2.xpi von:
 	https://github.com/ExchangeCalendar/exchangecalendar/releases
+	Angepasster Release direkt von Github mit manifest.json.
+	exchangecalendar-test-ethz.xpi
 
-	Aenderungen ab V60.3.0:
+	Änderungen bei Extensions:
+	Entfernt, da nicht mehr kompatibel mit TB68.x: Locale-Switcher, VCS-Support, Dictionary Switcher
+	Neu: TBSync, DAV4TBSync, Google4TBSync, Sieve
+
 	Lightning gibt es in einer aktuellen Version nur noch in Thunderbird integriert!
 	Diese ist aber leider nur noch einsprachig erhältlich!
 	Deshalb muss man die Sprachpakete für Lightning mühsam aus den Sprachspezifischen Versionen heraus schälen.
@@ -18,36 +20,10 @@
 	locale calendar en-US chrome/calendar-en-US/locale/en-US/calendar/
 	locale lightning en-US chrome/lightning-en-US/locale/en-US/lightning/
 
-	Locale2MUI nicht mehr notwendig, funktioniert jetzt gleich wie bei FF!
-	pref("intl.locale.requested","");
-	gpo4ETHZ-1.0.1-fx-tb_signed.xpi nicht mehr notwedig, neu mit GPO module https://mozillagpo.sourceforge.io/
-	Siehe aktualisierte mozilla.cfg
+	GPO module https://mozillagpo.sourceforge.io/
 
-	Neue Version von Locale Switcher notwendig, die auf "intl.locale.requested" zeigt.
-	locale_switcher-40-fx-tb.xpi
-	Neue Version Exchange Calendar, exchangecalendar-v5.0.0-alpha2.xpi von:
-	https://github.com/ExchangeCalendar/exchangecalendar/releases
-
-	Aenderungen ab V52.1.0:
-	Lightning wurde für 52.x freigegeben.
-	Es wurde wieder die normale Version eingebunden.
-
-	Aenderungen ab V52.0.0:
-	Lightning wurde noch nicht für 52.x freigegeben.
-	Deshalb verwenden wir die Version 5.4 beta4
-	https://addons.mozilla.org/thunderbird/downloads/latest-beta/lightning/platform:5/addon-2313-latest.xpi
-
-	Aenderungen ab V45.7.1:
 	License Dialog ausgeschaltet.
 
-	Wichtigste Aenderungen ab V45.0.0 (gegenüber V38.1.x und früher):
-	Es kommt nun eine Version von Lightning mit TB. Leider aber nur im Distribution Ordner und nur in englisch.
-	Das würde bedeuten, dass die Extension für jeden Benutzer ins Profil installiert wird.
-	Deshalb wird diese dort gelöscht und die reguläre Extension installiert.
-	Locale Switcher musste auf die neue UI angepasst werden.
-	Diese gibt es nun in einer ETHZ-Version 3.5, aber noch nicht signiert.
-
-	Wichtigste Aenderungen ab V24.6.0 (gegenüber V24.1.x und früher):
 	Verwendet Preserve_GUID.xlt Stylesheet. 
 	Damit wird bei nicht veränderten Komponenenten die GUID aus der Vorversion übernommen.
 
@@ -62,33 +38,21 @@
 	Dict-FR-fr: https://addons.mozilla.org/firefox/downloads/latest/13371/addon-13371-latest.xpi
 	Dict-IT-it: https://addons.mozilla.org/firefox/downloads/latest/3053/addon-3053-latest.xpi
 
-	Lightning: https://addons.mozilla.org/thunderbird/downloads/latest/2313/platform:5/addon-2313-latest.xpi
-
-	https://addons.mozilla.org/firefox/downloads/file/107845/locale_switcher-3-fx.xpi
-	Ist erneut angepasst. Siehe Script-File.
-	Neue Version: locale_switcher-40-fx-tb.xpi
-
-	VCS-Support: https://addons.mozilla.org/thunderbird/downloads/latest/4721/addon-4721-latest.xpi
-
-	Dictionary Switcher: https://addons.mozilla.org/thunderbird/downloads/latest/3414/addon-3414-latest.xpi
 
 	Compact Header: https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi
-	Wird nicht mehr verwendet, da jetzt im Core: Extra Folder Columns: https://addons.mozilla.org/thunderbird/downloads/latest/9716/addon-9716-latest.xpi
 
-	Exchange Calendar: https://github.com/ExchangeCalendar/exchangecalendar/releases
-	vorher: https://github.com/Ericsson/exchangecalendar/releases
+	Sieve: https://github.com/thsmi/sieve and: https://addons.thunderbird.net/en-US/thunderbird/addon/sieve/
+	tbsync: https://addons.thunderbird.net/thunderbird/downloads/latest/tbsync/addon-773590-latest.xpi
+	Provider für CalDAV & CardDAV: https://addons.thunderbird.net/thunderbird/downloads/latest/dav-4-tbsync/addon-986258-latest.xpi
+	Provider for Google Calendar: https://addons.thunderbird.net/thunderbird/downloads/latest/provider-for-google-calendar/addon-4631-latest.xpi
 
-	Im Auge behalten:
-	https://addons.mozilla.org/de/firefox/addon/quick-locale-switcher/
+	Zurückgestellt: Provider für Exchange ActiveSync: https://addons.thunderbird.net/thunderbird/downloads/latest/eas-4-tbsync/addon-986338-latest.xpi
 
 	Extrahieren von Thunderbird Setup 60.5.2.exe mit 7-zip nach \wixproject
 
 	Thunderbird 60.5.2 komplett installieren. Wird nur noch für die Registry gebraucht, -->in Zukunft aus NSIS-File auslesen!
 
-	Die folgenden Extensions global installiert:
-	Zuerst die Extensions auf Kompatibilität mit V8.0 überprüfen und ev. Versionsinfo anpassen.
-	Die Installation von Extensions hat wieder geändert. 
-	Jetzt gibt es 2 Arten von Installationen.
+
 	Als neuer Standard wird das XPI-File in den Extension-Folder gelegt, das ist alles. 
 	Wichtig: Der Filename muss em:id von Install.rdf sein!
 	Als 2. Variante wird die Extension als Verzeichnis ausgepackt, wie in früheren Versionen.
@@ -97,12 +61,9 @@
 
 	Neues Extension-Format wird für die Sprachpackete verwendet.
 	Siehe Wix-Build-File. manifest.json statt install.rdf
+	"unpack" ist nicht mehr enthalten. Entpackte Extensions funktionieren aber. Siehe Lightning
 	
-	Ab v7 wird das install.rdf viel genauer gecheckt.
-	Die Schema-Verweise müssen zwingend wie folgt aussehen:
-	<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
-	<Description rdf:about="urn:mozilla:install-manifest">
-
+	Die folgenden Extensions global installiert:
 
 	Language_Pack_DEU
 	..\sourcepkt\de.xpi
@@ -114,16 +75,11 @@
 	..\sourcepkt\it.xpi
 	..\sourcepkt\dizionario_italiano-3.3-tb+sm+fx.xpi
 
-	Language_Helper
-	..\sourcepkt\dictionary_switcher-1.3.1-tb.xpi
-	..\sourcepkt\locale_switcher-35-fx+tb.xpi"
-
-	Kalenderfunktion
+	Lightning
 	..\sourcepkt\lightning.xpi
-	..\sourcepkt\.vcs_support-0.6.3.1-tb+sb.xpi
 
-	Group Policy Extension
-	GPO module https://mozillagpo.sourceforge.io/
+	Sieve
+	..\sourcepkt\sieve@mozdev.org.xpi
 
 	Extras
 	..\sourcepkt\CompactHeader.xpi
@@ -136,11 +92,13 @@
 	Sprache auf "folgt OS".
 
 	//
-	lockPref("app.update.auto", false);
-	lockPref("app.update.enabled", false);
+	Funktioniert nicht mehr! Siehe Policies: lockPref("app.update.auto", false);
+	Funktioniert nicht mehr! Siehe Policies: lockPref("app.update.enabled", false);
 	lockPref("extensions.strictCompatibility", false);
 	lockPref("extensions.update.autoUpdateDefault", false);
 	lockPref("toolkit.telemetry.rejected", true);
+	lockPref("extensions.shownSelectionUI", true);
+	lockPref("extensions.autoDisableScopes", 0);
 	defaultPref("intl.locale.requested","");
 	defaultPref("mail.shell.checkDefaultClient", false);
 	defaultPref("toolkit.telemetry.prompted", 2);
@@ -197,36 +155,21 @@
 	Danach in .\Mozilla Thunderbird\defaults\pref das File: local-settings.js erstellen.
 	Es muss diese Zeilen enthalten:
 	pref("general.config.filename", "mozilla.cfg");
-	pref("extensions.shownSelectionUI", true);
-	pref("extensions.autoDisableScopes", 11);
+	pref("general.config.sandbox_enabled", false);
 
 	Dazu die Zeile:
 	user_pref("extensions.update.enabled", false);
 	zum File: C:\Program Files\Mozilla Thunderbird\defaults\profile\prefs.js
 	hinzufügen.
 
-	Features:
-	UserSettings		User Settings	Delivers user settings automatically to each profile.	1	3	INSTALLDIR	0
-	ThunderBird	UserSettings	ThunderBird	Installs the main program.	11	3	INSTALLDIR	0
-	Language_Pack_DEU	ThunderBird	Language Pack DEU	German user interface and swiss german spell checking features.	21	3		32
-	Language_Pack_FRA	ThunderBird	Language Pack FRA	French user interface and french spell checking features.	31	3		32
-	Language_Pack_ITA	ThunderBird	Language Pack ITA	Italian user interface and italian spell checking features.	41	3		32
-	Language_Pack_RUM	ThunderBird	Language_Pack RUM	Romansh user interface.	7	3		32
-	Language_Helper	ThunderBird	Language Helper	This installs dictionary and locale switcher + translator.	0	0		32
-	Administrative_Pack	ThunderBird	Administrative Pack	This installs the group policy extension and templates.	61	3		32
-	Lightning		ThunderBird	Lightning Calendar	The Lightning calendar as an extension in Tunderbird.	71	100		32
-	Extras	ThunderBird	Extras	Exchange Calendar Conn. + Compact Header	13	100		32
-
-	Die folgenden Features auf Level 100 gesetzt (Damit werden sie beim Installmode 'Typical' nicht mehr installiert, jedoch bei 'Complete'):
-	Lightning
-	Extras
-
-	Anzeige-Reihenfolge der Features geordnet mit der Display-Clumn in der Feature Table.
-
-	Folgende Zeile in Condition table eingefügt, damit 'Language_Helper' nicht installiert wird, 
-	wenn keine Language Packs installiert werden.
-	Language_Helper	3	&Language_Pack_DEU=0 AND &Language_Pack_FRA=0 AND &Language_Pack_ITA=0 AND &Language_Pack_RUM=0
-
+	policies.json in .\Mozilla Thunderbird\distribution
+	{
+	  "policies": {
+	    "DisableAppUpdate": true
+	  }
+	}
+	
+	Features, siehe Thunderbird_ML.wxs
 
 	'SHORTCUTDIR' in Directory Table auf 'Internet' gesetzt.
 
@@ -239,15 +182,6 @@
 
 	und folgendem Eintrag in AppSearch table:
 	SHORTCUTDIR	SC_Dir
-
-;	EULA von http://www.mozilla.com/en-US/legal/eula/thunderbird-en.txt nach sourcepkt heruntergeladen
-;	User Information Dialog augeschaltet.
-;	Single Feature Destination Dialog augeschaltet.
-;	Shortcut Dialog eingeschaltet.
-;	Installation Type Dialog eingeschaltet.
-;	Select Feature Dialog eingeschaltet.
-;	Licensing Dialog eingeschaltet und thunderbird-en.txt von Sourcepkt eingefügt.
-;	Dialog Theme auf Neptun 06 umgestellt.
 
 	WIX-Mondo Dialog eingeschaltet. Die Grafiken von Wise-Neptun-Themes eingebunden.
 

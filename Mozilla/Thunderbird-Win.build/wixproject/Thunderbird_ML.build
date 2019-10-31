@@ -33,28 +33,29 @@
 	<property name="TBdicFRXPI" value="dictionnaire_francais_classique_reforme_1990.xpi" />
 	<property name="TBdicITSRC" value="https://addons.mozilla.org/firefox/downloads/latest/3053/platform:5/addon-3053-latest.xpi" />
 	<property name="TBdicITXPI" value="dizionario_italiano.xpi" />
-	<property name="ExchCalendarXPI" value="exchangecalendar-v5.0.0-alpha3.xpi" />
-	<property name="LocaleSwitcherXPI" value="locale_switcher-40-fx-tb.xpi" />
-	<!--
-	<property name="LocaleSwitcherSRC" value="https://addons.mozilla.org/firefox/downloads/latest/356/addon-356-latest.xpi" />
-	<property name="LocaleSwitcherXPI" value="locale_switcher.xpi" />
-	<property name="Locale2MUISRC" value="https://addons.mozilla.org/firefox/downloads/latest/5584/platform:5/addon-5584-latest.xpi" />
-	<property name="Locale2MUIXPI" value="Locale2MUI.xpi" />
-	<property name="Locale2MUIXPI" value="Locale2MUI-2.5-fx+tb.xpi" />
-	<property name="GPO4FFextXPI" value="gpo4ETHZ-1.0.1-fx-tb_signed.xpi" />
-	<property name="LightningSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/2313/platform:5/addon-2313-latest.xpi" />
-	<property name="LightningSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest-beta/lightning/platform:5/addon-2313-latest.xpi" />
-	-->
+	<property name="ExchCalendarXPI" value="exchangecalendar-test-ethz.xpi" />
+	<property name="SieveXPI" value="sieve@mozdev.org.xpi" />
+	 
+	<property name="TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/tbsync/addon-773590-latest.xpi" />
+	<property name="TBSyncXPI" value="tbsync.xpi" />
+	<property name="DAV4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/dav-4-tbsync/addon-986258-latest.xpi" />
+	<property name="DAV4TBSyncXPI" value="dav-4-tbsync.xpi" />
+																   
+																		 
+	<property name="Google4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/provider-for-google-calendar/addon-4631-latest.xpi" />
+	<property name="Google4TBSyncXPI" value="google-4-tbsync.xpi" />
 	<property name="LightningXPI" value="lightning.xpi" />
+	<property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" />
+	<property name="CompactHeaderXPI" value="CompactHeader.xpi" />																																  
+<!--														   	
 	<property name="QuickLocaleSwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/1333/addon-1333-latest.xpi" />
 	<property name="QuickLocaleSwitcherXPI" value="QuickLocaleSwitcher.xpi" />
 	<property name="DictionarySwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/3414/addon-3414-latest.xpi" />
 	<property name="DictionarySwitcherXPI" value="DictionarySwitcher.xpi" />
 	<property name="VCS-SupportSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/4721/addon-4721-latest.xpi" />
 	<property name="VCS-SupportXPI" value="VCS-Support.xpi" />
-	<property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" />
-	<property name="CompactHeaderXPI" value="CompactHeader.xpi" />
-<!--
+
+
 	<property name="ExtraFolColSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/9716/addon-9716-latest.xpi" />
 	<property name="ExtraFolColXPI" value="ExtraFolderColumns.xpi" />
 -->
@@ -79,12 +80,13 @@
 		<call target="installTBlp" />
 
 		<call target="install-Lightning" />
-		<call target="install-LocaleSwitcher" />
 
-		<call target="install-DictionarySwitcher" />
-		<call target="install-VCS-Support" />
 		<call target="install-CompactHeader" />
 		<call target="install-ExchangeCalendar" />
+		<call target="install-Sieve" />
+		<call target="install-TBSync" />
+		<call target="install-DAV4TBSync" />
+		<call target="install-Google4TBSync" />										   
 		<!--
 		<call target="install-TBGPOExt" />
 		<call target="install-Locale2MUI" />		
@@ -174,6 +176,7 @@
 		<copy file="..\sourcepkt\ETH\mozilla.cfg" tofile=".\${TBdir}\mozilla.cfg" />
 		<copy file="..\sourcepkt\ETH\local-settings.js" tofile=".\${TBdir}\defaults\pref\local-settings.js" />
 		<copy file="..\sourcepkt\ETH\prefs.js" tofile=".\${TBdir}\defaults\profile\prefs.js" />
+		<copy file="..\sourcepkt\ETH\policies.json" tofile=".\${TBdir}\distribution\policies.json" />
         <!-- 
 		Ab V60.x setzen wir GPO-Extension durch das GPO-Autostart-Modul
         -->
@@ -274,54 +277,54 @@
 		<call target="Ext-harv" />
     </target>
 	
-	<target name="install-QuickLocaleSwitcher">
+	<target name="install-TBSync">
         <!-- 
-            Install the Quick Locale Switcher Extension.
+            Install the TBSync Extension.
         -->
-		<property name="CGextXPI" value="ExtQuickLocaleSwitcherFiles" />
-		<property name="DownloadSRC" value="${QuickLocaleSwitcherSRC}" />
-		<property name="SourceFILE" value="${QuickLocaleSwitcherXPI}" />
+		<property name="CGextXPI" value="ExtTBSyncFiles" />
+		<property name="DownloadSRC" value="${TBSyncSRC}" />
+		<property name="SourceFILE" value="${TBSyncXPI}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
         <!--
 		<call target="update-extension-maxversion" />
         -->
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 
-	<target name="install-DictionarySwitcher">
+	<target name="install-Google4TBSync">
         <!-- 
-            Install the Dictionary Switcher Extension.
+            Install the Google 4 TBSync Extension.
         -->
-		<property name="CGextXPI" value="ExtDictionarySwitcherFiles" />
-		<property name="DownloadSRC" value="${DictionarySwitcherSRC}" />
-		<property name="SourceFILE" value="${DictionarySwitcherXPI}" />
+		<property name="CGextXPI" value="ExtGoogle4TBSyncFiles" />
+		<property name="DownloadSRC" value="${Google4TBSyncSRC}" />
+		<property name="SourceFILE" value="${Google4TBSyncXPI}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
         <!--
 		<call target="update-extension-maxversion" />
         -->
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 
-	<target name="install-VCS-Support">
+	<target name="install-DAV4TBSync">
         <!-- 
-            Install the VCS-Support Extension.
+            Install the DAV 4 TBSync Extension.
         -->
-		<property name="CGextXPI" value="ExtVCS_SupportFiles" />
-		<property name="DownloadSRC" value="${VCS-SupportSRC}" />
-		<property name="SourceFILE" value="${VCS-SupportXPI}" />
+		<property name="CGextXPI" value="ExtDAV4TBSyncFiles" />
+		<property name="DownloadSRC" value="${DAV4TBSyncSRC}" />
+		<property name="SourceFILE" value="${DAV4TBSyncXPI}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
         <!--
 		<call target="update-extension-maxversion" />
         -->
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 
@@ -335,7 +338,7 @@
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 
@@ -431,19 +434,19 @@
 		<call target="install-extension-new" />
 		<call target="Ext-harv" />
 	</target>
-	<target name="install-LocaleSwitcher">
+	<target name="install-Sieve">
         <!-- 
-            Install the Locale Switcher Extension.
+            Install the Sieve Extension.
         -->
-		<property name="CGextXPI" value="ExtLocaleSwitcher" />
-		<property name="SourceFILE" value="${LocaleSwitcherXPI}" />
+		<property name="CGextXPI" value="ExtSieveFiles" />
+		<property name="SourceFILE" value="${SieveXPI}" />
         <!--
 		<property name="DownloadSRC" value="${LocaleSwitcherSRC}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
 		 -->
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 	<target name="install-Locale2MUI">
@@ -476,7 +479,7 @@
         -->
 		<property name="CGextXPI" value="ExtExchangeCalendar" />
 		<property name="SourceFILE" value="${ExchCalendarXPI}" />
-		<call target="install-extension" />
+		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
 	<target name="install-extension">
@@ -629,6 +632,7 @@
 			<arg value="-v" />
 			<arg value="-svb6" />
 			<arg value="-sfrag" />
+			<arg value="-sw5150" />						  
 			<arg value="-srd" />
 			<arg value="-suid" />
 			<arg value="-dr" />
@@ -775,6 +779,7 @@
 			rebuild="true"
 			extensions="WixUIExtension;WixUtilExtension"
 			warningsaserrors="false">
+			<arg line="-sw1044" />
 			<sources basedir=".">
 				<include name="Thunderbird_ML.wxs" />
 				<include name="ThunderbirdReg_ML.wxs" />

@@ -1,5 +1,5 @@
-read\create-log-Firefox_64_ML.txt
-read\readme-Firefox_64_ML.txt
+read\create-log-Firefox_64_VVeerrssiioonn_ML.txt
+read\readme-Firefox_64_VVeerrssiioonn_ML.txt
 sourcepkt\FireFox-Icons.exe
 sourcepkt\SC_Scripts.vbs
 sourcepkt\SideImage.bmp

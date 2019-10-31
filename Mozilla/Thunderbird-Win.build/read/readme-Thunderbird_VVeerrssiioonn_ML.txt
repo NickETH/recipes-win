@@ -12,16 +12,16 @@ msiexec /i "Thunderbird_60.5.2_ML.msi" DESKTOP_SC=0
 
 Slient Install: msiexec /i "ThunderBird_60.5.2_ML.msi" /qn (komplett silent) oder /qb! (mit Fortschritts-Dialog).
 
-Alle ETH-ID Versionen 1.0.6 + 1.5.0.5, 1.5.0.10, 2.0.0.x, 3.x, 6.x - 60.x werden erkannt und automatisch deinstalliert.
+Alle ETH-ID Versionen ab 1.0.6 - 68.x werden erkannt und automatisch deinstalliert.
 
 Features in dieser Version:
 - Multi-Language enu, deu, fra, ita, rum.
 - Spellchecker für enu, deu, fra, ita.
-- Firefox-Sprache folgt automatisch der System-Sprache auch beim Multi-Language-Pack.
-- alle Settings per Group Policies konfigurierbar.
+- Thunderbird-Sprache folgt automatisch der System-Sprache.
+- einige Settings per Group Policies konfigurierbar.
 - Lightning Kalender Extension.
-- Import/Export von .VCF-Kalender Dateien.
-- Extra Folder Colums + Compact Header Extensions.
+- TBSync Extension mit Provider für DAV/CAL und Google.
+- Compact Header Extension.
 - Exchange-Calender Extension.
 
 Release 1.0

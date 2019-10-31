@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Firefox (x86/x64) offline installer for Windows.</string>
     <key>Identifier</key>
-    <string>ch.ethz.gitlab.id-cd-win.download.Firefox-Win</string>
+    <string>com.github.autopkg-win.download.Firefox-Win</string>
     <key>Input</key>
     <dict>
     </dict>
@@ -33,7 +33,6 @@
                 <string>%SEARCH_URL%</string>
                 <key>re_pattern</key>
                 <string>Firefox%20Setup%20(([0-9]+\.)*[0-9]+)</string>
-                <!-- <string>&lt;update version=&quot;(?P&lt;match&gt;(?P&lt;ver_major&gt;[0-9]+),0,0,(?P&lt;ver_minor&gt;[0-9]+), $1\.0\.0\.$2)&quot;&gt;</string>  -->
                 <key>curl_opts</key>
                     <array>
                        <string>-I</string>
@@ -42,7 +41,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -59,7 +58,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=Mozilla Corporation, O=Mozilla Corporation, L=Mountain View, S=California, C=US</string>
+                <string>E="release+certificates@mozilla.com", CN=Mozilla Corporation, OU=Release Engineering, O=Mozilla Corporation, L=Mountain View, S=California, C=US</string>
             </dict>
         </dict>
         <dict>

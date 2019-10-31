@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Builds latest Firefox x86 to an MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>ch.ethz.gitlab.id-cd-win.build.Firefox-Win</string>
+    <string>com.github.autopkg-win.build.Firefox-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -20,7 +20,7 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>ch.ethz.gitlab.id-cd-win.download.Firefox-Win</string>
+    <string>com.github.autopkg-win.download.Firefox-Win</string>
     <key>Process</key>
     <array>
         <dict>
@@ -35,7 +35,7 @@
     <!--    -->
         <dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -75,7 +75,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -86,7 +86,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/WixDefaults</string>
+            <string>com.github.autopkg-win.SharedProcessors/WixDefaults</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -101,27 +101,27 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-Firefox.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-FireFox_%build_ver%_ML.txt</string>
                 <key>new_ver</key>
-                <string>%version%</string>
+                <string>%build_ver%</string>
                 <key>re_pattern</key>
                 <string>[0-9][0-9]\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-Firefox.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-Firefox_%build_ver%_ML.txt</string>
                 <key>new_ver</key>
-                <string>%version%</string>
+                <string>%build_ver%</string>
                 <key>re_pattern</key>
                 <string>[0-9][0-9]\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
@@ -137,13 +137,17 @@
             <string>Copier</string>
         </dict>
         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>								
             <key>Arguments</key>
             <dict>
                 <key>run_folder</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject</string>
             </dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/NANTrun</string>
+            <string>com.github.autopkg-win.SharedProcessors/NANTrun</string>
         </dict>
         <dict>
             <key>Processor</key>
