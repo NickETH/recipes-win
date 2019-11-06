@@ -29,6 +29,7 @@ org_ver, (required: True), Description: "Original version string."
 pkg_dir, (required: True), Description: "Path to the pkg_dir, if the tag ::VVeerrssiioonn:: is part of, it will be replaced with the normalized version."
 folder_list, (required: True), Description: "Path to the folder_list."
 ver_fields, (required: False), Description: "Number of version fields divided by periods."
+create_AS_ver, (required: False), Description: "Bool, Create a version string for an Active Setup."
 recipe_path, (required: False), Description: "Path to the recipe file."
 BuildFiles, (required: False), Description: "Textfile, containing the paths to the additional buildfiles to copy."
 recipe_cache_dir, (required: False), Description: "Path to the recipe cache dir."
@@ -36,6 +37,8 @@ PrevVerFiles, (required: False), Description: "Textfile, containing the paths to
 ignore_errors, (required: False), Description: "Ignore any errors during the run."
 Output variables:
 build_ver, Description: "Normalized version string."
+build_ver_short, Description: "Special version string without dots."
+AS_ver, Description: "Special version string for an Active Setup."
 ```
 
 DateTimeStamps
@@ -53,7 +56,7 @@ time, Description: "Actual time."
 ExeVersionExtractor
 -------------------
 Extracts version info from .exe file using the 7z utility.
-Slightly changed version of "ExeVersionExtractor" by Matt Hansen.
+Deprecated! Use WinPEVersionExtractor instead.
 ```
 Input variables:
 exe_path, (required: False), Description: "Path to exe or msi, defaults to %pathname%."
@@ -61,7 +64,7 @@ ignore_errors, (required: False), Description: "Ignore any errors during the ext
 Output variables:
 version, Description: "ProductVersion of exe found." 
 ```
-		
+
 FileDateVersionSubst
 --------------------
 Load a file and search for date and version patterns and actualize them.
@@ -92,6 +95,22 @@ mst_paths, (required: True), Description: "(Array of) Paths to the mst."
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
+MSIimportMergeModule
+--------------------
+Import a MergeModule into a MSI file.
+```
+Input variables:
+pkg_dir_abs, (required: True), Description: "Absolute path to the pkg_dir."
+msi_path, (required: True), Description: "Path to the MSI-file, relative to pkg_dir."
+msm_path, (required: True), Description: "Path to the MSM-file, relative to pkg_dir."
+msm_feature, (required: True), Description: Feature in the MSI-file to connect the MSM to."
+msm_dir, (required: True), Description: "Directory in the MSI-file to install the MSM, required."
+temp_path, (required: False), Description: "Path to store the temporary build files."
+log_file_abs, (required: False), Description: "Absolute path to the merge log file."
+ignore_errors, (required: False), Description: "Ignore any errors during the run."
+```
+
+
 MSIofflinePatcher
 -----------------
 Apply an patch to an MSI file offline and rebuild the package.
@@ -99,7 +118,8 @@ Apply an patch to an MSI file offline and rebuild the package.
 Input variables:
 pkg_dir_abs, (required: True), Description: "Absolute path to the pkg_dir."
 msi_path, (required: True), Description: "Path to the MSI-file, relative to pkg_dir."
-msp_path, (required: True), Description: "Path to the MSP-file, relative to pkg_dir."
+msp_path, (required: False), Description: "Path to the MSP-file, relative to pkg_dir, omit for cabs in or compress only."
+compact_msi, (required: False), Description: "Compact the MSI-file."
 adm_msi_path, (required: True), Description: "Path to the MSI-file to be patched, relative to pkg_dir."
 new_msi_path, (required: True), Description: "Path to the new MSI-file, relative to pkg_dir."
 cab_file, (required: True), Description: "Name of the CAB-file to generate."
@@ -133,7 +153,7 @@ msi_value, Description: "Value from the SQL run."
 
 NANTrun
 -------
-Run NANT to build a NANT-(WIX-)project or to call a specific NANT-command."
+Run NANT to build a NANT-(WIX-)project or to call a specific NANT-command.
 ```
 Input variables:
 run_folder, (required: True), Description: "Path to the (WIX) build dir."
@@ -151,6 +171,20 @@ input_var, (required: True), Description: "Name of the variable to rename."
 rename_var, (required: True), Description: "Name of the variable to copy the value to."
 ```
 
+ResourceExtractor
+-----------------
+Extracts a resource from a Windows exe using ResourceHacker.
+```
+Input variables:
+exe_path, (required: False), Description: "Path to the (setup.)exe, defaults to %pathname%."
+extract_dir, (required: True), Description: "Output path (absolute) for the extracted archive."
+extract_file, (required: True), Description: "Output filename of the resource to be extracted."
+extract_cmd, (required: True), Description: "Resource to extract (e.g. 'BIN,123,')."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+Output variables:
+version, Description: "Version of exe found."
+```
+
 SevenZipExtractor
 -----------------
 Extracts specific file(s) using the 7z utility.
@@ -162,6 +196,17 @@ extract_dir, (required: True), Description: "Output path for the extracted archi
 extract_file, (required: False), Description: "File to be extracted or a @listfile.txt."
 ignore_pattern, (required: False), Description: "Wildcard pattern to ignore files from the archive."
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+```
+
+WinPEVersionExtractor
+---------------------
+Extracts version info from Windows PE-executable (.exe/.dll) file.
+```
+Input variables:
+exe_path, (required: False), Description: "Path to exe or msi, defaults to %pathname%."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+Output variables:
+version, Description: "Version of exe found."
 ```
 
 WixDefaults
