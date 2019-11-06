@@ -1,0 +1,57 @@
+20190620	mabea		Createlog: VLC_3.0.7.1_ML
+
+Download VLC:			https://download.videolan.org/vlc/3.0.7.1/win64/
+				vlc-3.0.7.1-win64.msi
+Fix MSI:                        http://packageology.com/2019/01/fixing-vlcs-msi-package/
+
+
+Windows Installer Editor:------ General Information:	Title: VLC media player 3.0.7				Author: VideoLAN
+
+
+------------------------------- Property Tabelle:	-Upgradecode von der vorherigen Version übernehmen {D2E0205B-0D3A-46E2-ADF7-0504FF48CF04}
+
+
+
+------------------------------- VLC benötigt zum streamen eine Firewall-Ausnahme (CustomAction) :
+				"CA_SetFirewall","3106","SystemFolder","netsh advfirewall firewall add rule name="VLC media player" dir=in action=allow program="[#vlc.exe]" enable=yes profile=domain,private,public","0"
+				"CA_RemFirewall","3106","SystemFolder","netsh advfirewall firewall delete rule name="VLC media player" program="[#vlc.exe]" profile=domain,private,public","0"
+
+------------------------------- Firewall-Ausnahmen in InstallExecuteSequence eingefügt:
+				AND REMOVE bei CA_RemFirewall resp. AND NOT Installed bei CA_SetFirewall sind nötig, damit bei ActiveSetup nicht der Windows Firewall Dialog wieder durchläuft.
+				"CA_RemFirewall","Installed AND VersionNT>=500 AND REMOVE","1600"
+				"CA_SetFirewall","NOT REMOVE ~="ALL" AND VersionNT>=500 AND NOT Installed","6450"
+
+------------------------------- Desktop Shortcut löschen
+
+
+------------------------------- Active Setup:
+------------------------------- Registry Werte erstellt:
+				Unter HKLM\Software\Microsoft\Active Setup\Installed Components\[UpgradeCodes]
+				Stubpath= msiexec /i [ProductCode] REINSTALL=User REINSTALLMODE=up /qn
+				Version= 3,0,7
+				<default>= [ProductName] User Setup
+
+
+				Update in VLC kann nur über "vlcrc" deaktiviert werden, deshalb Active Setup mit Ini File Funktion.
+				
+				Neues Feature "User" wird erstellt; Complete Feature wird untergeordnet
+				Bei User Feature "IniFile" Funktion erstellt: 
+
+				"vlcrc" wird als IniFile Funktion Directory \Windows\Profiles\Application Data\vlc erstellt
+				[qt]
+				qt-updates-notif=0
+				qt-updates-days=0
+				qt-privacy-ask=0
+
+				In Registry Table:
+				Bei "CurrentUser" Komponente Registry Key regHKCU01 HKCU\Software\VideoLAN\vlc\User Setup Reg_SZ "ok" erstellen
+
+				In Components:
+				CurrentUser: regHKCU01 als Keypath setzen
+
+
+
+
+
+
+

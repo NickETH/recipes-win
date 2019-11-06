@@ -1,0 +1,391 @@
+190924	ACHTUNG: Bei AppleApplicationSupport wurde die Version auf 7.6.1 geändert, da neue Version mit neuem Productcode aber Version gleich!
+	Download iTunes64Setup.exe von Apple Website als Standalone Installer, nach 'sourcepkt'.
+	Mit 7-zip iTunes64Setup.exe öffnen und iTunes64.msi extrahieren, nach 'sourceunzipped' und auf RO setzen.
+	'iTunes64.msi' nach iTunes64_12.10.0.7_ML.msi in 'helperfiles' kopieren.
+	Direct-Download Links: 		https://discussions.apple.com/docs/DOC-6562#more
+
+
+	Analyzing the package, we need to alter this issues:
+	1. There are things in iTunesSetup.exe we don't need/want.
+	   We extract AppleApplicationSupport.msi, AppleMobileDeviceSupport.msi and iTunes.msi
+	2. User settings are not making it to different users on a machine. We need to provide a run once for those settings.
+	   Active Setup is the way to go.
+	3. Auto update has to be disabled. We need the AdminFlags Regkey. See: https://support.apple.com/de-ch/HT201677
+	4. We need a mechanism to disable the Tray Icon. We move the Regkey, which enables it to its own component.
+	5. We don't want the APS deamon installed by AppleApplicationSupport.msi. It is used for wireless sync.
+	   Change the Component or FeatureComponents table.
+	6. 
+
+	Analyse des Packets, ergibt folgende Probleme:
+	1. UserSettings werden nicht mit Self-Healing in den Profilen restored. Dies wird über Active Setup gelöst.
+	2. Es können neu eine begrenzte Anzahl Preferences via Kindersicherung festgelegt werden.
+	   Siehe: https://support.apple.com/de-ch/HT201677
+	   Die Prefs braucht es aber weiterhin.
+		190924: Neue Infos: https://www.applepie.se/apple-itunes-11-1-4-and-software-license-agreement-and-process-monitor
+			Und: https://www.applepie.se/apple-itunes-12-7-and-software-license-agreement-registry-key
+			Undbedingt machen!
+			Prefs funktionieren nicht mehr!
+			AdminFlags auf 16777473 (kParentlFlags_DisableFirstRunWelcomeWindow, kParentalFlags_Locked, kParentalFlags_DisableCheckForUpdates
+			EULA ausschalten, Filename auslesen:
+			cscript ..\..\MSIScripts\WiRunSQL.vbs iTunes.work.msi "SELECT `File`.`File` FROM `File`, `Component`, `Directory` WHERE `File`.`Component_` = `Component`.`Component` AND `Directory`.`Directory` = `Component`.`Directory_` AND `DefaultDir`='tajvqtga|de.lproj' AND `FileName`='License.rtf'"
+
+
+	3. Das Trayicon kann im Installer nicht ausgeschaltet werden.
+	4. Neu ist ein Outlook Addin vorhanden. Die Registry-Einträge werden aber nicht automatisch in das
+	   Benutzerprofil kopiert. Das gleiche gilt für die Soundeffects.
+	5. Zusatz-Applikationen ergeben Probleme:
+	   Apple Software Update installiert automatisch Safari und ist nicht kontrollierbar!
+	   Quicktime hat in der Out-of-the-Box Version von Apple diverse Unzulänglichkeiten.
+	   Bonjour ist ein Zero-config-Service um andere Geräte auf dem Netz zu erkennen. Apples Antwort auf UPNP.
+	   Das braucht der normale Benutzer nicht!
+	6. Unnötig viele eingebettete Sprachtranforms vorhanden.
+	   Die noch verwendeten Sprachtranforms an die Änderungen anpassen und neue generieren.
+	7. Es wird bei den Active Setup Reinstalls immer wieder unnötig rebootet.
+	   Dafür ist eine Reboot CA des GEAR CD-Writer Drivers verantwortlich.
+	
+	Troubleshooting issues with iTunes for Windows updates: https://discussions.apple.com/docs/DOC-6562
+
+
+	Ist momentan nicht implementiert: (Music folder kann beim installieren nicht konfiguriert werden. Dieser ist)
+	(oMF = ohne Music Folder)
+	(mMF = mit Music Folder)
+	Musik folder HTML Codes?
+
+	Zusätzliche Erweiterungen:
+	8. Shortcut-Verzeichnis ist nicht von aussen erreichbar.
+	   Es wird neu über das SHORTCUT property gesetzt.
+	9. Im Dialog wird eine Editier-Möglichkeit für das Shortcut-Verzeichnis geschaffen.
+
+	10. Komfort für das Editieren des Shortcut-Verzeichnis: Die bestehenden Verzeichnisse werden zur Auswahl angeboten, 
+		es kann ein bestehendes oder das vorgeschlagene gewählt werden. 
+
+	Die Applikation 1x installieren und alle notwendigen Einstellungen vornehmen.
+	Danach die folgenden Dateien wegkopieren und umbenennen:
+	In '%USERPROFILE%\AppData\Roaming\Apple Computer\Preferences'
+	com.apple.iTunes.plist nach 'com.apple.iTunes.plist' kopieren.	
+
+	11. Das Caching per Default ausschalten.
+
+	'iTunes64.msi' in 'iTunes64_12.10.0.7_ML.msi' umbenennen.
+
+190924	P1: UserSettings in ein eigenes Feature. Dieses wird über Active Setup in allen Profilen nachinstalliert.
+
+	In Feature-Table die folgende Zeile eingefügt:
+	UserSettings		UserSettings		1	1		16
+
+	In Feature-Table die folgende Zeilen anpassen (Feature Parent):
+	iTunes	UserSettings	iTunes		2	1		16
+	CoreFP	UserSettings	FairPlay Core		0	1		16
+	iPodService	UserSettings	iPod Service		0	1		0
+	MS_CRT	UserSettings	Microsoft Runtime Libraries		0	1		8
+
+	In Component-Table die folgende Zeile eingefügt:
+	UserSettingsRepair	{CA4246F4-E9EE-4B48-8ED2-D9BBB90400CB}	iTunesAppDataFolder	4		RegUser1
+
+	In FeatureComponents-Table die folgende Zeile eingefügt:
+	UserSettings	UserSettingsRepair
+
+	In FeatureComponents-Table die folgende Zeilen geändert:
+	UserSettings	AboutiTunes.rtf
+	UserSettings	UserSettingsRepair
+	UserSettings	iTunesShadowPrefs
+
+	In Directory-Table die folgende Zeilen eingefügt:
+	AppleAppDataFolder	AppDataFolder	APPLEC~1|Apple Computer
+	PrefsAppDataFolder	AppleAppDataFolder	Prefs~1|Preferences
+
+	In Registry-Table die folgende Zeilen eingefügt:
+	RegHKLM1	2	SOFTWARE\Microsoft\Active Setup\Installed Components\[UgradeCode]	Stubpath	msiexec /i [ProductCode] REINSTALL=UserSettings REINSTALLMODE=up /qn	iTunes.exe
+	RegHKLM2	2	SOFTWARE\Microsoft\Active Setup\Installed Components\[UgradeCode]	Version	12,10,0	iTunes.exe
+	RegHKLM3	2	SOFTWARE\Microsoft\Active Setup\Installed Components\[UgradeCode]		[ProductName]	iTunes.exe
+
+
+	P2: Preferences Files einbinden.
+
+	In Directory-Table die folgende Zeile eingefügt:
+	iTunesDefaultPrefs	INSTALLDIR	DEFAUL~1.PRE|Default.prefs
+
+	In Component-Table die folgende Zeile eingefügt:
+	Prefs.xml	{C18B49A6-EFB5-43F4-90F8-AE7230A97D15}	iTunesDefaultPrefs	0		iTunesPrefs.xml.AppData
+
+	In File-Table die folgende Zeile eingefügt:
+	com.apple.iTunes.plist	Prefs.xml	ITUNES~1.APP|com.apple.iTunes.plist	121341			0	7000
+
+	Das Config-File erzeugen und in ein CAB-File einbinden:
+	Die folgenden Zeilen in die Datei 'config.ddf' einfügen (ohne führende tabs + spaces).
+	.Set CabinetName1=config.cab
+	.Set DiskDirectoryTemplate=.
+	.Set CompressionType=MSZIP
+	.Set Compress=ON
+	.Set Cabinet=ON
+	com.apple.iTunes.plist com.apple.iTunes.plist
+
+	Dann im Verzeichnis mit den Konfigdateien den folgenden Befehl ausführen:
+	makecab /f config.ddf
+
+	Mit 'Tables - Add Custom Table...' die table 'Cabs' erzeugen.
+	Danach die folgenden Columns in die table einfügen:
+	Name:Name Type:String Length:32
+	Name:Data Type:Binary
+
+	In Cabs-Table die folgende Zeile eingefügt:
+	config.cab <die oben erzeugte Datei config.cab hier einfügen>
+
+	In Media-Table die folgende Zeile eingefügt:
+	4	7000		#Cabs.config.cab		
+
+	Damit beim installieren der UserSettings nicht versucht wird, Files neu zu installieren, muss bei den neu einzufügenden XML-Dateien
+	ohne Versions-Information ein Eintrag in die 'MsiFileHash' table gemacht werden. Dies betrifft die folgenden 2 Dateien:
+	<ProfilesDir>\AppData\Roaming\Apple Computer\Preferences\com.apple.iTunes.plist
+	Siehe: http://blogs.msdn.com/astebner/archive/2005/08/30/458295.aspx
+
+	Mit dem folgenden Befehl eine 'MsiFileHash.idt' von 'com.apple.iTunes.plist'erzeugen:
+	cscript hash2.vbs com.apple.iTunes.plist
+	Die Datei 'MsiFileHash.idt' kann nun in das orginale 'iTunes_12.10.0.7_ML.msi' importiert werden (merge).
+
+	Mit 'Tables - Add Table...' die table DuplicateFile erzeugen.
+
+	In DuplicateFile-Table die folgende Zeile eingefügt:
+	DupFile1	UserSettingsRepair	com.apple.iTunes.plist	ITUNES~1.APP|com.apple.iTunes.plist	PrefsAppDataFolder
+
+	In InstallExecuteSequence-Table die folgende Zeile eingefügt:
+	DuplicateFiles		6350
+
+	In Registry-Table die folgende Zeile eingefügt:
+	RegUser1	1	SOFTWARE\Apple Computer, Inc.\iTunes	UserSettingsInstalled	1	UserSettingsRepair
+
+	Kindersicherung:
+	In Component-Table die folgende Zeile eingefügt:
+	ParentalControl	{14AC2F38-84B3-4DA2-8087-BF4833282358}	INSTALLDIR	260	NOT NOPARENTCTRL	RegHKLM5
+
+	In FeatureComponents-Table die folgende Zeile geändert:
+	iTunes	ParentalControl
+
+	In Registry-Table die folgenden Zeilen geändert:
+	RegHKLM5	2	SOFTWARE\Apple Computer, Inc.\iTunes\Parental Controls\Default	AdminFlags	#257	ParentalControl
+	RegHKLM6	2	SOFTWARE\Apple Computer, Inc.\iTunes\Parental Controls\Default	AdminRatingSystemID	#11	ParentalControl
+
+	P3: Möglichkeit schaffen, das Tray-Icon auszuschalten.
+
+	In Component-Table die folgende Zeile eingefügt:
+	iTunesHelper_HKLMRun	{E9D4E2D8-7BF2-4DF5-9711-DCAC3EDD15AB}	INSTALLDIR	4	NOT DONTHKLMRUN	Registry415
+
+	In Registry-Table die folgende Zeile geändert:
+	reg660680B4604832BBC61F523DF84864D2	2	SOFTWARE\Microsoft\Windows\CurrentVersion\Run	iTunesHelper	"[#iTunesHelper.exe]"	iTunesHelper_HKLMRun
+
+	In Property-Table die folgende Zeile eingefügt:
+	DONTHKLMRUN	1
+
+
+	P4: Sicherstellen, dass die Registry-Einträge für Benutzereinstellungen in die Benutzerprofile kopiert werden.
+
+	In FeatureComponents-Table die folgende Zeilen geändert:
+
+	UserSettings	AboutiTunes.rtf
+	UserSettings	iTunesShadowPrefs
+
+	P5: Unnötige Zusatzinstallationen (Quicktime, Apple Update, Bonjour, MobileMe) entfernen.
+
+	In caPackage-Table die folgende Zeilen gelöscht:
+	AppleSoftwareUpdate	AppleSoftwareUpdate.msi	SCHEDULE="[SCHEDULE_ASUW]"	
+	Bonjour	Bonjour.msi	ADDDEFAULT=mDNSResponder	
+
+	In MoveFile-Table die folgende Zeilen gelöscht:
+	SetupAdmin.exe	iTunesInstallerCache	SetupAdmin.exe		SourceDir	INSTALLERCACHE	0
+
+	In MoveFile-Table die folgende Zeile geändert:
+	iTunes.msi	iTunesInstallerCache	iTunes_12.10.0.7_ML.msi		SourceDir	INSTALLERCACHE	0
+
+	In Control-Table die folgenden Zeilen geändert:
+	DestinationOptions	InstallShortcuts	CheckBox	28	52	283	15	3	ChkOptShortcuts	Add iTunes shortcuts to my desktop	UseiTunesAsDefault	
+
+
+	In Control-Table die folgenden Zeilen gelöscht:
+	DestinationOptions	ScheduleASUW	CheckBox	28	108	283	15	2	ChkOptASU	Automatically update [ProductName] and other Apple software	LangCombo	
+
+
+	In ControlCondition-Table die folgenden Zeilen gelöscht:
+	DestinationOptions	ScheduleASUW	Show	NOT ASUW_IS_INSTALLED
+
+	In ControlEvent-Table die folgenden Zeilen gelöscht:
+	DestinationOptions	Install	[INSTALL_ASUW]	1	1	5
+	DestinationOptions	Install	[INSTALL_BONJOUR]	1	1	6
+	DestinationOptions	Install	[INSTALL_MOBILEME]	1	1	7
+	DestinationOptions	Install	[INSTALL_QT]	1	1	8
+	DestinationOptions	Install	[SCHEDULE_ASUW]	1	ChkOptASU	9
+	DestinationOptions	Install	[SCHEDULE_ASUW]	0	NOT ChkOptASU	10
+
+	In Dialog-Table in allen Zeilen die Title-Spalte nach "iTunes" geändert.
+
+
+	P6: Unötig viele eingebettete Sprachtranforms vorhanden. Es werden die folgenden eingefügt:
+	4108 French (Switzerland) 
+	2055 German (Switzerland)
+	2064 Italian (Switzerland) 
+	1031 German (Germany) 
+	1036 French (France)
+	1040 Italian (Italy) 
+
+	Alle Transforms werden extrahiert und danach das MSI umbenennen und mit ORCA wieder mit dem gewünschten Namen abspeichern.
+	Dadurch werden alle Language-Transforms gelöscht und die MSI verkleinert.
+	Script zum extrahieren: ExtractLangTran.cmd
+
+	Beim deutschen Sprach-Transform die neuen/geänderten Dialoge anpassen.
+	Die Anpassungen sind im Transform '1031-add.mst' - '4108-add.mst' gespeichert.
+	1031.mst/1036.mst/1040.mst einmal in ORCA zu 'iTunes_12.10.0.7_ML.msi' dazuladen und neu apspeichern. 
+	Damit werden unnötige Einträge gelöscht, die sonst beim Installieren Fehler ergeben würden.
+
+	Für die die Schweizer Regionen werden 3 neue Sprachtransforms aus 1031/1036/1040 mit angepassten Apple-Koordinaten erzeugt.
+	Dabei die folgenden ARP-Zeilen in der Property Table angepasst:
+	2055 (ProductLanguage bleibt bei 1031)
+	ARPHELPLINK	http://www.apple.com/chde/support
+	ARPHELPTELEPHONE	0848 000 132
+	ARPURLINFOABOUT	http://www.apple.com/chde
+	ARPURLUPDATEINFO	http://www.apple.com/chde/quicktime/
+
+	4108 (ProductLanguage bleibt bei 1036)
+	ARPHELPLINK	http://www.apple.com/chfr/support/
+	ARPHELPTELEPHONE	0848 000 132
+	ARPURLINFOABOUT	http://www.apple.com/chfr/
+	ARPURLUPDATEINFO	http://www.apple.com/chfr/quicktime/
+
+	2064 (ProductLanguage bleibt bei 1040)
+	ARPHELPLINK	http://www.apple.com/it/support/
+	ARPHELPTELEPHONE	0848 000 132
+	ARPURLINFOABOUT	http://www.apple.com/it
+	ARPURLUPDATEINFO	http://www.apple.com/it/quicktime/
+
+	Mit cscript WiSubStg.vbs iTunes_12.10.0.7_ML.msi 2055.MST 2055 (DEU CH) usw. die
+	Transforms für die folgenden Sprachen als SubStorage eingebunden:
+	4108 French (Switzerland) 
+	2055 German (Switzerland)
+	2064 Italian (Switzerland) 
+	1031 German (Germany) 
+	1036 French (France)
+	1040 Italian (Italy) 
+	Script zum einbetten: AddLangTran.cmd
+
+	Danach unter Summary Information:Languages die obigen Sprachcodes eingefügt.
+	Siehe: http://www.installsite.org/pages/en/msi/articles/embeddedlang/
+	Dadurch wird die zu installierende Sprache selbständig, auf Grund der 
+	eingestellten Region, erkannt.
+
+
+	P7: Bei REINSTALL (wird mit Active Setup ausgelöst) wird ein Reboot generell unterdrückt.
+
+	In InstallExecuteSequence-Table die folgende Zeile geändert:
+	CheckRebootNeeded	NOT REINSTALL	6601
+
+
+	P8: Das Shortcut-Directory wird mit einem Public-Property konfigurierbar gemacht.
+
+	In AppSearch-Table die folgende Zeile eingefügt:
+	SHORTCUTDIR	SC_Dir
+
+	In Directory-Table die folgende Zeile eingefügt:
+	SHORTCUTDIR	ProgramMenuFolder	iTunes
+
+	In RegLocator-Table die folgende Zeile eingefügt:
+	SC_Dir	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	ShortcutDirectory	2
+
+	In Registry-Table die folgende Zeile eingefügt:
+	RegHKLM4	2	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	ShortcutDirectory	[SHORTCUTDIR]	iTunes.exe
+
+	In Shortcut-Table die folgenden Zeilen geändert:
+	iTunes	SHORTCUTDIR	iTunes	iTunes.exe	iTunes				iTunesIco.exe							
+	AboutiTunes	SHORTCUTDIR	ABOUTIT|About iTunes	AboutiTunes.rtf	[$AboutiTunes.rtf]About iTunes.rtf				RichText.ico		1					
+
+	P9: Das Shortcut-Directory wird im Dialog konfigurierbar gemacht.
+
+	In Control-Table die folgenden Zeilen eingefügt:
+	DestinationOptions	Location1	Text	57	142	220	20	3	_BrowseProperty	[SHORTCUTDIR]		
+	DestinationOptions	GroupBox1	GroupBox	15	124	344	41	3		Shortcut Folder		
+	DestinationOptions	SCFolder4bpp	Icon	21	134	24	24	5242880		Folder4bpp.ico		
+	DestinationOptions	SCFolder8bpp	Icon	21	134	24	24	5242880		Folder8bpp.ico		
+	DestinationOptions	ChangeFolder1	PushButton	285	139	66	17	3		&Change...	ChangeFolder	
+
+	In Control-Table die folgenden Zeilen geändert:
+	DestinationOptions	Back	PushButton	164	239	66	17	3		< &Back	InstallShortcuts	
+	DestinationOptions	Cancel	PushButton	301	239	66	17	3		Cancel	Back	
+	DestinationOptions	InstallShortcuts	CheckBox	28	52	283	15	3	ChkOptShortcuts	Add iTunes shortcuts to my desktop	UseiTunesAsDefault	
+	DestinationOptions	UseiTunesAsDefault	CheckBox	28	70	283	15	3	ChkOptDefPlayer	Use iTunes as the default player for audio files	LangCombo	
+	DestinationOptions	LangCombo	ComboBox	133	95	120	117	131075	ITUNES_LANGID		ChangeFolder1	
+	DestinationOptions	Install	PushButton	230	239	66	17	8388611		&Install	Cancel	
+	DestinationOptions	iTunesLangLabel	Text	40	97	90	15	3		Default iTunes language:		
+	DestinationOptions	GroupBox	GroupBox	15	175	344	41	3		Destination Folder		
+	DestinationOptions	DestFolder4bpp	Icon	21	185	24	24	5242880		Folder4bpp.ico		
+	DestinationOptions	DestFolder8bpp	Icon	21	185	24	24	5242880		Folder8bpp.ico		
+	DestinationOptions	ChangeFolder	PushButton	285	189	66	17	3		&Change...	Install	
+	DestinationOptions	Location	Text	57	190	220	20	3	_BrowseProperty	[INSTALLDIR]		
+
+	In ControlCondition-Table die folgenden Zeilen eingefügt:
+	DestinationOptions	SCFolder4bpp	Show	VersionNT<501
+	DestinationOptions	SCFolder8bpp	Show	VersionNT>=501
+
+	In ControlEvent-Table die folgenden Zeilen eingefügt:
+	DestinationOptions	ChangeFolder1	SpawnDialog	ChangeFolder	1	1
+	DestinationOptions	ChangeFolder1	[_BrowseProperty]	SHORTCUTDIR	1	2
+
+
+	P10: Editier-Komfort für Shortcut-Directory wird im Dialog konfigurierbar gemacht.
+
+	In Binary-Table die folgende Zeile eingefügt:
+	SC_Scripts	C:\daten\1MSI-Packs\iTunes_12.10.0.7_ML\helperfiles\combo1.vbs
+
+	In CustomAction-Table die folgenden Zeilen eingefügt:
+	SetShortcutDir	51	SHORTCUTDIR	[ProgramMenuFolder][MENU_FOLDERID]\
+	AddCombo	6	SC_Scripts	AddComboTable
+
+	In InstallUISequence-Table die folgenden Zeilen eingefügt:
+	SetShortcutDir		1299
+	AddCombo		1227
+
+	In Property-Table die folgende Zeile eingefügt:
+	MENU_FOLDERID	iTunes
+
+	In Control-Table die folgenden Zeilen geändert:
+	DestinationOptions	Location1	Text	57	142	220	20	3		[ProgramMenuFolder]		
+	DestinationOptions	ChangeFolder1	ComboBox	285	139	66	17	65539	MENU_FOLDERID		ChangeFolder	
+
+	In ControlEvent-Table die folgenden Zeilen gelöscht:
+	DestinationOptions	ChangeFolder1	SpawnDialog	ChangeFolder	1	1
+	DestinationOptions	ChangeFolder1	[_BrowseProperty]	SHORTCUTDIR	1	2
+
+	P11: MST für Caching ausschalten erstellen.
+	In Property-Table die folgende Zeile eingefügt:
+	DONTCACHEMSI	1
+
+	Nicht mehr nötig! Apple hat's nach 10 Jahren endlich gefixt!
+::	Bugfix: - iTunesRegistry.dll hat falsche Versionsinfo in MSI! Folgende Zeile in File Table angepasst:
+::	filB18EE7F407798227B87EBF41B81D57D2	cmp62DDB8A1BED6B1315E6BCC90793D8CF8	jrd96w7f.dll|iTunesRegistry.dll	166712	12.7.5.4	3082,2070,2058,2057,2052,1086,1066,1058,1057,1055,1054,1053,1051,1050,1049,1048,1046,1045,1044,1043,1042,1041,1040,1038,1037,12,1035,1033,1032,1031,1030,5,1028,3,1025	512	3891
+::	CAB-File extrahieren: msidb /d iTunes.work.msi -x iTunes.cab
+::	Daraus 'filB18EE7F407798227B87EBF41B81D57D2' extrahieren und gegebenenfalls Versionsinfo in File Table anpassen.
+	
+190924	v1.0 ETHZBuild#1 Released.
+
+
+ ITUNES OUTLOOK ADDIN - Ken Slovak - [MVP - Outlook]
+09-May-08 05:10:18
+
+Don't uninstall it, just disable it. As long as you don't try to set up a
+calendar synch connection or delete an existing one on the iTunes side of
+things it won't get re-enabled. You can uncheck it in the COM Add-Ins dialog
+to disable it.
+
+That will set the LoadBehavior value in the registry to 2 from 3 (start with
+Outlook). If you set that value in the registry to 0 it won't even show up
+in the COM Add-Ins dialog.
+
+Do this with Outlook shut down.
+
+To set LoadBehavior type "regedit" in the Start, Run dialog, then press
+Enter.
+
+Navigate to
+HKEY_CURRENT_USER\Software\Microsoft\Office\Outlook\Addins\iTunesAddIn.CalendarHelper.
+
+In the right-hand pane select LoadBehavior and right-click on it and select
+Modify. Set LoadBehavior to 0. OK the change and close the registry editor.
+
+I usually start the iTunes software when I'm testing with it by plugging the
+iPod into a USB port.

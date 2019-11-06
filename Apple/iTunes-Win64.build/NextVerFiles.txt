@@ -1,0 +1,4 @@
+helpers\iTunes64-files.txt
+helpers\iTunes64-Settings.mst
+read\create-log-iTunes_64_VVeerrssiioonn_ML.txt
+read\readme-iTunes_64_VVeerrssiioonn_ML.txt

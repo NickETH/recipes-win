@@ -1,0 +1,3 @@
+helpers\VLC64-ETHZ-cfg.mst
+read\create-log-VLC_VVeerrssiioonn_ML.txt
+read\readme-VLC_VVeerrssiioonn_ML.txt

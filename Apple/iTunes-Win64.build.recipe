@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest iTunes Client x64 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.NickETH.build.iTunes-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>iTunes</string>
+<!--         <key>SEARCH_PATTERN</key>
+        <string>get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.exe</string>
+ -->        <key>PLATFORM</key>
+        <string>64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>ParentRecipe</key>
+    <string>com.github.NickETH.download.iTunes-Win</string>
+    <key>Process</key>
+    <array>
+		<!--
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>pkg_dir</key>
+                <string>%NAME%_64_::VVeerrssiioonn::_ML</string>
+                <key>folder_list</key>
+                <string>sourcepkt:sourceunzipped:release:read:helpers</string>
+                <key>ver_fields</key>
+                <string>4</string>
+                <key>create_AS_ver</key>
+                <string>True</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%NAME%_64_%build_ver%_ML</string>
+                <key>rename_var</key>
+                <string>pkg_dir</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%-%version%-%PLATFORM%.exe</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%-%version%-%PLATFORM%.exe</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
+                <key>extract_file</key>
+                <string>@%BUILD_DIR%\%pkg_dir%\helpers\iTunes64-files.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the version from AppleApplicationSupport64.msi into msi_value</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AppleApplicationSupport64.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%msi_value%</string>
+                <key>rename_var</key>
+                <string>AAS_version</string>
+            </dict>
+		</dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Copy the AppleApplicationSupport64.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AppleApplicationSupport64.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport64_%AAS_version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Copy the 32bit AppleApplicationSupport.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AppleApplicationSupport.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport32_%AAS_version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the version from AppleMobileDeviceSupport64.msi into msi_value</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AppleMobileDeviceSupport64.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%msi_value%</string>
+                <key>rename_var</key>
+                <string>AMDS_version</string>
+            </dict>
+		</dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Copy the AppleMobileDeviceSupport64.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\AppleMobileDeviceSupport64.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleMobileDeviceSupport64_%AMDS_version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Copy the iTunes.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\%NAME%%PLATFORM%.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+			<key>Comment</key>
+			<string>Applies the Settings-Transform to the iTunes.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <key>mst_paths</key>
+				<array>
+                    <string>%BUILD_DIR%\%pkg_dir%\helpers\iTunes64-Settings.mst</string>
+                </array>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Change a few settings in the MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>		
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='iTunes %version% ML' WHERE `Property`.`Property`='ProductName']]></string>
+					<string><![CDATA[UPDATE `Registry` SET `Registry`.`Value`='%AS_ver%' WHERE `Registry`.`Registry`='RegHKLM2']]></string>
+					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleMobileDeviceSupport64_%AMDS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleMobileDeviceSupport']]></string>
+					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport64_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport64']]></string>
+					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport32_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>iTunes x64 %version% ML</string>
+				    <key>/t</key>
+                    <string>iTunes x64 %version% ML</string>
+				    <key>/p</key>
+                    <string>x64;1033</string>
+				</dict>
+            </dict>
+		</dict>
+<!--
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
+                <key>mst_paths</key>
+				<array>				
+                    <string>%BUILD_DIR%\%pkg_dir%\helpers\VLC64-ETHZ-cfg.mst</string>
+                </array>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Inserts the license information into the property table</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>				
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%version%' WHERE `Property`.`Property`='ProductVersion']]></string>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='VLC media player %version% (64-bit)' WHERE `Property`.`Property`='ProductName']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>Videolan Client x64 %version% ML</string>
+				    <key>/t</key>
+                    <string>Videolan Client x64 %version% ML</string>
+				</dict>
+            </dict>
+		</dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
