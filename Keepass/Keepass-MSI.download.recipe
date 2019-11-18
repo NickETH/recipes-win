@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Keepass MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.Keepass-MSI</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Keepass</string>
+        <key>SEARCH_URL_MSI</key>
+		<!-- <string>https://sourceforge.net/projects/keepass/files/KeePass%202.x/2.43/KeePass-2.43.msi/download</string> -->
+		<string>(?P&lt;msi_dl_link&gt;https://sourceforge\.net/projects/keepass/files/KeePass%20[0-9]\.x/([0-9]+\.)*[0-9]+/KeePass-(?P&lt;version&gt;[0-9]+\.[0-9]+(\.([0-9]+))?).msi/download)</string>
+		<key>DOWNLOAD_FILE</key>
+        <string>Keepass</string>
+        <key>ver_build</key>
+        <string>0</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+<!--         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SourceForgeURLProvider</string>
+            <key>Arguments</key>
+            <dict>
+                <key>SOURCEFORGE_PROJECT_ID</key>
+                <string>95013</string>
+                <key>SOURCEFORGE_FILE_PATTERN</key>
+                <string>%SEARCH_URL%</string>
+			</dict>
+		</dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>http://sourceforge.net/api/file/index/project-id/95013/rss</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_URL_MSI%</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%DOWNLOAD_URL%</string>  -->
+				<string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>%NAME%.msi</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>E=cert@dominik-reichl.de, CN="Open Source Developer, Dominik Reichl", L=Metzingen, O=Open Source Developer, C=DE</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

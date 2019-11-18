@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+	<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+		<?include version.wxi?>
+		<Module Id="PkgMergeModule" Language="0" Version="$(var.version)" Codepage="1252">
+			<Package Id="$(var.Packagecode)" Manufacturer="ETHZ ID-CD" InstallerVersion="200" />
+
+			<!-- Über IgnoreModularization definieren wir, dass an die Directory Variable SystemFolder kein Modularisierungs-GUID angehängt werden soll -->
+			<!-- <IgnoreModularization Name="SystemFolder" Type="Directory"/> -->
+
+			<Directory Id="TARGETDIR" Name="SourceDir">
+				<!-- <Directory Id="SystemFolder" SourceName="SystemFolder" /> -->
+				<Directory Id="MergeRedirectFolder" />
+					<Directory Id="PkgFolder" />
+			</Directory>
+
+			<ComponentGroupRef Id="PkgFiles1" />
+		</Module>
+	</Wix>

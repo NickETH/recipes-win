@@ -4,9 +4,8 @@
 <dict>
     <key>Description</key>
     <string>Alters latest Dropbox client for Windows.</string>
-    <!-- Initial test package with a build environment -->
     <key>Identifier</key>
-    <string>com.github.NickETH.build.DropboxClient-Win</string>
+    <string>com.github.autopkg-win.build.DropboxClient-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -17,7 +16,7 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.DropboxClient-Win</string>
+    <string>com.github.autopkg-win.download.DropboxClient-Win</string>
     <key>Process</key>
     <array>
         <dict>
@@ -29,15 +28,17 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
+	    <!--
+		-->
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/SevenZipExtractor</string>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>
                 <string>%pathname%</string>
                 <key>extract_dir</key>
-                <string>downloads</string>
+                <string>%RECIPE_CACHE_DIR%\downloads</string>
                 <key>extract_file</key>
                 <string>installer.exe*</string>
             </dict>
@@ -53,7 +54,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.hansen-m.SharedProcessors/ExeVersionExtractor</string>
+            <string>com.github.autopkg-win.SharedProcessors/ExeVersionExtractor</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>
@@ -62,7 +63,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -122,7 +123,44 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\DropboxClient_%version%_ML.exe</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\</string>
+                <key>extract_file</key>
+                <string>$0\DropboxUninstaller.exe</string>
+                <key>preserve_paths</key>
+                <string>False</string>				
+            </dict>
+        </dict>	
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\Create-log-Dropbox_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-Dropbox_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Processor</key>

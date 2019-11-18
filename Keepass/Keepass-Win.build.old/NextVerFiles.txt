@@ -1,0 +1,9 @@
+read\create-log-Keepass_VVeerrssiioonn_ML.txt
+read\readme-Keepass_VVeerrssiioonn_ML.txt
+helpers\KeePass.config.enforced.xml
+helpers\Release.cmd
+helpers\archive.cmd
+wixproject\version.wxi
+wixproject\global.prop
+wixproject\Keepass_ML.build
+wixproject\Keepass_ML.wxs

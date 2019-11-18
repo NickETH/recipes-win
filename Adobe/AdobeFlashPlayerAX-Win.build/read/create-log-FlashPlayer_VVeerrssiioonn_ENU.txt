@@ -1,0 +1,93 @@
+120821	Neu gibt es nur noch ein Kombi-Packet für x86 + x64
+
+190216	Download Flashplayer MSI's von:
+	https://www.adobe.com/products/flashplayer/distribution5.html
+	install_flash_player_32_active_x.msi
+	install_flash_player_32_plugin.msi
+
+	Versions: https://forums.adobe.com/thread/2365651
+
+	Beide MSI's haben keine Möglichkeit, das mms.cfg File zu verteilen.
+
+	'install_flash_player_32_active_x.msi' nach 'FlashPlayer_AX_32.0.0.142_ENU.msi' umbenannt.
+	'install_flash_player_32_plugin.msi' nach 'FlashPlayer_PG_32.0.0.142_ENU.msi' umbenannt.
+
+
+	Änderungen in 'FlashPlayer_AX.32.0.0.142_ENU.msi'
+
+	Summary Information angepasst:
+	Title + Subject: 'Flash Player ActiveX 32.0.0.142'
+	Comments: 'Slightley altered version for ETHZ ID. 20190216 Nick Heim'
+
+	Änderungen in 'FlashPlayer_Plugin.32.0.0.142_ENU.msi'
+
+	Summary Information angepasst:
+	Title + Subject: 'Flash Player Plugin 32.0.0.142'
+	Comments: 'Slightely altered version for ETHZ ID. 20190216 Nick Heim'
+
+
+	Änderungen in beiden MSI's:
+
+	In der Property table geändert (Damit der Upgradecheck ausgeschaltet wird):
+	ISCHECKFORPRODUCTUPDATES	0
+
+	http://www.itninja.com/question/how-to-disable-update-service-for-adobe-flash-11-2
+	To remove Adobe's scheduled task, just go to 'Execute Deferred' 
+	and in the line 'Execute Installed Program InstallAX.exe 
+	... just add '-au 2' so the 'Command Line Arguments' line will be: -install -msi -au 2
+
+	Stand zwischenzeitlich im Verdacht den Bug mit der fehlenden mms.cfg in x64 ..\System32\Macromed\Flash zu verursachen.
+	In der CustomAction table geändert (Damit der Update Service nicht installiert wird):
+	NewCustomAction1	3090	InstallPlugin_32_0_0_142.exe	-install -msi -au 2	
+
+	Adobe hat die Einträge in mms.cfg überarbeitet.
+	Neu wird nur noch:
+	AutoUpdateDisable=1
+	gebraucht.
+	ACHTUNG: Config File muss in Cabinet mms_cfg heissen, nicht mms.cfg!
+
+	Die Konfigurationsdatei 'mms.cfg' in die CAB-Datei config.cab komprimiert.
+
+	In der Binary table eingefügt:
+	config.cab	..\scriptspkt\config.cab
+
+	In Component table eingefügt:
+	ConfigFiles	{EA6CEC7B-30D3-4523-8A88-14F699D4089C}	INSTALLDIR	0		mms_cfg
+
+	In der FeatureComponents table eingefügt:
+	FlashPlayerAXInstaller	ConfigFiles
+
+	In der File table eingefügt:
+	mms_cfg	ConfigFiles	mms.cfg	84			16384	5
+
+	In der Media table eingefügt:
+	2	5	2	#Binary.config.cab	
+
+	In der MsiFileHash table eingefügt:
+	mms_cfg	0	-685636886	-103556092	124668755	1931007589
+
+	Adobe hat einen Bug bestätigt, bei dem die mms.cfg auf x64 Systemen von ..\System32\Macromed\Flash zu lesen.
+	Diese wird aber nach ..\SysWOW64\Macromed\Flash abgelegt, da es sich um eine 32bit Installation handelt.
+	Mit MSI haben wir keinen Zugang zu diesen Directories, da das System alle Zugriffe in Richtung ..\System32\..
+	nach ..\SysWOW64\.. umlenkt.
+	Deshalb verwenden wir eine CA mit xcopy und hardcodierten Directory-Einträgen, um das mms.cfg zud duplizieren.
+	Folgende Änderungen sind notwendig:
+
+	In Component table eingefügt:
+	CfgFileDuplicate	{BBA2BDE6-82A7-49EE-8E7A-EADDFE8BC399}	INSTALLDIR	0	(VersionNT64)	
+
+	In der CustomAction table eingefügt:
+	CopyCfg2x64	3170	FLASH	xcopy.exe "[FLASH]mms.cfg" "C:\Windows\System32\Macromed\Flash\" /y	
+
+	In der Directory table eingefügt:
+	System64Folder	TARGETDIR	.:System32
+	MACROMED64	System64Folder	Macromed
+	FLASH64	MACROMED64	Flash
+
+	In der FeatureComponents table eingefügt:
+	FlashPlayerAXInstaller	CfgFileDuplicate
+
+	In der InstallExecuteSequence table eingefügt:
+	CopyCfg2x64	NOT REMOVE	4050
+
+190216	Released. V1.0

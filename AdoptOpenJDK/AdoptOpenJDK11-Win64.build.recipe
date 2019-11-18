@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest AdoptOpenJDK Hotspot x64 MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.AdoptOpenJDK11-Win64</string>
+    <string>com.github.autopkg-win.build.AdoptOpenJDK11-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -13,14 +13,18 @@
         <key>SEARCH_URL</key>
 		<string><![CDATA[https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk11?os=windows&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jdk]]></string>
         <key>DOWNLOAD_FILE</key>
-        <string>OpenJDK11U</string>
+        <string>OpenJDK11U-JDK</string>
         <key>PLATFORM</key>
         <string>x64</string>
+        <key>ZULUPLATFORM</key>
+        <string>x64</string>
+        <key>ZULUPRODUCT</key>
+        <string>jdk</string>
     </dict>
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.AdoptOpenJDKMSI-Win</string>
+    <string>com.github.autopkg-win.download.AdoptOpenJDKMSI-Win</string>
     <key>Process</key>
     <array>
         <dict>
@@ -34,7 +38,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -49,14 +53,8 @@
                 <string>AdoptOpenJDK_Hotspot_64_%version%_ML</string>
                 <key>folder_list</key>
                 <string>sourceunzipped:release:read:helpers</string>
-				<!--
-                <key>BuildFiles</key>
-                <string>NextVerFiles.txt</string>
-				-->
 			</dict>
 		</dict>
-		<!--
-		-->
         <dict>
             <key>Arguments</key>
             <dict>
@@ -83,15 +81,13 @@
             <key>Processor</key>
             <string>Copier</string>
         </dict>
-		<!--
-		-->
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -99,7 +95,7 @@
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Slightley altered version for mass deployment.</string>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
                     <string>AdoptOpenJDK Hotspot x64 %version% ML</string>
 				    <key>/t</key>

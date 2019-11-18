@@ -5,7 +5,7 @@
 # Created by Nick Heim (heim)@ethz.ch) on 2019-11-03.
 #
 # Extracts version info from Windows PE-executable (.exe/.dll) file.
-
+# pywin32 is required. Install: pip install pywin32
 
 import os
 import sys

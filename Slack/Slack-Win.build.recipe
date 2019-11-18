@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest Slack MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.Slack-Win</string>
+    <string>com.github.autopkg-win.build.Slack-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -16,24 +16,23 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.Slack-MSI</string>
+    <string>com.github.autopkg-win.download.Slack-MSI</string>
     <key>Process</key>
     <array>
-<!--         <dict>
+        <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
 			<key>Comment</key>
-			<string>Uses the Python eval function, It is assumed, that the Adopt-files are supplied earlier, when a new release is ready. If this changes, the predication has to be altered</string>
+			<string>Uses the Python eval function</string>
             <key>Arguments</key>
             <dict>
                 <key>predicate</key>
-                <string>(download_changed == False) or not __import__('os').path.isfile(__import__('os').path.join("%RECIPE_CACHE_DIR%\downloads","%zuludlfile%")) or not __import__('os').path.isfile(__import__('os').path.join("%RECIPE_CACHE_DIR%\downloads", "%DOWNLOAD_FILE%_hotspot_%PLATFORM%_%version%.msi"))</string>
-                <string>'(download_changed == False) and os.path.isfile(os.path.join("%RECIPE_CACHE_DIR%\downloads","%zuludlfile%"))and os.path.isfile(os.path.join("%RECIPE_CACHE_DIR%\downloads", "%DOWNLOAD_FILE%_hotspot_%PLATFORM%_%version%.msi"))'</string>
+                <string>download_changed == False</string>
             </dict>
-        </dict> -->
+        </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -56,7 +55,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -69,27 +68,27 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%_%build_ver%_ML.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%_64_%build_ver%_ML.txt</string>
                 <key>new_ver</key>
                 <string>%build_ver%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%_%build_ver%_ML.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%_64_%build_ver%_ML.txt</string>
                 <key>new_ver</key>
                 <string>%build_ver%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
@@ -97,7 +96,7 @@
                 <key>source_path</key>
                 <string>%RECIPE_CACHE_DIR%\downloads\%NAME%_%PLATFORM%.msi</string>
                 <key>destination_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%build_ver%_ML.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_64_%build_ver%_ML.msi</string>
                 <key>overwrite</key>
                 <string>true</string>
             </dict>
@@ -106,15 +105,15 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%build_ver%_ML.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_64_%build_ver%_ML.msi</string>
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>

@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Amazon Coretto JDK 8 MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.AmazonCorettoJDK8MSI-Win</string>
+    <string>com.github.autopkg-win.download.AmazonCorettoJDK8MSI-Win</string>
     <key>Input</key>
     <dict>
     </dict>
@@ -30,7 +30,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -41,7 +41,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>

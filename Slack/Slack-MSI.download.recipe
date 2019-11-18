@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Slack MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.Slack-MSI</string>
+    <string>com.github.autopkg-win.download.Slack-MSI</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -55,15 +55,6 @@
                 <string>E=hostmaster@slack-corp.com, CN="Slack Technologies, Inc.", O="Slack Technologies, Inc.", L=San Francisco, S=CA, C=US</string>
             </dict>
         </dict>
-<!--         <dict>
-            <key>Processor</key>
-            <string>StopProcessingIf</string>
-            <key>Arguments</key>
-            <dict>
-                <key>predicate</key>
-                <string>download_changed == False</string>
-            </dict>
-        </dict> -->
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

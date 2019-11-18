@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest Adobe Flash Player ActiveX Plugin MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.AdobeFlashPlayerAX-Win</string>
+    <string>com.github.autopkg-win.build.AdobeFlashPlayerAX-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -20,7 +20,7 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.AdobeFlashPlayerMSI-Win</string>
+    <string>com.github.autopkg-win.download.AdobeFlashPlayerMSI-Win</string>
     <key>Process</key>
     <array>
         <dict>
@@ -36,7 +36,7 @@
     -->
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -47,7 +47,7 @@
 	-->
                 <key>recipe_path</key>
                 <string>%RECIPE_PATH%</string>
-                <key>build_ver</key>
+                <key>org_ver</key>
                 <string>%version%</string>
                 <key>pkg_dir</key>
                 <string>FlashPlayer_AX_%version%_ENU</string>
@@ -61,27 +61,27 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-FlashPlayer.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-FlashPlayer_%version%_ENU.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-FlashPlayer.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-FlashPlayer_%version%_ENU.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
@@ -111,7 +111,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -122,43 +122,35 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_AX_%version%_ENU.msi</string>
-                <key>mst_path</key>
+                <key>mst_paths</key>
                 <string>%BUILD_DIR%\%pkg_dir%\helpers\cfg-emb.mst</string>
             </dict>
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
-            <key>Arguments</key>
-            <dict>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_AX_%version%_ENU.msi</string>
-                <key>flag_sinfo</key>
-                <string>/t</string>
-                <key>string_sinfo</key>
-                <string>Flash Player ActiveX %ver_major%.0.0.%ver_minor%</string>
-            </dict>
-		</dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\release\FlashPlayer_AX_%version%_ENU.msi</string>
-                <key>flag_sinfo</key>
-                <string>/o</string>
-                <key>string_sinfo</key>
-                <string>Slightley altered version for mass deployment</string>
+                <key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Slightely altered version for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>Flash Player ActiveX %ver_major%.0.0.%ver_minor%</string>
+				    <key>/t</key>
+                    <string>Flash Player ActiveX %ver_major%.0.0.%ver_minor%</string>
+				</dict>
             </dict>
 		</dict>
         <dict>

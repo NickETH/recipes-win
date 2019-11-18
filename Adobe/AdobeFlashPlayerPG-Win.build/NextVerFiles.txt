@@ -1,3 +1,3 @@
 helpers\cfg-emb.mst
-read\create-log-FlashPlayer.txt
-read\readme-FlashPlayer.txt
+read\create-log-FlashPlayer_VVeerrssiioonn_ENU.txt
+read\readme-FlashPlayer_VVeerrssiioonn_ENU.txt

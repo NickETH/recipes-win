@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Patches Adobe Reader DC for Windows (MSI) with the latest Update MSP-file and builds it.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.AdobeReaderDC-Win</string>
+    <string>com.github.autopkg-win.build.AdobeReaderDC-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -22,11 +22,9 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.AdobeReaderDCMSI-Win</string>
+    <string>com.github.autopkg-win.download.AdobeReaderDCMSI-Win</string>
     <key>Process</key>
     <array>
-    <!--
-	--> 
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
@@ -36,10 +34,9 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
-
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -64,31 +61,31 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-AdobeReaderDC_deu.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-AdobeReaderDC_%version%_deu.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9][0-9]\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-AdobeReaderDC_deu.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-AdobeReaderDC_%version%_deu.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9][0-9]\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
     <!--
 	-->
-		<dict>
+        <dict>
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
@@ -104,7 +101,7 @@
 
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIofflinePatcher</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIofflinePatcher</string>
             <key>Arguments</key>
             <dict>
                 <key>pkg_dir_abs</key>
@@ -128,7 +125,7 @@
 
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/AcrobatGUIDPatcher</string>
+            <string>com.github.autopkg-win.SharedProcessors/AcrobatGUIDPatcher</string>
             <key>Arguments</key>
             <dict>
                 <key>base_GUID</key>
@@ -141,7 +138,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -152,7 +149,6 @@
                     <string><![CDATA[UPDATE `Property` SET `Property`.`Value`='Adobe Acrobat Reader DC DE-EN' WHERE `Property`.`Property`='ProductName']]></string>
                     <string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='CHROMEPLUGIN' WHERE `Component`.`Component`='WCChromeNativeMessagingHost']]></string>
                     <string><![CDATA[UPDATE `MoveFile` SET `MoveFile`.`SourceName`='AdobeReaderDC_%version%_Deu.msi', `MoveFile`.`DestName`='AdobeReaderDC_%version%_Deu.msi' WHERE `MoveFile`.`FileKey`='CacheSetupFiles_AcroRdrDC1501720050_de_DE.msi']]></string>
-					
 				</array>
 			</dict>
 		</dict>
@@ -171,13 +167,13 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>				
                 <key>mst_paths</key>
-				<array>				
+				<array>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\CurrentUser1.mst</string>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\ActiveSetup1.mst</string>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\ActiveSetup64.mst</string>
@@ -191,7 +187,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -207,19 +203,19 @@
 		<!--    -->
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>				
                 <key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Slightly altered version for mass deployment</string>
+                    <string>Slightely altered version for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
                     <string>Adobe Reader DC %version%</string>
 				    <key>/t</key>
@@ -227,7 +223,6 @@
 				</dict>
             </dict>
 		</dict>
-
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

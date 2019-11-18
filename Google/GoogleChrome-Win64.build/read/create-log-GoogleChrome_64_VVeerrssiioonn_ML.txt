@@ -1,0 +1,64 @@
+.
+190207	Download GoogleChromeStandaloneEnterprise64.msi
+	von: https://www.google.com/intl/en/chrome/business/browser
+	http://dl.google.com/tag/s/dl/chrome/install/googlechromestandaloneenterprise64.msi
+
+	Analyse des Packets, ergibt folgende Probleme:
+	1. UserSettings werden mit Active Setup installiert. Muss noch genauer analysiert werden.
+	2. Es können keine voreingestellten Preferences installiert werden.
+	3. Autoupdate muss ausgeschaltet werden.
+	4. ARP Icon fehlt.
+	5. Version in MSI ist Fantasie. Neu: Richtige Version in MSI einfügen.
+		Version change also in the upgrade table.
+	6. Uninstall crasht, wenn Chrome Registry nicht mehr vorhanden.
+		Check for the presence of the keys and run the uninstaller conditionally.
+
+	MSI nach: GoogleChrome_64_72.0.3626.96_ML.msi kopiert.
+	Title auf: Google Chrome x64 72.0.3626.96 ML
+	Comments: Version 72.0.3626.96 for ETHZ ID. 20190207 by AutoPkg
+
+	P3: Autoupdate ausgeschaltet.
+	In Registry Table diese Zeilen eingefügt:
+	HKLM2	2	SOFTWARE\Policies\Google\Update	InstallDefault	#0	ProductClientState
+	HKLM1	2	SOFTWARE\Policies\Google\Update	AutoUpdateCheckPeriodMinutes	#0	ProductClientState
+
+	Siehe: http://support.google.com/installer/bin/answer.py?hl=de&answer=146164#Registry_Settings
+
+	P2: Preferences müssen beim Installieren mitgegeben werden können.
+	In Custom Action Table folgende Zeile anpassen:
+	BuildInstallCommand	51	InstallComm....E530F96}&installerdata=[MASTER_PREFERENCES]	
+
+	P4: ARP Icon auf GC.
+	In Registry Table folgende Zeile einfügen:
+	regARP1	-1	Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]	DisplayIcon	[ProgramFiles64Folder]Google\Chrome\Application\chrome.exe,0	ProductClientState
+
+	P5: MSI Version anpassen:
+	In Property Table folgende Zeile anpassen:
+	ProductVersion	72.0.3626.96
+
+	P6: Uninstall Command anpassen:
+	In InstallExecuteSequence Table folgende Zeile anpassen:
+	CallUninstaller --> in Condition AND UNINSTALLCMDLINE AND UNINSTALLCMDARGS hinzufügen.
+
+	In Property Table diese Zeile eingefügt:
+	MASTER_PREFERENCES	%7B%22homepage....
+	
+	Siehe: http://serverfault.com/questions/635202/how-can-i-customize-the-default-settings-when-deploying-google-chrome-for-busine
+	Alle Änderungen sind in: GChrome64_ETHZchanges.mst gespeichert.
+	Brauchen wir "msi_product_id":"0F474BB8-4854-390E-804D-55239CFCE277" ? 
+
+	Konfiguration:
+	Shortcuts:
+	http://serverfault.com/questions/635202/how-can-i-customize-the-default-settings-when-deploying-google-chrome-for-busine
+	https://productforums.google.com/forum/#!topic/chrome/f27KLm0q1jE
+	https://code.google.com/p/chromium/issues/detail?id=174465
+
+	MSI gernerell:
+	http://msiworld.blogspot.ch/2012/06/packaging-google-chrome-for-enterprise.html
+
+	Extensions:
+	http://www.adambarth.com/experimental/crx/docs/external_extensions.html
+	https://support.google.com/chrome/a/answer/188453?hl=en
+	https://developer.chrome.com/extensions/external_extensions
+
+190207	Release V72.0.3626.96

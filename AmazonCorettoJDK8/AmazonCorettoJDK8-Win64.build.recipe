@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest Amazon Coretto JDK 8 x64 MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.AmazonCorettoJDK8-Win64</string>
+    <string>com.github.autopkg-win.build.AmazonCorettoJDK8-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -20,7 +20,7 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.AmazonCorettoJDK8MSI-Win</string>
+    <string>com.github.autopkg-win.download.AmazonCorettoJDK8MSI-Win</string>
     <key>Process</key>
     <array>
         <dict>
@@ -34,7 +34,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -85,11 +85,11 @@
 		-->
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -97,7 +97,7 @@
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Version %version% for ETHZ ID. %us_date% Nick Heim</string>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
                     <string>Amazon Coretto JDK x64 %version% ML</string>
 				    <key>/t</key>

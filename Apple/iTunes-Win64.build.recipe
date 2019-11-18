@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest iTunes Client x64 MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.iTunes-Win64</string>
+    <string>com.github.autopkg-win.build.iTunes-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -18,10 +18,10 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.iTunes-Win</string>
+    <string>com.github.autopkg-win.download.iTunes-Win</string>
     <key>Process</key>
     <array>
-		<!--
+		
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
@@ -31,10 +31,10 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
-		-->
+		
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -59,7 +59,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -83,7 +83,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/SevenZipExtractor</string>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>
@@ -96,7 +96,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQLget</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
 			<key>Comment</key>
 			<string>Get the version from AppleApplicationSupport64.msi into msi_value</string>
             <key>Arguments</key>
@@ -109,7 +109,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -150,7 +150,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQLget</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
 			<key>Comment</key>
 			<string>Get the version from AppleMobileDeviceSupport64.msi into msi_value</string>
             <key>Arguments</key>
@@ -163,7 +163,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -204,7 +204,50 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the version from iTunes64.msi into msi_value</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\iTunes64.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `File`.`File` FROM `File`, `Component`, `Directory` WHERE `File`.`Component_` = `Component`.`Component` AND `Directory`.`Directory` = `Component`.`Directory_` AND `DefaultDir`='tajvqtga|de.lproj' AND `FileName`='License.rtf']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\iTunes64.msi</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers</string>
+                <key>extract_file</key>
+                <string>%msi_value%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/TextFileSearch</string>
+			<key>Comment</key>
+			<string>Searches the german License.rtf file in iTunes.msi for the EULA string</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_to_open</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\%msi_value%</string>
+				<key>pattern</key>			
+                <string>\\\n(?P&lt;eulastring&gt;.*)\\\n\d+(\.\d*){2,}\}$</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
 			<key>Comment</key>
 			<string>Applies the Settings-Transform to the iTunes.msi to the release folder</string>
             <key>Arguments</key>
@@ -219,9 +262,9 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
 			<key>Comment</key>
-			<string>Change a few settings in the MSI-file</string>
+			<string>Change a few settings in the iTunes MSI-file</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -230,6 +273,7 @@
 				<array>
 					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='iTunes %version% ML' WHERE `Property`.`Property`='ProductName']]></string>
 					<string><![CDATA[UPDATE `Registry` SET `Registry`.`Value`='%AS_ver%' WHERE `Registry`.`Registry`='RegHKLM2']]></string>
+					<string><![CDATA[UPDATE `Registry` SET `Registry`.`Value`='%matchstring%' WHERE `Registry`.`Registry`='RegHKLM7']]></string>
 					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleMobileDeviceSupport64_%AMDS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleMobileDeviceSupport']]></string>
 					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport64_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport64']]></string>
 					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport32_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport']]></string>
@@ -238,7 +282,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -256,58 +300,221 @@
 				</dict>
             </dict>
 		</dict>
-<!--
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIDbWorker</string>
+			<key>Comment</key>
+			<string>Extract language transforms from the iTunes MSI-file</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
-                <key>mst_paths</key>
-				<array>				
-                    <string>%BUILD_DIR%\%pkg_dir%\helpers\VLC64-ETHZ-cfg.mst</string>
-                </array>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>		
+                <key>mode</key>
+                <string>-w</string>
+                <key>workfile</key>
+                <string>1031</string>
+                <key>workfolder</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers</string>		
+			</dict>
+		</dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Make a copy from iTunes.msi to the helpers folder to apply the language transform</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\%NAME%_%PLATFORM%_1031.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
             </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
+			<key>Comment</key>
+			<string>Apply the language transforms to the iTunes MSI copy</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\%NAME%_%PLATFORM%_1031.msi</string>		
+                <key>mst_paths</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\1031</string>		
+                <key>mode</key>
+                <string>-a</string>
+			</dict>
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
-			<string>Inserts the license information into the property table</string>
+			<string>Generate a new 1031 language transform from the iTunes MSI-file and the copy</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>				
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <key>msi_path_new</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\%NAME%_%PLATFORM%_1031.msi</string>		
+                <key>mst_paths</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\1031</string>		
+                <key>mode</key>
+                <string>-g</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIDbWorker</string>
+			<key>Comment</key>
+			<string>Delete the existing 1031 language transforms from the iTunes MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>		
+                <key>mode</key>
+                <string>-j</string>
+                <key>workfile</key>
+                <string>1031</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIDbWorker</string>
+			<key>Comment</key>
+			<string>Embed the altered 1031 language transforms into the iTunes MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>		
+                <key>mode</key>
+                <string>-r</string>
+                <key>workfile</key>
+<!-- 				<array>
+					<string>1031</string>
+					<string>1036</string>
+					<string>1040</string>
+				</array> -->
+                <string>1031</string>
+                <key>workfolder</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>		
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Change a few settings in the AppleApplicationSupport64 MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport64_%AAS_version%_ML.msi</string>
                 <key>SQL_command</key>
 				<array>
-					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%version%' WHERE `Property`.`Property`='ProductVersion']]></string>
-					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='VLC media player %version% (64-bit)' WHERE `Property`.`Property`='ProductName']]></string>
+					<string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='INSTALLAPSDAEMON' WHERE `Component`.`Component`='x64_AppleApplicationSupport_APSDaemon.exe']]></string>
+					<string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='INSTALLAPSDAEMON' WHERE `Component`.`Component`='x64_AppleApplicationSupport_APSDaemon_main.dll']]></string>
+					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Sequence`='1450' WHERE `InstallExecuteSequence`.`Action`='RemoveExistingProducts']]></string>
+					<string><![CDATA[DELETE FROM `LaunchCondition` WHERE `LaunchCondition`.`Condition`='NOT BNEWERPRODUCTISINSTALLED']]></string>
 				</array>
 			</dict>
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport64_%AAS_version%_ML.msi</string>
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
                     <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
-                    <string>Videolan Client x64 %version% ML</string>
+                    <string>AppleApplicationSupport x64 %version% ML</string>
 				    <key>/t</key>
-                    <string>Videolan Client x64 %version% ML</string>
+                    <string>AppleApplicationSupport x64 %version% ML</string>
+				    <key>/p</key>
+                    <string>x64;1033</string>
 				</dict>
             </dict>
-		</dict> -->
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Change a few settings in the AppleApplicationSupport32 MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport32_%AAS_version%_ML.msi</string>
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='INSTALLAPSDAEMON' WHERE `Component`.`Component`='APSDaemonRegistry']]></string>
+					<string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='INSTALLAPSDAEMON' WHERE `Component`.`Component`='AppleApplicationSupport_APSDaemon.exe']]></string>
+					<string><![CDATA[UPDATE `Component` SET `Component`.`Condition`='INSTALLAPSDAEMON' WHERE `Component`.`Component`='AppleApplicationSupport_APSDaemon_main.dll']]></string>
+					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Sequence`='1450' WHERE `InstallExecuteSequence`.`Action`='RemoveExistingProducts']]></string>
+					<string><![CDATA[DELETE FROM `LaunchCondition` WHERE `LaunchCondition`.`Condition`='NOT BNEWERPRODUCTISINSTALLED']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleApplicationSupport32_%AAS_version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>AppleApplicationSupport x86 %version% ML</string>
+				    <key>/t</key>
+                    <string>AppleApplicationSupport x86 %version% ML</string>
+				    <key>/p</key>
+                    <string>Intel;1033</string>
+				</dict>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Change a few settings in the AppleMobileDeviceSupport64 MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleMobileDeviceSupport64_%AMDS_version%_ML.msi</string>
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[INSERT INTO `Property` (`Property`.`Property`,`Property`.`Value`) VALUES ('REBOOT','ReallySuppress')]]></string>
+					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Sequence`='1450' WHERE `InstallExecuteSequence`.`Action`='RemoveExistingProducts']]></string>
+					<string><![CDATA[DELETE FROM `LaunchCondition` WHERE `LaunchCondition`.`Condition`='NOT BNEWERPRODUCTISINSTALLED']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AppleMobileDeviceSupport64_%AMDS_version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>Apple Mobile Device Support x64 %version% ML</string>
+				    <key>/t</key>
+                    <string>Apple Mobile Device Support x64 %version% ML</string>
+				    <key>/p</key>
+                    <string>x64;1033</string>
+				</dict>
+            </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

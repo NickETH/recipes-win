@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Adobe Flash Player NPAPI MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.AdobeFlashPlayerMSI-Win</string>
+    <string>com.github.autopkg-win.download.AdobeFlashPlayerMSI-Win</string>
     <key>Input</key>
     <dict>
     </dict>
@@ -27,7 +27,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -38,7 +38,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -67,7 +67,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=Adobe Systems Incorporated, OU=Flash Player, O=Adobe Systems Incorporated, L=San Jose, S=California, C=US, PostalCode=95110, STREET=345 Park Avenue, SERIALNUMBER=2748129, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, OID.2.5.4.15=Private Organization</string>
+                <string>CN=Adobe Inc., OU=Flash Player, O=Adobe Inc., L=San Jose, S=ca, C=US, SERIALNUMBER=2748129, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US</string>
             </dict>
         </dict>
         <dict>

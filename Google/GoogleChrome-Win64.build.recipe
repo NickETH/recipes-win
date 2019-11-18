@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest Google Chrome x64 MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.build.GoogleChrome-Win64</string>
+    <string>com.github.autopkg-win.build.GoogleChrome-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -22,7 +22,7 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.GoogleChromeMSI-Win</string>
+    <string>com.github.autopkg-win.download.GoogleChromeMSI-Win</string>
     <key>Process</key>
     <array>
 	<!--
@@ -38,15 +38,13 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
                 <string>%BUILD_DIR%</string>
                 <key>recipe_dir</key>
                 <string>%RECIPE_DIR%</string>
-	<!--
-	-->
                 <key>recipe_path</key>
                 <string>%RECIPE_PATH%</string>
                 <key>org_ver</key>
@@ -63,27 +61,27 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-GoogleChrome_64.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-GoogleChrome_64_%version%_ML.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-GoogleChrome_64.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-GoogleChrome_64_%version%_ML.txt</string>
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
                 <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
             </dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/FileDateVersionSubst</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
         <dict>
             <key>Arguments</key>
@@ -113,18 +111,25 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\release\GoogleChrome_64_%version%_ML.msi</string>
                 <key>SQL_command</key>
-                <string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%match%' WHERE `Property`.`Property`='ProductVersion']]></string>
-            </dict>
+				<array>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%msiversion%' WHERE `Property`.`Property`='ProductVersion']]></string>
+					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Condition`='((?ProductClientState=3) AND ($ProductClientState=2) AND NOT UPGRADINGPRODUCTCODE) AND UNINSTALLCMDLINE AND UNINSTALLCMDARGS' WHERE `InstallExecuteSequence`.`Action`='CallUninstaller']]></string>
+					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='UPGRADEFOUND']]></string>
+					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='NEWPRODUCTFOUND']]></string>
+					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','0.0.0','%msiversion%',768,'UPGRADEFOUND')]]></string>
+					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','%msiversion%','',0,'NEWPRODUCTFOUND')]]></string>
+				</array>
+				</dict>
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -135,11 +140,11 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
@@ -147,7 +152,7 @@
                 <key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Slightley altered version for mass deployment</string>
+                    <string>Version %match% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
                     <string>Google Chrome x64 %match% ML</string>
 				    <key>/t</key>

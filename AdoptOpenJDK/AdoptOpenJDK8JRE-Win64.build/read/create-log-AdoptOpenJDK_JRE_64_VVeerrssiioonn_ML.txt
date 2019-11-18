@@ -1,0 +1,8 @@
+190813	AdoptOpenJDK8JRE x64
+	Java Runtime Environment for x64 Windows.
+	The AdoptOpenJDK8JRE is made with a professional CI Buildsystem.
+	Unfortunately, it lacks the JavaFX library.
+	In this package, we download the JRE from Zulu, which has JFX built in.
+	The JFX-files are extracted and packaged into a MergeModule.
+	The JFX-MergeModule is then merged into the MSI-package from Adopt.
+	That gives a more or less 1:1 substitution for Oracle JRE.

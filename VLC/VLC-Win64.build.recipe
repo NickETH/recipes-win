@@ -2,26 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Description</key>
-    <string>Alters latest Videolan Client x64 MSI-file for Windows.</string>
-    <key>Identifier</key>
-    <string>com.github.NickETH.build.VLC-Win64</string>
-    <key>Input</key>
-    <dict>
-        <key>NAME</key>
-        <string>VLC</string>
-        <key>SEARCH_PATTERN</key>
-        <string>get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.exe</string>
-        <key>PLATFORM</key>
-        <string>win64</string>
-    </dict>
-    <key>MinimumVersion</key>
-    <string>1.0.5</string>
-    <key>ParentRecipe</key>
-    <string>com.github.NickETH.download.VLCMSI-Win</string>
-    <key>Process</key>
-    <array>
-		<!--
+	<key>Description</key>
+	<string>Alters latest Videolan Client x64 MSI-file for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.build.VLC-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VLC</string>
+		<key>PLATFORM</key>
+		<string>win64</string>
+		<key>SEARCH_PATTERN</key>
+		<string>get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.exe</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.5</string>
+	<key>ParentRecipe</key>
+	<string>com.github.autopkg-win.download.VLCMSI-Win</string>
+	<key>Process</key>
+	<array>
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
@@ -31,35 +30,34 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
-		-->
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/CreateNextBuild</string>
-            <key>Arguments</key>
-            <dict>
-                <key>build_dir</key>
-                <string>%BUILD_DIR%</string>
-                <key>recipe_dir</key>
-                <string>%RECIPE_DIR%</string>
-                <key>recipe_path</key>
-                <string>%RECIPE_PATH%</string>
-                <key>org_ver</key>
-                <string>%version%</string>
-                <key>pkg_dir</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>BuildFiles</key>
+				<string>NextVerFiles.txt</string>
+				<key>build_dir</key>
+				<string>%BUILD_DIR%</string>
+				<key>folder_list</key>
+				<string>sourceunzipped:release:read:helpers</string>
+				<key>org_ver</key>
+				<string>%version%</string>
+				<key>pkg_dir</key>
                 <string>VLC_64_::VVeerrssiioonn::_ML</string>
-                <key>folder_list</key>
-                <string>sourceunzipped:release:read:helpers</string>
                 <key>ver_fields</key>
                 <string>4</string>
                 <key>create_AS_ver</key>
                 <string>True</string>
-                <key>BuildFiles</key>
-                <string>NextVerFiles.txt</string>
+				<key>recipe_dir</key>
+				<string>%RECIPE_DIR%</string>
+				<key>recipe_path</key>
+				<string>%RECIPE_PATH%</string>
 			</dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -68,112 +66,137 @@
                 <string>pkg_dir</string>
             </dict>
 		</dict>
-        <dict>
-            <key>Arguments</key>
-            <dict>
-                <key>source_path</key>
-                <string>%pathname%</string>
-                <key>destination_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\vlc-%version%-%PLATFORM%.msi</string>
-                <key>overwrite</key>
-                <string>true</string>
-            </dict>
-            <key>Processor</key>
-            <string>Copier</string>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIofflinePatcher</string>
-            <key>Arguments</key>
-            <dict>
-                <key>pkg_dir_abs</key>
-                <string>%BUILD_DIR%\%pkg_dir%</string>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\vlc-%version%-%PLATFORM%.msi</string>
-                <key>compact_msi</key>
-                <string>True</string>
-                <key>adm_msi_path</key>
-                <string>adm\vlc-%version%-%PLATFORM%.msi</string>
-                <key>new_msi_path</key>
-                <string>adm\VLC_%version%_ML.msi</string>
-                <key>cab_file</key>
-                <string>product</string>
-                <key>cab_dir</key>
-                <string>adm</string>
-                <key>embed_cab</key>
-                <string>True</string>
-                <key>new_packcode</key>
-                <string>False</string>
-            </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>destination_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\vlc-%version%-%PLATFORM%.msi</string>
+				<key>overwrite</key>
+				<string>true</string>
+				<key>source_path</key>
+				<string>%pathname%</string>
+			</dict>
+			<key>Processor</key>
+			<string>Copier</string>
 		</dict>
-        <dict>
-            <key>Arguments</key>
-            <dict>
-                <key>source_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\adm\VLC_%version%_ML.msi</string>
-                <key>destination_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
-                <key>overwrite</key>
-                <string>true</string>
-            </dict>
-            <key>Processor</key>
-            <string>Copier</string>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplyTransform</string>
-            <key>Arguments</key>
-            <dict>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
-                <key>mst_paths</key>
-				<array>				
-                    <string>%BUILD_DIR%\%pkg_dir%\helpers\VLC64-ETHZ-cfg.mst</string>
-                </array>
-            </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>adm_msi_path</key>
+				<string>adm\vlc-%version%-%PLATFORM%.msi</string>
+				<key>cab_dir</key>
+				<string>adm</string>
+				<key>cab_file</key>
+				<string>product</string>
+				<key>compact_msi</key>
+				<string>True</string>
+				<key>embed_cab</key>
+				<string>True</string>
+				<key>msi_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\vlc-%version%-%PLATFORM%.msi</string>
+				<key>new_msi_path</key>
+				<string>adm\VLC_64_%build_ver%_ML.msi</string>
+				<key>new_packcode</key>
+				<string>False</string>
+				<key>pkg_dir_abs</key>
+				<string>%BUILD_DIR%\%pkg_dir%</string>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/MSIofflinePatcher</string>
 		</dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIRunSQL</string>
-            <key>Arguments</key>
-            <dict>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>				
-                <key>SQL_command</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>destination_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\release\VLC_64_%build_ver%_ML.msi</string>
+				<key>overwrite</key>
+				<string>true</string>
+				<key>source_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\adm\VLC_64_%build_ver%_ML.msi</string>
+			</dict>
+			<key>Processor</key>
+			<string>Copier</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>msi_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\release\VLC_64_%build_ver%_ML.msi</string>
+				<key>mst_paths</key>
 				<array>
-					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%version%' WHERE `Property`.`Property`='ProductVersion']]></string>
-					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='VLC media player %version% (64-bit)' WHERE `Property`.`Property`='ProductName']]></string>
+					<string>%BUILD_DIR%\%pkg_dir%\helpers\VLC64-ETHZ-cfg.mst</string>
 				</array>
 			</dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
 		</dict>
-		<!--
-		-->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>SQL_command</key>
+				<array>
+					<string>UPDATE `Property` SET `Property`.`Value`='%version%' WHERE `Property`.`Property`='ProductVersion'</string>
+					<string>UPDATE `Property` SET `Property`.`Value`='VLC media player %version% (64-bit)' WHERE `Property`.`Property`='ProductName'</string>
+					<string>UPDATE `Registry` SET `Registry`.`Value`='%AS_ver%' WHERE `Registry`.`Registry`='regHKLM11'</string>
+				</array>
+				<key>msi_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\release\VLC_64_%build_ver%_ML.msi</string>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+		</dict>
         <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/DateTimeStamps</string>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/MSIApplySumInfo</string>
             <key>Arguments</key>
             <dict>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\VLC_%version%_ML.msi</string>
-				<key>cmnds_sinfo</key>			
-				<dict>
-				    <key>/o</key>
-                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
-				    <key>/j</key>
-                    <string>Videolan Client x64 %version% ML</string>
-				    <key>/t</key>
-                    <string>Videolan Client x64 %version% ML</string>
-				</dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-VLC_64_%build_ver%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
             </dict>
-		</dict>
-        <dict>
             <key>Processor</key>
-            <string>EndOfCheckPhase</string>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
         </dict>
-    </array>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-VLC_64_%build_ver%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>cmnds_sinfo</key>
+				<dict>
+					<key>/j</key>
+					<string>Videolan Client x64 %version% ML</string>
+					<key>/o</key>
+					<string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+					<key>/t</key>
+					<string>Videolan Client x64 %version% ML</string>
+				</dict>
+				<key>msi_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\release\VLC_64_%build_ver%_ML.msi</string>
+			</dict>
+			<key>Processor</key>
+			<string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
 </dict>
 </plist>

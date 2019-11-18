@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Downloads latest Adobe Reader DC Update MSP-file for Windows.</string>
     <key>Identifier</key>
-    <string>com.github.NickETH.download.AdobeReaderDCMSI-Win</string>
+    <string>com.github.autopkg-win.download.AdobeReaderDCMSI-Win</string>
     <key>Input</key>
     <dict>
     </dict>
@@ -20,13 +20,14 @@
             <dict>
                 <key>url</key>
                 <string>%SEARCH_URL%</string>
+				<!-- <string>https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/index.html</string>  -->
                 <key>re_pattern</key>
-                <string>(?P&lt;version&gt;(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+))</string>
+                <string>&lt;em&gt;(?P&lt;version&gt;(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+))</string>
             </dict>
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.NickETH.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
@@ -53,7 +54,6 @@
             <dict>
                 <key>url</key>
                 <!-- <string>%DOWNLOAD_URL%</string>  -->
-                <!-- <string>ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/%version_string%/AcroRdrDCUpd%version_string%.msp</string> -->
 				<string>http://ardownload.adobe.com/pub/adobe/reader/win/AcrobatDC/%version_string%/AcroRdrDCUpd%version_string%.msp</string>
                 <key>filename</key>
                 <string>AdobeReaderDCUpd%version_string%.msp</string>

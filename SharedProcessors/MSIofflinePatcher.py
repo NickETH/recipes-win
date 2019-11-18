@@ -4,6 +4,8 @@
 #
 # Created by Nick Heim (heim)@ethz.ch) on 2019-04-12.
 #
+# Needs 'WiMkCab2.vbs' from the Installer SDK to be in the TOOLS_DIR.
+# Depends on the 'WiX Toolset SDK' in DTF_PATH.
 # Apply a patch file to an MSI offline or compact (rebuild) an MSI-file.
 # Compress an uncompressed MSI installation into a CAB-file and embed it into the MSI-file, if necessary.
 # Create folders, copy needed files from repository and/or previous build.

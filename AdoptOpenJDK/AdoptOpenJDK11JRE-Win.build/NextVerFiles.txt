@@ -1,0 +1,8 @@
+read\create-log-AdoptOpenJDK_JRE_VVeerrssiioonn_ML.txt
+read\readme-AdoptOpenJDK_JRE_VVeerrssiioonn_ML.txt
+helpers\Zulu-JFX-JRE_11-x86.txt
+helpers\archive.cmd
+wixproject\version.wxi
+wixproject\global.prop
+wixproject\JavaFX_ML.build
+wixproject\JavaFX_ML.wxs

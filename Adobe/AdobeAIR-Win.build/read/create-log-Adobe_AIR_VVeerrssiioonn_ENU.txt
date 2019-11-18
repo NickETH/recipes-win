@@ -1,0 +1,68 @@
+Displaynamen anpassen, analog anderen Paketen wie Flash oder Firefox.
+
+190218	Download der gezippten Installationdateien von:
+	http://www.adobe.com/products/air/runtime_distribution3.html
+	http://airdownload.adobe.com/air/win/download/latest/AdobeAIRInstaller.exe
+	nach .\sourcedir\
+
+	Nach .\sourceunzipped auspacken.
+	
+	Dateien packen und in MSI einbetten.
+	cscript WiMkCab2.vbs setup.msi Data1 /L /C /U /E
+
+	Nach '.\helperfiles\Adobe_AIR_32.0.0.89_ENU.msi' kopieren.
+
+	Folgende Konfigurations-Einstellung setzen:
+
+	Auto Update + Installation von "Untrusted Applications" ausschalten (Siehe Admin-Guide):
+	In der Registry Table folgende Zeilen einfügen:
+	HKLM1	2	Software\Policies\Adobe\AIR	UpdateDisabled	#1	AIR_Policies
+	HKLM2	2	Software\Policies\Adobe\AIR	UntrustedAppInstallDisabled	#1	AIR_Policies
+
+	In Component table die folgende Zeile eingefügt:
+	AIR_Policies	{0025F296-022D-403E-BA9B-CEC21EB76A1E}	AIR	4		HKLM1
+
+	In FeatureComponents table die folgende Zeile eingefügt:
+	Management	AIR_Policies
+
+	Um das EULA-Popup abzuschalten muss eine Datei "eulaAccepted" mit dem Inhalt '3' nach:
+	%ALLUSERSPROFILE%\Application Data\Adobe\AIR eingefügt werden.
+
+	Diese wird in ein neues Cab-File verpackt und ins Paket eingefügt.
+
+	Die "eulaAccepted" wird im Verzeichnis ..\helperfiles\EULA\ abgelegt. 
+	Mit dem File custom.ddf wird ein CAB-file erzeugt.
+	'custom.cab' wird einfachhalber in die Table 'Binary' eingefügt.
+	Dann kann mit:
+	cscript WiStream.vbs Adobe_AIR_32.0.0.89_ENU.msi custom.cab Binary.custom.cab
+	das CAB-file eingefügt werden.
+	Weiter muss das CAB-file in der Media table bekannt gemacht werden:
+	2	25		#Binary.custom.cab		
+
+	In der File table die folgenden Zeile eingefügt:
+	eulaAccepted	AIR_EULA_accept	eulaAccepted	4			512	25
+
+	Das 'EULAaccepted' File hat keine Versionsinformationen. 
+	Deswegen müssen dafür Einträge in der 'MsiFileHash' table gemacht werden.
+	Um diese zu erstellen, müssen die folgenden Schritte gemacht werden:
+	Im Verzeichnis ..\helperfiles\EULA\ wird:
+	cscript ..\..\..\MSIScripts\CreHash.vbs eulaAccepted aufgerufen.
+
+	Dadurch wird die Datei 'MsiFileHash.idt' erzeugt.
+	Diese kann dann via Orca - Tables - Import Tables... importiert werden.
+
+	In Component table die folgende Zeile eingefügt:
+	AIR_EULA_accept	{6348E65A-0D8B-4F51-B0E3-069A2E7CA40B}	AIRAdobeCommonAppDataFolder	0	EULAACCEPT	eulaAccepted
+
+	In FeatureComponents table die folgende Zeile eingefügt:
+	Management	AIR_EULA_accept
+
+	In Property table die folgende Zeile eingefügt:
+	EULAACCEPT	1
+
+	Dadurch kann die EULA-Accept Option ein- und ausgeschaltet werden.
+
+	Alle diese Änderungen werden im Transform 'AIR-Corp-config.mst' gespeichert.
+
+190218	Released v1.0
+

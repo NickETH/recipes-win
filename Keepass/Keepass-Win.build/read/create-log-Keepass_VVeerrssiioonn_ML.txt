@@ -1,0 +1,19 @@
+190813	Keepass 2.0.0
+	Engineered by MAB, brought to AutoPkg by Hm.
+	MSI with an very basic directory structure originated from earlier Visual Studio wix templates.
+	TARGETDIR is set by a CA.
+	Changes:
+	Import additional language files for ger, fra, ita, spa into TARGETDIR\Languages
+
+	Disable auto update.
+	generate file in : KeePass.config.enforced.xml
+	<CheckForUpdate>false</CheckForUpdate>
+	<CheckForUpdateConfigured>true</CheckForUpdateConfigured>
+
+	Remove Desktop Shortcut.
+	Delete line from Shortcut table:
+	_D4CD5274BA6C4E25937C7C422285FBCB	DesktopFolder	....
+
+	The changes are compiled into a Merge Module and imported under the Feature: LangAndConfig
+
+190813	Released v2.0.0,  Build 1

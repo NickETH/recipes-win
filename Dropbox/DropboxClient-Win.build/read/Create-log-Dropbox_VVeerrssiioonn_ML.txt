@@ -1,0 +1,15 @@
+.
+190319	Download von:
+	https://www.dropbox.com/downloading?build=68.4.102.0&plat=win&type=full
+	Analyse des Dropbox Offline Installers
+	Der Installer ist ein NSIS Paket
+	Darin enthalten sind der Autoupdater und der eigentlich Client-Installer. Neben anderen Dingen...
+	Um den Autoupdater loszuwerden, ist ziemlich Aufwand notwendig...
+	Der Installationsablauf wurde mit Process Explorer verfolgt und nach dem Starten eines neuen Prozesses, 
+	dieser jeweils auf Suspend gesetzt, damit in Ruhe die Command line analysiert werden konnte.
+	Install: Dropbox_68.4.102.0_ML.exe /S /InstallType:MACHINE
+	Uninstall: DropboxUninstaller.exe /S /InstallType:MACHINE _?=C:\Program Files (x86)\Dropbox\Client\
+
+	Was noch offen ist: Ob der Client einen Autoupdate selber anstossen kann ?
+
+	https://www.dropboxforum.com/t5/Desktop-client-builds/bd-p/101003016

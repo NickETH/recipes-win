@@ -1,0 +1,9 @@
+read\create-log-AdoptOpenJDK_JRE_64_VVeerrssiioonn_ML.txt
+read\readme-AdoptOpenJDK_JRE_64_VVeerrssiioonn_ML.txt
+helpers\zulu-jfx-def.txt
+helpers\archive.cmd
+wixproject\version.wxi
+wixproject\global.prop
+wixproject\Comp-x64.xslt
+wixproject\JavaFX_64_ML.build
+wixproject\JavaFX_64_ML.wxs

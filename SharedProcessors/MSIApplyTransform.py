@@ -15,19 +15,27 @@ import subprocess
 from autopkglib import Processor, ProcessorError
 
 
-__all__ = ["MSIApplyTransform"]
+__all__ = ["MSITransformer"]
 
 
-class MSIApplyTransform(Processor):
-    description = "Apply transform(s) to an MSI-file using msitran.exe."
+class MSITransformer(Processor):
+    description = "Generate or Apply transform(s) to/from an MSI-file using msitran.exe."
     input_variables = {
-        "msi_path": {
+        "mode": {
+            "required": False,
+            "description": "Mode of working -a/-g (Apply/Generate), defaults to '-a'",
+        },
+        "msi_path_": {
             "required": True,
             "description": "Path to the msi, required",
         },
+        "msi_path_new": {
+            "required": False,
+            "description": "Path to the new changed msi.",
+        },
         "mst_paths": {
             "required": True,
-            "description": "(Array of) Paths to the mst, required",
+            "description": "(Array of) paths to the mst (on Apply)or output mst, when generating, required",
         },
         "ignore_errors": {
             "required": False,
@@ -41,6 +49,8 @@ class MSIApplyTransform(Processor):
 
     def main(self):
 
+        mode = self.env.get('mode', '-a')
+        msi_path = self.env.get('msi_path', self.env.get('pathname'))
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
         mst_paths = self.env.get('mst_paths', self.env.get('pathname'))
         ignore_errors = self.env.get('ignore_errors', True)
@@ -67,5 +77,5 @@ class MSIApplyTransform(Processor):
                     raise
 
 if __name__ == '__main__':
-    processor = MSIApplyTransform()
+    processor = MSITransformer()
     processor.execute_shell()
