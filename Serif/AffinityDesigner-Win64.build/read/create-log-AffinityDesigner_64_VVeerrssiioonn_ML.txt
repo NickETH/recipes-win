@@ -1,0 +1,11 @@
+.
+190813	Affinity Designer x64
+	We extract the msi with Resource Hacker.
+	Changes:
+	Disable desktop shortcut: INSTALL_DESKTOP_SHORTCUT_PROPERTY=0
+	Disable updates: NO_UPDATE_CHECK_PROPERTY
+	Disable EULA popup: NO_EULA_PROPERTY
+
+	To set the product key, use the following properties:
+
+190813	By AutoPkg

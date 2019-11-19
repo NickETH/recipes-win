@@ -516,6 +516,33 @@
             </dict>
 		</dict>
         <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%_%PLATFORM%_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%_%PLATFORM%_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+
+        <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>
         </dict>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Comment</key>
+	<string>Created by Nick Heim, ETHZ ID-CD</string>
+	<key>Description</key>
+	<string>Downloads the latest version of a program from the Affinity Suite</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.AffinitySuite-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>AffinitySuite</string>
+		<key>AppKey</key>
+		<string>designer</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				<string>((?P&lt;url&gt;https://d1gl0nrskhax8d\.cloudfront\.net/windows/%AppKey%/\d+(\.\d*){2,}/(?P&lt;filename&gt;affinity-%AppKey%-(?P&lt;upgradeversion&gt;\d+(\.\d*){2,})\.exe))\?Expires=(?P&lt;expires&gt;\d+)&amp;amp;Signature=(?P&lt;signature&gt;[\w\~\-]+)&amp;amp;Key-Pair-Id=(?P&lt;key&gt;[\w]+))</string>
+				<key>result_output_var_name</key>
+				<string>url</string>
+				<key>url</key>
+				<string>https://store.serif.com/en-us/update/windows/%AppKey%/1/</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+                <key>url</key>
+                <string>%url%?Expires=%expires%&amp;Signature=%signature%&amp;Key-Pair-Id=%key%</string>
+				<key>filename</key>
+				<string>affinity-%AppKey%-%upgradeversion%.exe</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>S=Nottinghamshire, CN=Serif (Europe) Ltd, O=Serif (Europe) Ltd, L=Nottingham, C=GB</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%pathname%</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

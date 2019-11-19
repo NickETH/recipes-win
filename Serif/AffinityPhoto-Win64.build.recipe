@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest Affinity Photo x64 for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.build.AffinityPhoto-Win64</string>
+    <key>Input</key>
+    <dict>
+		<key>NAME</key>
+		<string>AffinityPhoto</string>
+		<key>AppKey</key>
+		<string>photo</string>
+        <key>PLATFORM_STR</key>
+        <string>x64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg-win.download.AffinitySuite-Win64</string>
+    <key>Process</key>
+    <array>
+<!--         <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict> -->
+    <!--    -->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+	<!--
+	-->
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>pkg_dir</key>
+                <string>%NAME%_64_::VVeerrssiioonn::_ML</string>
+                <key>folder_list</key>
+                <string>sourcepkt:sourceunzipped:release:read:helpers</string>
+                <key>ver_fields</key>
+                <string>4</string>
+<!--                 <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string> -->
+                <key>recipe_cache_dir</key>
+                <string>%RECIPE_CACHE_DIR%</string>
+<!--                 <key>PrevVerFiles</key>
+                <string>PrevVerFiles.txt</string> -->
+            </dict>
+		</dict>
+         <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%NAME%_64_%build_ver%_ML</string>
+                <key>rename_var</key>
+                <string>pkg_dir</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\affinity-%AppKey%-%version%.exe</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/ResourceExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\affinity-%AppKey%-%version%.exe</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
+                <key>extract_file</key>
+                <string>affinity-%AppKey%-%version%.msi</string>
+                <key>extract_cmd</key>
+                <string>BIN,135,</string>
+			</dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/ResourceExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\affinity-%AppKey%-%version%.exe</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
+                <key>extract_file</key>
+                <string>affinity-%AppKey%-%version%.ico</string>
+                <key>extract_cmd</key>
+                <string>ICONGROUP,107,</string>
+			</dict>
+        </dict>
+
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%pkg_dir%.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]\.[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%pkg_dir%.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]\.[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\affinity-%AppKey%-%version%.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%pkg_dir%.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Inserts the license information into the property table</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%pkg_dir%.msi</string>
+                <key>SQL_command</key>
+				<array>
+                    <string><![CDATA[INSERT INTO `Property` (`Property`.`Property`,`Property`.`Value`) VALUES ('PRODUCT_KEY_PROPERTY','YourKey')]]></string>
+                    <string><![CDATA[INSERT INTO `Property` (`Property`.`Property`,`Property`.`Value`) VALUES ('EMAIL_PROPERTY','your@email.ch')]]></string>
+				</array>
+			</dict>
+		</dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Inserts config changees into the property table</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%pkg_dir%.msi</string>
+                <key>SQL_command</key>
+				<array>
+                    <string><![CDATA[INSERT INTO `Property` (`Property`.`Property`,`Property`.`Value`) VALUES ('INSTALL_DESKTOP_SHORTCUT_PROPERTY','#0')]]></string>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='#1' WHERE `Property`.`Property`='NO_UPDATE_CHECK_PROPERTY']]></string>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='#1' WHERE `Property`.`Property`='NO_EULA_PROPERTY']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%pkg_dir%.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>%NAME% x64 %version% ML</string>
+				    <key>/t</key>
+                    <string>%NAME% x64 %version% ML</string>
+				    <key>/p</key>
+                    <string>x64;1033</string>
+				</dict>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
