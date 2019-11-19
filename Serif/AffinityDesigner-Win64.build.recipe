@@ -56,8 +56,8 @@
                 <string>NextVerFiles.txt</string>
                 <key>recipe_cache_dir</key>
                 <string>%RECIPE_CACHE_DIR%</string>
-                <key>PrevVerFiles</key>
-                <string>PrevVerFiles.txt</string>
+<!--                 <key>PrevVerFiles</key>
+                <string>PrevVerFiles.txt</string> -->
             </dict>
 		</dict>
          <dict>

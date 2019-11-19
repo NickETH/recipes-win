@@ -52,8 +52,8 @@
                 <string>sourcepkt:sourceunzipped:release:read:helpers</string>
                 <key>ver_fields</key>
                 <string>4</string>
-<!--                 <key>BuildFiles</key>
-                <string>NextVerFiles.txt</string> -->
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
                 <key>recipe_cache_dir</key>
                 <string>%RECIPE_CACHE_DIR%</string>
 <!--                 <key>PrevVerFiles</key>
