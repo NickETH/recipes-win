@@ -111,14 +111,18 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
+			<key>Comment</key>
+			<string>Applies the Settings-Transform to the GoogleChrome.msi in the release folder</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\release\GoogleChrome_%version%_ML.msi</string>
                 <key>mst_paths</key>
                 <string>%BUILD_DIR%\%pkg_dir%\helpers\GChrome_ETHZchanges.mst</string>
-            </dict>
+                <key>mode</key>
+                <string>-a</string>
+			</dict>
 		</dict>
         <dict>
             <key>Processor</key>

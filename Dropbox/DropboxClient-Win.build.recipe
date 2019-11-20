@@ -54,7 +54,7 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/ExeVersionExtractor</string>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>

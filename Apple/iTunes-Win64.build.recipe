@@ -247,18 +247,18 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
 			<string>Applies the Settings-Transform to the iTunes.msi to the release folder</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>	
                 <key>mst_paths</key>
-				<array>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\iTunes64-Settings.mst</string>
-                </array>
-            </dict>
+                <key>mode</key>
+                <string>-a</string>
+			</dict>
 		</dict>
         <dict>
             <key>Processor</key>

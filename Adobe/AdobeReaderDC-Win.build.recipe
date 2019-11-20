@@ -167,11 +167,13 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/MSIApplyTransform</string>
+            <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
+			<key>Comment</key>
+			<string>Applies the Settings-Transform to the AdobeReaderDC.msi in the release folder</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>				
+                <string>%BUILD_DIR%\%pkg_dir%\release\AdobeReaderDC_%version%_Deu.msi</string>
                 <key>mst_paths</key>
 				<array>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\CurrentUser1.mst</string>
@@ -183,7 +185,9 @@
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\MUI.mst</string>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\AcroRdrDC15UI1.mst</string>
                 </array>
-            </dict>
+                <key>mode</key>
+                <string>-a</string>
+			</dict>
 		</dict>
         <dict>
             <key>Processor</key>

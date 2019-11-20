@@ -67,7 +67,7 @@ version, Description: "ProductVersion of exe found."
 
 FileDateVersionSubst
 --------------------
-Load a file and search for date and version patterns and actualize them.
+Load a text file and search for date and version patterns and actualize them.
 ```
 Input variables:
 file_path, (required: True), Description: "Path to a file to update."
@@ -88,10 +88,35 @@ ignore_errors, (required: False), Description: "Ignore any errors during the ext
 MSIApplyTransform
 -----------------
 Apply transform(s) to an MSI-file using msitran.exe.
+Deprecated! Use MSITransformer instead.
 ```
 Input variables:
 msi_path, (required: True), Description: "Path to the msi."
 mst_paths, (required: True), Description: "(Array of) Paths to the mst."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+```
+
+MSIDbWorker
+-----------
+Wrapper around msidb.exe to work with an MSI-file.
+```
+Input variables:
+mode, (required: True), Description: "Mode of working (-e,-i,-m,-a,-r,-t,-j,-k,-x,-w)."
+msi_path, (required: True), Description: "Path to the msi."
+workfile, (required: False), Description: "Path to the file to work with (stream, storage, msi, transform)."
+workfolder, (required: False), Description: "Path to the folder, where files should be written or read; Or the folder to work with table text files."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+```
+
+MSITransformer
+--------------
+Generate or Apply transform(s) to/from (an) MSI-file(s) using msitran.exe.
+```
+Input variables
+mode, (required: False), Description: "Mode of working -a/-g (Apply/Generate), defaults to '-a'."
+msi_path, (required: True), Description: "Path to the msi."
+msi_path_new, (required: False), Description: "Path to the new changed msi, when generating an MST."
+mst_paths, (required: True), Description: "(Array of) path(s) to the mst (on Apply) or output mst, when generating."
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
@@ -110,10 +135,9 @@ log_file_abs, (required: False), Description: "Absolute path to the merge log fi
 ignore_errors, (required: False), Description: "Ignore any errors during the run."
 ```
 
-
 MSIofflinePatcher
 -----------------
-Apply an patch to an MSI file offline and rebuild the package.
+Apply an patch to an MSI file offline and rebuild the package (compression of files on or off). Can also compact an MSI.
 ```
 Input variables:
 pkg_dir_abs, (required: True), Description: "Absolute path to the pkg_dir."
@@ -161,16 +185,6 @@ build_target, (required: False), Description: "Target to run in NANT-file."
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
-RenameVar
----------
-Substitute a character from a given string and return the parsed string
-Copied version of "RenameVar" by Sebastien Tomasi.
-```
-Input variables:
-input_var, (required: True), Description: "Name of the variable to rename."
-rename_var, (required: True), Description: "Name of the variable to copy the value to."
-```
-
 ResourceExtractor
 -----------------
 Extracts a resource from a Windows exe using ResourceHacker.
@@ -198,6 +212,16 @@ ignore_pattern, (required: False), Description: "Wildcard pattern to ignore file
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
+TextFileSearch
+--------------
+Reads a text file and looks for a regex pattern and returns the string that matched the pattern.
+```
+Input variables:
+file_to_open, (required: True), Description: "The text file that needs to be opened for reading."
+pattern, (required: True), Description: "The regex pattern to look for and return."
+Output variables:
+matchstring, Description: "Returns the string that matched the pattern."
+        }
 WinPEVersionExtractor
 ---------------------
 Extracts version info from Windows PE-executable (.exe/.dll) file.
