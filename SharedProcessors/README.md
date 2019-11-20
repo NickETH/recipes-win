@@ -221,7 +221,8 @@ file_to_open, (required: True), Description: "The text file that needs to be ope
 pattern, (required: True), Description: "The regex pattern to look for and return."
 Output variables:
 matchstring, Description: "Returns the string that matched the pattern."
-        }
+```
+
 WinPEVersionExtractor
 ---------------------
 Extracts version info from Windows PE-executable (.exe/.dll) file.
