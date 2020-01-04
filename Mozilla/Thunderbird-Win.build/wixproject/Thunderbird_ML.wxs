@@ -94,11 +94,11 @@
 					<ComponentGroupRef Id="ExtlpRMFiles" />
                 </Feature>
 								
-                <Feature Id="TB_Sync" AllowAdvertise="system" Description="This installs the sync manager TBSync and providers for DAV and Google" Display="expand" Level="3" Title="TBsync + providers">
+                <Feature Id="TB_Sync" AllowAdvertise="system" Description="This installs the sync manager TBSync and providers for EAS, DAV and Google" Display="expand" Level="3" Title="TBsync + providers">
 					<ComponentGroupRef Id="ExtTBSyncFiles" />
 					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
 					<ComponentGroupRef Id="ExtGoogle4TBSyncFiles" />
-					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
+					<ComponentGroupRef Id="ExtEAS4TBSyncFiles" />
 				</Feature>
                 <Feature Id="Sieve" AllowAdvertise="system" Description="This installs the ManageSieve protocol for securely managing Sieve Script on a remote IMAP server" Display="expand" Level="3" Title="Sieve protocol">
 					<ComponentGroupRef Id="ExtSieveFiles" />
@@ -108,12 +108,13 @@
 					<ComponentGroupRef Id="ExtLightningFiles" />
                     <!-- <ComponentGroupRef Id="ExtVCS_SupportFiles" /> -->
                 </Feature>
-                <Feature Id="Extras" AllowAdvertise="system" Description="Exchange Calendar Conn. + Compact Header" Display="expand" Level="100" Title="Extras">
+                <!-- <Feature Id="Extras" AllowAdvertise="system" Description="Exchange Calendar Conn. + Compact Header" Display="expand" Level="100" Title="Extras"> -->
+				<Feature Id="Extras" AllowAdvertise="system" Description="Compact Header" Display="expand" Level="100" Title="Extras">
 					<!--
                     <ComponentGroupRef Id="ExtExtraFolColFiles" />
 					-->
                     <ComponentGroupRef Id="ExtCompactHeaderFiles" />
-                    <ComponentGroupRef Id="ExtExchangeCalendar" />
+                    <!-- <ComponentGroupRef Id="ExtExchangeCalendar" /> -->
                 </Feature>
 <!-- 				<Feature Id="Language_Helper" AllowAdvertise="system" Description="This installs dictionary and locale switcher + translator." Display="hidden" Level="3" Title="Language Helper">
 					<ComponentGroupRef Id="ExtLocaleSwitcher" />

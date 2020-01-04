@@ -92,7 +92,6 @@
 					<ComponentGroupRef Id="ExtTBSyncFiles" />
 					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
 					<ComponentGroupRef Id="ExtGoogle4TBSyncFiles" />
-					<ComponentGroupRef Id="ExtDAV4TBSyncFiles" />
 					<ComponentGroupRef Id="ExtEAS4TBSyncFiles" />
 				</Feature>
 				
