@@ -3,7 +3,8 @@
 # Copyright 2019 Swiss federal institute of technology (ETHZ).
 #
 # Created by Nick Heim (heim)@ethz.ch) on 2019-04-03.
-# Based on WinInstallerExtractor by Matt Hansen
+# Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll is needed in the Wix bin directory, 
+# if the NANT tasks for wix are used.
 #
 # Run NANT to build or to call a specific command.
 

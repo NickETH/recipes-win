@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Shared Processors for id-cd-win/recipes-test</string>
+    <string>Shared Processors for com.github.autopkg-win</string>
     <key>Identifier</key>
     <string>com.github.autopkg-win.SharedProcessors</string>
     <key>Input</key>

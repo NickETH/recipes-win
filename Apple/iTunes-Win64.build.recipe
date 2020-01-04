@@ -349,6 +349,35 @@
 		</dict>
         <dict>
             <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the product GUID from iTunes64.msi into msi_value</string>
+
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PLATFORM%_%version%_ML.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductCode']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Put the original product GUID into the transformed iTunes MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\%NAME%_%PLATFORM%_1031.msi</string>
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%msi_value%' WHERE `Property`.`Property`='ProductCode']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
 			<string>Generate a new 1031 language transform from the iTunes MSI-file and the copy</string>

@@ -33,7 +33,7 @@
 	<property name="TBdicFRXPI" value="dictionnaire_francais_classique_reforme_1990.xpi" />
 	<property name="TBdicITSRC" value="https://addons.mozilla.org/firefox/downloads/latest/3053/platform:5/addon-3053-latest.xpi" />
 	<property name="TBdicITXPI" value="dizionario_italiano.xpi" />
-	<property name="ExchCalendarXPI" value="exchangecalendar-test-ethz.xpi" />
+<!-- 	<property name="ExchCalendarXPI" value="exchangecalendar-test-ethz.xpi" /> -->
 	<property name="SieveXPI" value="sieve@mozdev.org.xpi" />
 	<property name="TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/tbsync/addon-773590-latest.xpi" />
 	<property name="TBSyncXPI" value="tbsync.xpi" />
@@ -41,6 +41,8 @@
 	<property name="DAV4TBSyncXPI" value="dav-4-tbsync.xpi" />
 	<property name="Google4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/provider-for-google-calendar/addon-4631-latest.xpi" />
 	<property name="Google4TBSyncXPI" value="google-4-tbsync.xpi" />
+	<property name="EAS4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/eas-4-tbsync/addon-986338-latest.xpi" />
+	<property name="EAS4TBSyncXPI" value="eas-4-tbsync.xpi" />
 	<property name="LightningXPI" value="lightning.xpi" />
 	<property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" />
 	<property name="CompactHeaderXPI" value="CompactHeader.xpi" />
@@ -81,7 +83,8 @@
 		<call target="install-Sieve" />
 		<call target="install-TBSync" />
 		<call target="install-DAV4TBSync" />
-		<call target="install-Google4TBSync" />		
+		<call target="install-Google4TBSync" />
+		<call target="install-EAS4TBSync" />
 
 		<!--
 		<call target="install-TBGPOExt" />
@@ -297,6 +300,23 @@
 		<property name="CGextXPI" value="ExtGoogle4TBSyncFiles" />
 		<property name="DownloadSRC" value="${Google4TBSyncSRC}" />
 		<property name="SourceFILE" value="${Google4TBSyncXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+        <!--
+		<call target="update-extension-maxversion" />
+        -->
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-EAS4TBSync">
+        <!-- 
+            Install the Exchange Active Sync (EAS) 4 TBSync Extension.
+        -->
+		<property name="CGextXPI" value="ExtEAS4TBSyncFiles" />
+		<property name="DownloadSRC" value="${EAS4TBSyncSRC}" />
+		<property name="SourceFILE" value="${EAS4TBSyncXPI}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
