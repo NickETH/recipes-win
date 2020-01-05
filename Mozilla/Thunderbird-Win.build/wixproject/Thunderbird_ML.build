@@ -82,13 +82,13 @@
 		<call target="install-Lightning" />
 
 		<call target="install-CompactHeader" />
-		<call target="install-ExchangeCalendar" />
 		<call target="install-Sieve" />
 		<call target="install-TBSync" />
 		<call target="install-DAV4TBSync" />
 		<call target="install-Google4TBSync" />
 		<call target="install-EAS4TBSync" />
 		<!--
+		<call target="install-ExchangeCalendar" />
 		<call target="install-TBGPOExt" />
 		<call target="install-Locale2MUI" />		
 		<call target="install-ExtraFolderColumns" />	

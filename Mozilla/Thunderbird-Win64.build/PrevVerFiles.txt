@@ -7,7 +7,6 @@ TBwoerterbuch_deutsch_de_ch_neue_rechtschreibung.xpi.wxs
 TBdictionnaire_francais_classique_reforme_1990.xpi.wxs
 TBdizionario_italiano.xpi.wxs
 TBlightning.xpi.wxs
-TBexchangecalendar-test-ethz.xpi.wxs
 TBsieve@mozdev.org.xpi.wxs
 TBtbsync.xpi.wxs
 TBdav-4-tbsync.xpi.wxs
