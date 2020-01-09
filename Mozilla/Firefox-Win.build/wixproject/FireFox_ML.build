@@ -148,7 +148,8 @@
 		Ab V47.x setzen wir die Default Settings mit dem CCK2
         -->
 		<copy file="..\sourcepkt\ETH\autoconfig.js" tofile=".\${FFdir}\defaults\pref\autoconfig.js" />
-		<copy file="..\sourcepkt\ETH\cck2.cfg" tofile=".\${FFdir}\cck2.cfg" />
+		<!-- Nicht notwendig, wird on the fly erzeugt und kopiert! -->
+		<!-- <copy file="..\sourcepkt\ETH\cck2.cfg" tofile=".\${FFdir}\cck2.cfg" /> -->
 		<copy todir=".\${FFdir}\cck2">
 			<fileset basedir=".\..\sourcepkt\ETH\cck2">
 				<include name="**/*" />
