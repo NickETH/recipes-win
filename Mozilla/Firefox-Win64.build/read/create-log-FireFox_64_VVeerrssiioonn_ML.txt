@@ -138,20 +138,13 @@
 	http://home.comcast.net/~dabbink/dabbink/ByteShifter.htm
 	cck2.cfg in .\Mozilla Firefox\ einfügen.
 
-
-	Die folgenden Zeilen in cck2.cfg.txt einfügen oder kontrollieren:
-	Diese schalten den Firstrun der entsprechenden Extensions ab.
-	lockPref("app.update.auto", false);
-	lockPref("app.update.enabled", false);
 	lockPref("browser.startup.homepage_override.mstone", "ignore");
-	lockPref("extensions.update.enabled", false);
 	lockPref("extensions.shownSelectionUI", true);
 	lockPref("extensions.autoDisableScopes", 11);
 	lockPref("plugins.hide_infobar_for_outdated_plugin", false);
 	lockPref("xpinstall.signatures.required", false);
 	lockPref("app.update.silent", true);
-	
-lockPref("app.update.service.enabled", false);
+	lockPref("app.update.service.enabled", false);
 
 	defaultPref("intl.locale.requested","");
 	defaultPref("browser.startup.homepage","data:text/plain,browser.startup.homepage=www.ethz.ch");
