@@ -6,7 +6,6 @@ sourcepkt\SideImage.bmp
 sourcepkt\TopImage.bmp
 sourcepkt\ETH
 sourcepkt\ETH\autoconfig.js
-sourcepkt\ETH\cck2.cfg
 sourcepkt\ETH\cck2.cfg.txt
 sourcepkt\ETH\distribution.ini
 sourcepkt\ETH\Firefox.adm.zip

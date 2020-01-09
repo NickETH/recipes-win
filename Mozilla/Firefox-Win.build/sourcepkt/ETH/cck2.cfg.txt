@@ -20,10 +20,10 @@ pref("browser.selfsupport.url","");
 pref("browser.search.widget.inNavBar", true);
 pref("extensions.adblockplus.currentVersion", "");
 var config = {
-  "cckVersion": "2.2.9",
+  "cckVersion": "2.4.5",
   "name": "ETHZ ID",
   "description": "Custom config 3",
-  "version": "2.7",
+  "version": "3.0",
   "extension": {
     "id": "ethz-cck@id.ethz.ch",
     "name": "ETHZ ID"
