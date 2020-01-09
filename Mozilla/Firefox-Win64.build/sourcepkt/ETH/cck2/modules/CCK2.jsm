@@ -1,7 +1,6 @@
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
-// Behaviour of default profiles lookup pref changed to "browser.migration.version",line 126 for ETHZ. 20180924, Nick Heim
-// Exchanged XPCOMUtils with ChromeUtils on Line 1403. 20181101, Nick Heim
+// Behaviour of default profiles lookup pref changed to "browser.migration.version",line 109 for ETHZ. 20200109, Nick Heim
 
 var EXPORTED_SYMBOLS = ["CCK2"];
 
@@ -67,23 +66,6 @@ let fixupUTF8 = function(str) {
   return out;
 };
 
-/* Crazy hack to work around distribution.ini bug */
-/* Basically if the distribution can't be parsed,  make it null */
-let dirSvc = Cc["@mozilla.org/file/directory_service;1"].
-             getService(Ci.nsIProperties);
-let iniFile = dirSvc.get("XREAppDist", Ci.nsIFile);
-iniFile.leafName = "distribution";
-iniFile.append("distribution.ini");
-if (iniFile.exists()) {
-  try {
-    let ini = Cc["@mozilla.org/xpcom/ini-parser-factory;1"].
-                 getService(Ci.nsIINIParserFactory).
-                 createINIParser(iniFile);
-  } catch (e) {
-    DistributionCustomizer.prototype.__defineGetter__("_iniFile", function() { return null;});
-  }
-}
-
 var networkPrefMapping = {
   proxyType: "network.proxy.type",
   proxyHTTP: "network.proxy.http",
@@ -124,10 +106,10 @@ var CCK2 = {
     // Bring back default profiles for >= FF46
     if (Services.vc.compare(Services.appinfo.version, "46") >= 0) {
       // If it is a new profile
-      // if (!Preferences.isSet("browser.startup.homepage_override.mstone")) {
+      //if (!Preferences.isSet("browser.startup.homepage_override.mstone")) {
 	  // Instead, we use the following one:
-	  if (!Preferences.isSet("browser.migration.version")) {	  
-	  var defaultProfileDir = Services.dirsvc.get("GreD", Ci.nsIFile);
+	  if (!Preferences.isSet("browser.migration.version")) {
+        var defaultProfileDir = Services.dirsvc.get("GreD", Ci.nsIFile);
         defaultProfileDir.append("defaults");
         defaultProfileDir.append("profile");
         if (defaultProfileDir.exists()) {
@@ -180,10 +162,6 @@ var CCK2 = {
       Preferences.lock("distribution.version", config.version + " (CCK2)");
 //      Preferences.lock("distribution.about", String(config.id + " - " + config.version + " (CCK2)"));
 
-      if (config.removeDefaultSearchEngines) {
-        Services.io.getProtocolHandler("resource").QueryInterface(Components.interfaces.nsIResProtocolHandler)
-                                                  .setSubstitution("search-plugins", null);
-      }
       if (config.noAddonCompatibilityCheck) {
         Preferences.reset("extensions.lastAppVersion");
       }
@@ -245,60 +223,6 @@ var CCK2 = {
                          config.registry[i].name,
                          config.registry[i].value,
                          config.registry[i].type);
-        }
-      }
-      if (config.permissions) {
-        for (var i in config.permissions) {
-          for (var j in config.permissions[i]) {
-            if (i.indexOf("http") == 0) {
-              Services.perms.add(NetUtil.newURI(i), j, config.permissions[i][j]);
-            } else {
-              var domain = i.replace(/^\*\./g, '');
-              Services.perms.add(NetUtil.newURI("http://" + domain), j, config.permissions[i][j]);
-              Services.perms.add(NetUtil.newURI("https://" + domain), j, config.permissions[i][j]);
-            }
-            if (j == "plugins") {
-              var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
-              for (var k=0; k < plugins.length; k++) {
-                if (i.indexOf("http") == 0) {
-                  Services.perms.add(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                } else {
-                  var domain = i.replace(/^\*\./g, '');
-                  Services.perms.add(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                  Services.perms.add(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), config.permissions[i][j]);
-                }
-              }
-            }
-          }
-          if (Object.keys(config.permissions[i]).length === 0) {
-            let perms = Services.perms.enumerator;
-            while (perms.hasMoreElements()) {
-              let perm = perms.getNext();
-              try {
-                // Firefox 41 and below
-                if (perm.host == i) {
-                  Services.perms.remove(perm.host, perm.type);
-                }
-              } catch(e) {
-                if (i.indexOf("http") == 0) {
-                  if (perm.matchesURI(NetUtil.newURI(i), false)) {
-                    perm.remove(NetUtil.newURI(i), perm.type);
-                  }
-                } else {
-                  var domain = i.replace(/^\*\./g, '');
-                  if (perm.matchesURI(NetUtil.newURI("http://" + domain), false)) {
-                    perm.remove(NetUtil.newURI("http://" + domain), perm.type);
-                  }
-                  if (perm.matchesURI(NetUtil.newURI("https://" + i), false)) {
-                    perm.remove(NetUtil.newURI("https://" + domain), perm.type);
-                  }
-                }
-              }
-            }
-          }
         }
       }
       if (config.disablePrivateBrowsing) {
@@ -462,11 +386,6 @@ var CCK2 = {
       }
       if (config.homePage && !config.lockHomePage) {
         Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
-        /* If you have a distribution.ini, browser.startup.homepage gets wiped out */
-        /* We need to save it */
-        if (!Preferences.isSet("browser.startup.homepage")) {
-          Preferences.set("browser.startup.homepage", config.homePage);
-        }
       }
       if (config.lockHomePage) {
         if (config.homePage) {
@@ -569,57 +488,11 @@ var CCK2 = {
   getConfigs: function() {
     return this.configs;
   },
-  observe: function observe(subject, topic, data) {
+  observe: async function observe(subject, topic, data) {
     switch (topic) {
       case "distribution-customization-complete":
         for (var id in this.configs) {
           var config = this.configs[id];
-          // Due to bug 947838, we have to reinitialize default preferences
-          {
-            var iniFile = Services.dirsvc.get("XREAppDist", Ci.nsIFile);
-            iniFile.leafName = "distribution";
-            iniFile.append("distribution.ini");
-            if (iniFile.exists()) {
-              if (config.preferences) {
-                for (var i in config.preferences) {
-                  // Workaround bug where this pref is coming is as a string from import
-                  if (i == "toolkit.telemetry.prompted") {
-                     config.preferences[i].value = parseInt(config.preferences[i].value);
-                  }
-                  if (!("locked" in config.preferences[i]) &&
-                      !("userset" in config.preferences[i]) &&
-                      !("clear" in config.preferences[i])) {
-                    if (Preferences.defaults.has(i)) {
-                      try {
-                        // If it's a complex preference, we need to set it differently
-                        Services.prefs.getComplexValue(i, Ci.nsIPrefLocalizedString).data;
-                        Preferences.defaults.set(i, "data:text/plain," + i + "=" + config.preferences[i].value);
-                      } catch (ex) {
-                        Preferences.defaults.set(i, config.preferences[i].value);
-                      }
-                    } else {
-                      Preferences.defaults.set(i, config.preferences[i].value);
-                    }
-                  }
-                }
-              }
-            }
-            if (config.homePage && !config.lockHomePage) {
-              Preferences.defaults.set("browser.startup.homepage", "data:text/plain,browser.startup.homepage=" + config.homePage);
-              /* If you have a distribution.ini, we changed browser.startup.homepage */
-              /* Put it back */
-              if (Preferences.get("browser.startup.homepage") == config.homePage) {
-                Preferences.reset("browser.startup.homepage");
-              }
-            }
-            if (config.network) {
-              for (var i in networkPrefMapping) {
-                if (i in config.network) {
-                  Preferences.defaults.set(networkPrefMapping[i], config.network[i]);
-                }
-              }
-            }
-          }
           // Try to install devices every time just in case get added after install
           if ("certs" in config && "devices" in config.certs) {
             let pkcs11;
@@ -640,15 +513,22 @@ var CCK2 = {
               }
             }
           }
+          if (config.removeAllCCK2Bookmarks) {
+            removeAllCCK2Bookmarks(config.id);
+          }
           if (!config.firstrun && config.installedVersion == config.version) {
             continue;
           }
           if (config.removeSmartBookmarks) {
-            var smartBookmarks = annos.getItemsWithAnnotation("Places/SmartBookmark", {});
-            for (var i = 0; i < smartBookmarks.length; i++) {
-              try {
-                bmsvc.removeItem(smartBookmarks[i]);
-              } catch (ex) {}
+            try  {
+              var smartBookmarks = await getItemsWithAnnotation("Places/SmartBookmark", {});
+              for (var i = 0; i < smartBookmarks.length; i++) {
+                try {
+                  bmsvc.removeItem(smartBookmarks[i]);
+                } catch (ex) {}
+              }
+            } catch (e) {
+              // getItemsWithAnnotation was removed, but so were smart bookmarks
             }
           }
           let syncBookmarks = false;
@@ -705,15 +585,15 @@ var CCK2 = {
             var oldCCKVersion = Preferences.get("extensions." + config.extension.id + ".version", null);
             if (oldCCKVersion) {
               Preferences.reset("extensions." + config.extension.id + ".version");
-              bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
+              bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.extension.id + "/" + oldCCKVersion, {}));
             }
           }
           if (config.installedVersion != config.version) {
-            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
-            bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.id + "/" + config.installedVersion, {}));
+            bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.installedVersion + "/" + config.installedVersion, {}));
           }
           // Just in case, remove bookmarks for this version too
-          bookmarksToRemove = bookmarksToRemove.concat(annos.getItemsWithAnnotation(config.id + "/" + config.version, {}));
+          bookmarksToRemove = bookmarksToRemove.concat(await getItemsWithAnnotation(config.id + "/" + config.version, {}));
           if (syncBookmarks) {
             let bmFolders = [];
             for (var i = 0; i < bookmarksToRemove.length; i++) {
@@ -764,13 +644,19 @@ var CCK2 = {
             }
           }
           if (config.searchplugins || config.defaultSearchEngine) {
+            let enginesToAdd;
             searchInitRun(function() {
               if (Array.isArray(config.searchplugins)) {
+                enginesToAdd = config.searchplugins.length;
                 for (var i=0; i < config.searchplugins.length; i++) {
                   Services.search.addEngine(config.searchplugins[i], Ci.nsISearchEngine.DATA_XML, null, false, {
                     onSuccess: function (engine) {
                       if (engine.name == config.defaultSearchEngine) {
                         Services.search.currentEngine = engine;
+                      }
+                      enginesToAdd--;
+                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
+                        removeDefaultSearchEngines();
                       }
                     },
                     onError: function (errorCode) {
@@ -780,6 +666,7 @@ var CCK2 = {
                   });
                 }
               } else {
+                enginesToAdd = Object.keys(config.searchplugins).length;
                 for (let enginename in config.searchplugins) {
                   var engine = Services.search.getEngineByName(enginename);
                   if (engine) {
@@ -789,6 +676,10 @@ var CCK2 = {
                     onSuccess: function (engine) {
                       if (engine.name == config.defaultSearchEngine) {
                         Services.search.currentEngine = engine;
+                      }
+                      enginesToAdd--;
+                      if (enginesToAdd == 0 && config.removeDefaultSearchEngines) {
+                        removeDefaultSearchEngines();
                       }
                     },
                     onError: function (errorCode) {
@@ -862,6 +753,10 @@ var CCK2 = {
           // Delay loading unnecessary modules
           // We should do this on a timeout
           loadModules(config);
+          // Move permissions later so remove works
+          if ("permissions" in config) {
+            updatePermissions(config.permissions);
+          }
           if (!config.firstrun && config.installedVersion == config.version) {
             return;
           }
@@ -995,6 +890,33 @@ var CCK2 = {
   }
 }
 
+async function getItemsWithAnnotation(name) {
+  if ("getItemsWithAnnotation" in annos) {
+    return annos.getItemsWithAnnotation(name);
+  } else {
+    return PlacesUtils.promiseDBConnection().then(async db => {
+      let rows = await db.execute(`
+        SELECT b.id FROM moz_anno_attributes n
+        JOIN moz_items_annos a ON n.id = a.anno_attribute_id
+        JOIN moz_bookmarks b ON b.id = a.item_id
+        WHERE n.name = :name
+      `, {name});
+
+      return rows.map(row => row.getResultByName("id"));
+    });
+  }
+}
+
+function removeDefaultSearchEngines() {
+  let engines = Services.search.getEngines();
+  for (let i=0; i < engines.length; i++) {
+    let engine = engines[i];
+    if (engine.wrappedJSObject._isDefault) {
+      Services.search.removeEngine(engine);
+    }
+  }
+}
+
 async function removeDefaultBookmarks() {
   var firefoxFolder = await PlacesUtils.bookmarks.fetch({
     parentGuid: PlacesUtils.bookmarks.menuGuid,
@@ -1004,7 +926,11 @@ async function removeDefaultBookmarks() {
   }
   var userAgentLocale = Preferences.defaults.get("general.useragent.locale");
   if (!userAgentLocale) {
-    userAgentLocale = Services.locale.getRequestedLocales()[0];
+    try {
+      userAgentLocale = Services.locale.getRequestedLocales()[0];
+    } catch (e) {
+      userAgentLocale = Services.locale.requestedLocales[0];
+    }
   }
   var userAgentLocale = "en-US";
   var gettingStartedURL = "https://www.mozilla.org/" + userAgentLocale + "/firefox/central/";
@@ -1043,6 +969,19 @@ async function removeOldBookmarks(oldBookmarks, oldVersion) {
       }
     }
   }
+}
+
+async function removeAllCCK2Bookmarks(id) {
+  let bookmarks = await PlacesUtils.promiseDBConnection().then(async db => {
+      let rows = await db.execute(`
+        SELECT b.id FROM moz_anno_attributes n
+        JOIN moz_items_annos a ON n.id = a.anno_attribute_id
+        JOIN moz_bookmarks b ON b.id = a.item_id
+        WHERE n.name LIKE :id || '%'`, {id});
+
+      return rows.map(row => row.getResultByName("id"));
+    });
+  removeOldBookmarks(bookmarks, "CCK2");
 }
 
 function loadModules(config) {
@@ -1296,7 +1235,17 @@ function fixupCert(cert) {
 function download(url, successCallback, errorCallback, extraParams) {
   var uri = Services.io.newURI(url, null, null);
 
-  var channel = Services.io.newChannelFromURI(uri);
+  var channel;
+  try {
+    channel = Services.io.newChannelFromURI(uri);
+  } catch(e) {
+    channel = Services.io.newChannelFromURI(uri,
+                                            null,
+                                            Services.scriptSecurityManager.getSystemPrincipal(),
+                                            null,
+                                            Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_INHERITS,
+                                            Ci.nsIContentPolicy.TYPE_OTHER);
+  }
 
   var downloader = Cc["@mozilla.org/network/downloader;1"].createInstance(Ci.nsIDownloader);
   var listener = {
@@ -1400,7 +1349,7 @@ function disableAbout(aClass, aClassName, aboutType) {
       return Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
 
-    QueryInterface: ChromeUtils.generateQI([Ci.nsIAboutModule]),
+    QueryInterface: ("generateQI" in XPCOMUtils) ? XPCOMUtils.generateQI([Ci.nsIAboutModule]) : ChromeUtils.generateQI([Ci.nsIAboutModule]),
 
     createInstance: function(outer, iid) {
        return this.QueryInterface(iid);
@@ -1412,10 +1361,91 @@ function disableAbout(aClass, aClassName, aboutType) {
   return gAbout;
 }
 
+function updatePermissions(permissions) {
+  for (var i in permissions) {
+    for (var j in permissions[i]) {
+      if (permissions[i][j] == 3) {
+        // Remove
+        if (i.indexOf("http") == 0) {
+            Services.perms.remove(NetUtil.newURI(i), j);
+        } else {
+          var domain = i.replace(/^\*\./g, '');
+          Services.perms.remove(NetUtil.newURI("http://" + domain), j);
+          Services.perms.remove(NetUtil.newURI("https://" + domain), j);
+        }
+        if (j == "plugins") {
+          var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+          for (var k=0; k < plugins.length; k++) {
+            if (i.indexOf("http") == 0) {
+              Services.perms.remove(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+            } else {
+              var domain = i.replace(/^\*\./g, '');
+              Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]));
+              Services.perms.remove(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]));
+            }
+          }
+        }
+      } else {
+        if (i.indexOf("http") == 0) {
+          Services.perms.add(NetUtil.newURI(i), j, permissions[i][j]);
+        } else {
+          var domain = i.replace(/^\*\./g, '');
+          Services.perms.add(NetUtil.newURI("http://" + domain), j, permissions[i][j]);
+          Services.perms.add(NetUtil.newURI("https://" + domain), j, permissions[i][j]);
+        }
+        if (j == "plugins") {
+          var plugins = Cc["@mozilla.org/plugin/host;1"].getService(Ci.nsIPluginHost).getPluginTags({});
+          for (var k=0; k < plugins.length; k++) {
+            if (i.indexOf("http") == 0) {
+              Services.perms.add(NetUtil.newURI(i), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI(i), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+            } else {
+              var domain = i.replace(/^\*\./g, '');
+              Services.perms.add(NetUtil.newURI("http://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("http://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("https://" + domain), "plugin:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+              Services.perms.add(NetUtil.newURI("https://" + domain), "plugin-vulnerable:" + CTP.getPluginPermissionFromTag(plugins[k]), permissions[i][j]);
+            }
+          }
+        }
+      }
+    }
+    if (Object.keys(permissions[i]).length === 0) {
+      let perms = Services.perms.enumerator;
+      while (perms.hasMoreElements()) {
+        let perm = perms.getNext();
+        try {
+          // Firefox 41 and below
+          if (perm.host == i) {
+            Services.perms.remove(perm.host, perm.type);
+          }
+        } catch(e) {
+          if (i.indexOf("http") == 0) {
+            if (perm.matchesURI(NetUtil.newURI(i), false)) {
+              perm.remove(NetUtil.newURI(i), perm.type);
+            }
+          } else {
+            var domain = i.replace(/^\*\./g, '');
+            if (perm.matchesURI(NetUtil.newURI("http://" + domain), false)) {
+              perm.remove(NetUtil.newURI("http://" + domain), perm.type);
+            }
+            if (perm.matchesURI(NetUtil.newURI("https://" + i), false)) {
+              perm.remove(NetUtil.newURI("https://" + domain), perm.type);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 var documentObserver = {
   observe: function observe(subject, topic, data) {
     if (subject instanceof Ci.nsIDOMWindow) {
-      var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
+      var win = subject;
       if (topic == "chrome-document-global-created" ||
           (topic == "content-document-global-created" && win.document.documentURIObject.scheme == "about")) {
         win.addEventListener("load", function onLoad(event) {

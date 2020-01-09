@@ -20,7 +20,7 @@ var observer = {
   observe: function observe(subject, topic, data) {
     switch (topic) {
       case "chrome-document-global-created":
-        var win = subject.QueryInterface(Components.interfaces.nsIDOMWindow);
+        var win = subject;
         win.addEventListener("load", function onLoad(event) {
           win.removeEventListener("load", onLoad, false);
           var doc = event.target;
@@ -88,6 +88,10 @@ function updatePrefUI(doc) {
     if (config.noMasterPassword == true) {
       hide(E("useMasterPassword", doc));
       hide(E("changeMasterPassword", doc));
+    }
+    if (config.removeDefaultSearchEngines) {
+      // Can't disable because it gets enabled
+      hide(E("restoreDefaultSearchEngines", doc));
     }
     if (config.hiddenUI) {
       for (var i=0; i < config.hiddenUI.length; i++) {

@@ -35,8 +35,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// Exchanged XPCOMUtils with ChromeUtils on Line 595. 20181030, Nick Heim
-
 let EXPORTED_SYMBOLS = ["Preferences"];
 
 const Cc = Components.classes;
@@ -592,7 +590,7 @@ function PrefObserver(prefName, callback, thisObject) {
 }
 
 PrefObserver.prototype = {
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference]),
+  QueryInterface: ("generateQI" in XPCOMUtils) ? XPCOMUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference]) : ChromeUtils.generateQI([Ci.nsIObserver, Ci.nsISupportsWeakReference]),
 
   observe: function(subject, topic, data) {
     // The pref service only observes whole branches, but we only observe

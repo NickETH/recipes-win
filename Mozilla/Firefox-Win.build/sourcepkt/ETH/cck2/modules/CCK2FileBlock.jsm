@@ -1,4 +1,3 @@
-// Exchanged XPCOMUtils with ChromeUtils on Line 34. 20181101, Nick Heim
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 
 var EXPORTED_SYMBOLS = [];
@@ -31,7 +30,7 @@ let CCK2FileBlock = {
   classDescription: "CCK2 FileBlock Service",
   contractID: "@kaply.com/cck2-fileblock-service;1",
   classID: Components.ID('{26e7afc9-e22d-4d12-bb57-c184fe24b828}'),
-  QueryInterface: ChromeUtils.generateQI([Ci.nsIContentPolicy]),
+  QueryInterface: ("generateQI" in XPCOMUtils) ? XPCOMUtils.generateQI([Ci.nsIContentPolicy]) : ChromeUtils.generateQI([Ci.nsIContentPolicy]),
   createInstance: function(outer, iid) {
      return this.QueryInterface(iid);
   },
