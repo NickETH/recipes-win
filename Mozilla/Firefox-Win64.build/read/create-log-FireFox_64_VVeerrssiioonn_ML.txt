@@ -126,7 +126,7 @@
 	localit.xml
 
 	Konfiguration wird mit CCK2 von Mike Kaply gemacht.
-	Version 2.2.9
+	Version 2.4.5
 
 	Danach in .\Mozilla Firefox\defaults\pref das File: autoconfig.js erstellen.
 	Es muss diese Zeile enthalten:
