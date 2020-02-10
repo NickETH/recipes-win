@@ -1,0 +1,7 @@
+read\create-log-Fiji_VVeerrssiioonn_EN.txt
+read\readme-Fiji_VVeerrssiioonn_EN.txt
+sourcepkt\*.ico
+wixproject\Fiji.wxs
+wixproject\NoKeypathNoExe-x64.xslt
+wixproject\Fiji.build
+wixproject\version.wxi

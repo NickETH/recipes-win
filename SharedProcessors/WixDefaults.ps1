@@ -5,7 +5,8 @@
 param(
     [Parameter(mandatory=$true)][string]$build_dir,
     [Parameter(mandatory=$true)][string]$build_ver,
-    [Parameter(mandatory=$false)][string]$org_ver
+    [Parameter(mandatory=$false)][string]$org_ver,
+    [Parameter(mandatory=$false)][string]$prop_file
 );
 
 #Create a version string without delimiters
@@ -44,30 +45,32 @@ echo $node.value
 }
 $xml.Save($build_dir + "\wixproject\version.wxi")
 
-# global.prop aktualisieren
-$xml = [xml](Get-Content ($build_dir + "\wixproject\global.prop"))
-$propnodes = $xml.SelectNodes("/project/property")
+# PropFile aktualisieren
+if ($prop_file -and $build_dir) {
+    $xml = [xml](Get-Content ($build_dir + "\" + $prop_file))
+    $propnodes = $xml.SelectNodes("/project/property")
 
-foreach ($node in $propnodes){
-echo $node.name
-switch ($node.name)
-{
-    {$_ -match "download-component"}
-    {$node.Value = "yes";BREAK}
+    foreach ($node in $propnodes){
+    echo $node.name
+    switch ($node.name)
+    {
+        {$_ -match "download-component"}
+        {$node.Value = "yes";BREAK}
 
-    {$_ -match "RealVersion"}
-    {$node.Value = $org_ver ;BREAK}
+        {$_ -match "RealVersion"}
+        {$node.Value = $org_ver ;BREAK}
 
-    {$_ -match "PackageVersion"}
-    {$node.Value = $build_ver ;BREAK}
+        {$_ -match "PackageVersion"}
+        {$node.Value = $build_ver ;BREAK}
 
-    {$_ -match "ShortVersion"}
-    {$node.Value = $CurrShortver ;BREAK}
+        {$_ -match "ShortVersion"}
+        {$node.Value = $CurrShortver ;BREAK}
 
-    {$_ -match "xpi-maxversion"}
-    {$node.Value = $org_ver.Substring(0,2) + ".*" ;BREAK}
+        {$_ -match "xpi-maxversion"}
+        {$node.Value = $org_ver.Substring(0,2) + ".*" ;BREAK}
 
+    }
+    echo $node.value
+    }
+    $xml.Save($build_dir + "\" + $prop_file)
 }
-echo $node.value
-}
-$xml.Save($build_dir + "\wixproject\global.prop")

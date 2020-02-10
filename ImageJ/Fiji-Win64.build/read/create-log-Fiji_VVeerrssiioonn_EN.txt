@@ -1,0 +1,10 @@
+
+200113	Create Fiji for Windows
+	Download the x64 Zip ball
+	Delete the java folder and disable the auto-update. Then copy the relevant files to the wixproject.
+	Build it to an MSI. Disable key path in the MSI components.
+	Create an Icon with Greefish Icon Editor Pro.
+	Open Fiji.app\images\icon.png, Choose Create Windows Icon from image..., then save as Fiji-Icon.ico
+
+200113	Version 1.0.0, by AutoPkg
+	

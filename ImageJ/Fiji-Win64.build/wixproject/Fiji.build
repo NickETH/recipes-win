@@ -1,0 +1,41 @@
+<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+    <PropertyGroup>
+		<!-- Todo: -arch switch  x86/x64 in candle -->
+		<InstallerPlatform>x64</InstallerPlatform>
+        <BuildDirectory>$(BuildDir)</BuildDirectory>
+        <DestinationDirectory>$(FijiDir)</DestinationDirectory>
+		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
+		<MsiOut>..\Release\Fiji_64_$(version)_EN.msi</MsiOut>
+    </PropertyGroup>
+	<!-- The list of WIX input files -->
+	<ItemGroup>
+		<WixCode Include="Fiji.wxs" />
+		<WixCode Include="Fijifiles.wxs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<WixObject Include="Fiji.wixobj" />
+		<WixObject Include="Fijifiles.wixobj" />
+	</ItemGroup>
+	<Target Name="Harvest" >
+		<Exec
+            Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr INSTALLDIR -v -sw5150 -sreg -srd -suid -svb6 -sfrag -cg FijiFiles -var wix.APSourceDir -gg -out Fijifiles.wxs -t NoKeypathNoExe-x64.xslt'
+            ContinueOnError="false"
+            WorkingDirectory="." />
+    </Target>
+	<Target Name="WIX"
+		DependsOnTargets="Harvest">
+        <Exec
+            Command='"$(WiX)bin\candle" -arch x64 -ext WixUIExtension -v -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="$(BuildDirectory)" />
+        <Exec
+            Command='"$(WiX)bin\light" -ext WixUIExtension $(LightSrcDir) -v -sice:ICE57 -sice:ICE43  -sw1076 -sw0204 -out $(MsiOut) @(WixObject, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="." />
+
+
+  <!-- A message at the end -->
+		<Message Text="Install package has been created." />
+	</Target>
+</Project>

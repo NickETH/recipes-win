@@ -10,6 +10,8 @@
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 # 20190401 Nick Heim: PrevVerFiles is untested!
 
+from __future__ import absolute_import
+from __future__ import print_function
 import os
 import sys
 import subprocess
@@ -34,6 +36,10 @@ class WixDefaults(Processor):
         "org_ver": {
             "required": False,
             "description": "Original version string",
+        },
+        "prop_file": {
+            "required": False,
+            "description": "XMLfile, containing additional build properties.",
         },
         "ignore_errors": {
             "required": False,
@@ -66,7 +72,11 @@ class WixDefaults(Processor):
             org_ver = self.env.get('org_ver')
             cmd.extend(['-org_ver', org_ver])
 
-        # print >> sys.stdout, "cmdline %s" % cmd
+        if "prop_file" in self.env:
+            prop_file = self.env.get('prop_file')
+            cmd.extend(['-prop_file', prop_file])
+
+			# print >> sys.stdout, "cmdline %s" % cmd
         try:
             if verbosity > 1:
                 Output = subprocess.check_output(cmd)
@@ -81,7 +91,7 @@ class WixDefaults(Processor):
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:
-                print line
+                print(line)
             if "Buildversion:" in line:
                 archiveVersion = line.split()[-1]
                 continue

@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for Fiji, which downloads a zip file containing the latest stable version of Fiji without JRE in it. Therefore a version of JRE or JDK has to be present on the client. Fiji is an image processing package and can be described as a distribution of ImageJ (and ImageJ2) together with Java, Java3D and a lot of plugins organized into a coherent menu structure.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.Fiji-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Fiji</string>
+        <key>DOWNLOAD_URL</key>
+        <string>https://downloads.imagej.net/fiji/latest/fiji-win64.zip</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.2.0</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearchTst</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://imagej.nih.gov/ij/notes.html</string>
+				<key>re_pattern</key>
+				<!-- <string>Version (?P&lt;version&gt;[0-9a-z\.]*)</string> -->
+				<string>Version (?P&lt;version&gt;[0-9]\.[0-9]*)</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%DOWNLOAD_URL%</string>
+                <key>filename</key>
+                <string>%NAME%.zip</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%pathname%</string>
+                <key>preserve_paths</key>
+                <string>False</string>
+                <key>recursive</key>
+                <string>True</string>
+                <key>extract_dir</key>
+                <string>%RECIPE_CACHE_DIR%\downloads</string>
+                <key>extract_file</key>
+                <string>ij-1.*.jar</string>
+			</dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%RECIPE_CACHE_DIR%\downloads\ij-1.*.jar</string>
+            </dict>
+            <key>Processor</key>
+            <string>FileFinder</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%found_filename%</string>
+                <key>preserve_paths</key>
+                <string>False</string>
+                <key>recursive</key>
+                <string>True</string>
+                <key>extract_dir</key>
+                <string>%RECIPE_CACHE_DIR%\downloads</string>
+                <key>extract_file</key>
+                <string>MANIFEST.MF</string>
+			</dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/TextFileSearcher</string>
+			<key>Comment</key>
+			<string>Searches the version string and put it into variables</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_to_open</key>
+                <string>%RECIPE_CACHE_DIR%\downloads\MANIFEST.MF</string>
+				<key>pattern</key>			
+				<string>Implementation-Version: (?P&lt;version&gt;(?P&lt;versionmajor&gt;\d).(?P&lt;versionminor&gt;[\d]*)(?P&lt;buildstring&gt;.*))</string> <!-- 1.52p -->
+				
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/CharToNum</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%buildstring%</string>
+                <key>output_var</key>
+                <string>versionbuild</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%versionmajor%.%versionminor%.%versionbuild%</string>
+                <key>rename_var</key>
+                <string>version_intern</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+			<key>Comment</key>
+			<string>Delete the expanded files and folders in the cache</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+				<array>
+					<string>%found_filename%</string>
+                    <string>%RECIPE_CACHE_DIR%\downloads\MANIFEST.MF</string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
