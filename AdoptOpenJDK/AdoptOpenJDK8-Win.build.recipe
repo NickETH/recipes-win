@@ -81,6 +81,8 @@
                 <string>%build_ver%</string>
                 <key>org_ver</key>
                 <string>%version%</string>
+                <key>prop_file</key>
+                <string>wixproject\global.prop</string>
             </dict>
 		</dict>
         <dict>
