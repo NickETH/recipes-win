@@ -20,15 +20,6 @@
     <array>
         <dict>
             <key>Processor</key>
-            <string>StopProcessingIf</string>
-            <key>Arguments</key>
-            <dict>
-                <key>predicate</key>
-                <string>download_changed == False</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
 			<key>Comment</key>
             <string>Create a build enviroment to build the MSI with Wix</string>
@@ -43,7 +34,7 @@
                 <key>org_ver</key>
                 <string>%version%</string>
                 <key>ver_fields</key>
-                <string>3</string>
+                <string>2</string>
                 <key>pkg_dir</key>
                 <string>Fiji_64_%version%_EN</string>
                 <key>folder_list</key>
@@ -103,7 +94,7 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-Fiji_%build_ver%_EN.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-Fiji_64_%build_ver%_EN.txt</string>
                 <key>new_ver</key>
                 <string>%build_ver%</string>
                 <key>re_pattern</key>
@@ -116,7 +107,7 @@
             <key>Arguments</key>
             <dict>
                 <key>file_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\read\readme-Fiji_%build_ver%_EN.txt</string>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-Fiji_64_%build_ver%_EN.txt</string>
                 <key>new_ver</key>
                 <string>%build_ver%</string>
                 <key>re_pattern</key>
@@ -157,7 +148,8 @@
                 <string>BuildDir=%BUILD_DIR%\%pkg_dir%\wixproject;FijiDir=%BUILD_DIR%\%pkg_dir%\wixproject\Fiji.App;version=%version%</string>
             </dict>
         </dict>
-        <dict>
+		<!-- Todo: Why does this processor throw an error? -->
+		<!--	<dict>
             <key>Processor</key>
             <string>PathDeleter</string>
 			<key>Comment</key>
@@ -169,7 +161,7 @@
                     <string>%BUILD_DIR%\%pkg_dir%\release\Fiji*.wixpdb</string>
 				</array>
 			</dict>
-		</dict>
+		</dict> -->
 	</array>
 </dict>
 </plist>

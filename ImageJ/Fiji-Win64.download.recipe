@@ -17,18 +17,6 @@
     <string>0.2.0</string>
     <key>Process</key>
     <array>
-		<dict>
-			<key>Processor</key>
-			<string>URLTextSearchTst</string>
-			<key>Arguments</key>
-			<dict>
-				<key>url</key>
-				<string>https://imagej.nih.gov/ij/notes.html</string>
-				<key>re_pattern</key>
-				<!-- <string>Version (?P&lt;version&gt;[0-9a-z\.]*)</string> -->
-				<string>Version (?P&lt;version&gt;[0-9]\.[0-9]*)</string>
-			</dict>
-		</dict>
         <dict>
             <key>Processor</key>
             <string>URLDownloader</string>
@@ -40,7 +28,7 @@
                 <string>%NAME%.zip</string>
             </dict>
         </dict>
-<!--         <dict>
+        <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
             <key>Arguments</key>
@@ -48,7 +36,7 @@
                 <key>predicate</key>
                 <string>download_changed == False</string>
             </dict>
-        </dict> -->
+        </dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
@@ -101,7 +89,7 @@
             <dict>
                 <key>file_to_open</key>
                 <string>%RECIPE_CACHE_DIR%\downloads\MANIFEST.MF</string>
-				<key>pattern</key>			
+				<key>re_pattern</key>			
 				<string>Implementation-Version: (?P&lt;version&gt;(?P&lt;versionmajor&gt;\d).(?P&lt;versionminor&gt;[\d]*)(?P&lt;buildstring&gt;.*))</string> <!-- 1.52p -->
 				
             </dict>
@@ -119,7 +107,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/RenameVar</string>
+			<string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
