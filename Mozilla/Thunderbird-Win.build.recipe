@@ -63,7 +63,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/RenameVar</string>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
