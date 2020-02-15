@@ -30,10 +30,12 @@
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
+			<key>Comment</key>
+			<string>Uses the Python eval function, It is assumed, that the Adopt-files are supplied earlier, when a new release is ready. If this changes, the predication has to be altered</string>
             <key>Arguments</key>
             <dict>
                 <key>predicate</key>
-                <string>download_changed == False</string>
+                <string>(download_changed == False) or not __import__('os').path.isfile(__import__('os').path.join("%RECIPE_CACHE_DIR%\downloads","%zuludlfile%")) or not __import__('os').path.isfile(__import__('os').path.join("%RECIPE_CACHE_DIR%\downloads", "%DOWNLOAD_FILE%_hotspot_%PLATFORM%_%version%.msi"))</string>
             </dict>
         </dict>
         <dict>
@@ -50,16 +52,70 @@
                 <key>org_ver</key>
                 <string>%version%</string>
                 <key>pkg_dir</key>
-                <string>AdoptOpenJDK_Hotspot_64_%version%_ML</string>
+                <string>AdoptOpenJDK_Hotspot_64_::VVeerrssiioonn::_ML</string>
                 <key>folder_list</key>
-                <string>sourceunzipped:release:read:helpers</string>
+                <string>sourcepkt:sourceunzipped:release:read:helpers:wixproject</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
 			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>AdoptOpenJDK_Hotspot_64_%version%_ML</string>
+                <key>rename_var</key>
+                <string>pkg_dir</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WixDefaults</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%</string>
+                <key>build_ver</key>
+                <string>%build_ver%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>prop_file</key>
+                <string>wixproject\global.prop</string>
+            </dict>
 		</dict>
         <dict>
             <key>Arguments</key>
             <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-AdoptOpenJDK_64_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-AdoptOpenJDK_64_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
                 <key>source_path</key>
-                <string>%pathname%</string>
+                <string>%path_msi%</string>
                 <key>destination_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\%DOWNLOAD_FILE%_hotspot_%PLATFORM%_%version%.msi</string>
                 <key>overwrite</key>
@@ -72,7 +128,7 @@
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
-                <string>%pathname%</string>
+                <string>%path_msi%</string>
                 <key>destination_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\release\AdoptOpenJDK_Hotspot_64_%version%_ML.msi</string>
                 <key>overwrite</key>
@@ -81,6 +137,86 @@
             <key>Processor</key>
             <string>Copier</string>
         </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%zuludlfile%</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%zuludlfile%</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileMoverFromList</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\%zuludldir%</string>
+                <key>target_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\JFX</string>
+                <key>file_list</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\Zulu-JFX-JDK.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>run_folder</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/NANTrun</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIimportMergeModule</string>
+            <key>Arguments</key>
+            <dict>
+                <key>pkg_dir_abs</key>
+                <string>%BUILD_DIR%\%pkg_dir%</string>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AdoptOpenJDK_Hotspot_64_%version%_ML.msi</string>
+                <key>msm_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\JavaFX_64_%version%.msm</string>
+                <key>msm_feature</key>
+                <string>FeatureJavaFX</string>
+                <key>msm_dir</key>
+                <string>INSTALLDIR</string>
+                <key>temp_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers</string>
+                <key>log_file_abs</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\MSM-log.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\AdoptOpenJDK_Hotspot_64_%version%_ML.msi</string>
+                <key>SQL_command</key>
+				<array>
+                    <string><![CDATA[INSERT INTO `Feature` (`Feature`.`Feature`,`Feature`.`Feature_Parent`,`Feature`.`Title`,`Feature`.`Description`, `Feature`.`Display`,`Feature`.`Level`,`Feature`.`Directory_`,`Feature`.`Attributes`) VALUES ('FeatureJavaFX','FeatureMain','JavaFX','Install JavaFX',11,2,'INSTALLDIR',8)]]></string>
+				</array>
+			</dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
@@ -95,7 +231,7 @@
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+                    <string>Version %version% with JavaFX for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
                     <string>AdoptOpenJDK Hotspot x64 %version% ML</string>
 				    <key>/t</key>
