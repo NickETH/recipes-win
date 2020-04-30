@@ -119,6 +119,23 @@
 		</dict>
         <dict>
             <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIDbWorker</string>
+			<key>Comment</key>
+			<string>Merges the WixFirewallCA-merge.msi with the main MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\release\VLC_64_%build_ver%_ML.msi</string>
+                <key>mode</key>
+                <string>-m</string>
+                <key>workfile</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers\WixFirewallCA-merge.msi</string>
+<!--                 <key>workfolder</key>
+                <string>%BUILD_DIR%\%pkg_dir%\helpers</string>	 -->	
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
 			<string>Applies the Settings-Transform to the VLC.msi in the release folder</string>

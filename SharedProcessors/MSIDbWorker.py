@@ -22,7 +22,7 @@ class MSIDbWorker(Processor):
     input_variables = {
         "mode": {
             "required": True,
-            "description": "Mode of working (-e,-i,-m,-a,-r,-t,-j,-k,-x,-w)",
+            "description": "Mode of working (-a,-e,-i,-j,-k,-m,-r,-t,-w,-x)",
         },
         "msi_path": {
             "required": True,
@@ -57,7 +57,7 @@ class MSIDbWorker(Processor):
         self.output("Working on: %s" % msi_path)
         msidb_exe = os.path.join(self.env['TOOLS_DIR'], "msidb.exe")
 
-        if mode.lower() in ["-a","-r","-t","-j","-k","-x","-w"]:
+        if mode.lower() in ["-a","-j","-k","-m","-r","-t","-w","-x"]:
             if {"workfolder"}.issubset(self.env):
                 workfolder = self.env.get('workfolder')
                 os.chdir(workfolder)
