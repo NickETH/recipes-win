@@ -47,7 +47,7 @@ class NANTrun(Processor):
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
         ts = time.localtime()
-        us_date = time.strftime("%Y%m%d",ts)
+        us_date = time.strftime("%Y%m%d%H%M",ts)
         extract_flag = 'l'
         nant_cmd = self.env.get('NANT_PATH')
 
