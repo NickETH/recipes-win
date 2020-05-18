@@ -1,0 +1,2 @@
+read\create-log-VmwareTools_64_VVeerrssiioonn_ML.txt
+read\readme-VmwareTools_64_VVeerrssiioonn_ML.txt

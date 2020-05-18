@@ -1,0 +1,5 @@
+
+190920	Vmware Tools x64
+	No alterations at all.
+	We use the MSI out of the box here.
+

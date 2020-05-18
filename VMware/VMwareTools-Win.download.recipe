@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Download recipe for VMware Tools</string>
+	<key>Identifier</key>
+    <string>com.github.autopkg-win.download.VMwareTools-Win</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>VMware-Tools</string>
+		<key>SEARCH_PATTERN_DMG</key>
+        <string>(VMware-tools-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)[\d+\.\-]+-x86_64\.exe)</string>
+        <!-- <string>(?P&lt;dmg_url&gt;VMware-tools-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)[\d+\.\-]+-x86_64\.exe)</string> -->
+		<key>SEARCH_URL</key>
+		<string>https://packages.vmware.com/tools/releases/latest/windows/x64/</string>
+		<!-- https://packages.vmware.com/tools/releases/latest/windows/x64/index.html -->
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.4.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				<string>%SEARCH_PATTERN_DMG%</string>
+<!-- 				<key>result_output_var_name</key>
+				<string>dmg_url</string> -->
+				<key>url</key>
+				<string>%SEARCH_URL%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%SEARCH_URL%/%match%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>E=noreply@vmware.com, CN="VMware, Inc.", O="VMware, Inc.", L=Palo Alto, S=California, C=US</string>
+            </dict>
+        </dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>
