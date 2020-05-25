@@ -16,7 +16,40 @@ ignore_errors, (required: False), Description: "Ignore any errors during the run
 Output variables:
 newGUID, Description: "New GUID."
 ```
-	
+
+BMSImporter
+-----------
+Import a new application into BMS (baramundi Management System).
+```
+Input variables:
+bms_serverurl, (required: True), Description: "URL of the BMS server."
+bms_serverport, (required: False), Description: "Port of the BMS bConnect service, Defaults to: 443."
+bms_CM_entry, (required: True), Description: "Name of the object in the credential manager."
+bms_username, (required: True), Description: "Username to log into the BMS bconnect API."
+bms_app_name, (required: True), Description: "Application name in BMS."
+bms_app_vendor, (required: True), Description: "Application vendor name in BMS."
+bms_app_parentid, (required: True), Description: "GUID of the Parent OU in BMS."
+bms_app_version, (required: True), Description: "Application version in BMS."
+bms_app_valid4os, (required: True), Description: "Valid OS for the application in BMS."
+bms_app_seccont, (required: True), Description: "Application's security context in BMS."
+bms_app_installcmd, (required: True), Description: "Application install command line in BMS."
+bms_app_installparm, (required: False), Description: "Application install parameters in BMS."
+bms_app_iopt_rebootbhv, (required: False), Description: "Application install option <reboot behaviour> in BMS."
+bms_app_iopt_copylocal, (required: False), Description: "Application install option <copy locally> in BMS."
+bms_app_iopt_reinstall, (required: False), Description: "Application install option <Reinstallation allowed> in BMS."
+bms_app_iopt_target, (required: False), Description: "Application install option <target> in BMS."
+bms_app_comment, (required: False), Description: "Application comment in BMS."
+bms_app_conschecks, (required: False), Description: "Application consistency check in BMS."
+bms_app_uninstcmd, (required: False), Description: "Application uninstall command line in BMS."
+bms_app_uninstparm, (required: False), Description: "Application uninstall parameters in BMS."
+bms_app_localfilecopy, (required: False), Description: "File to copy locally."
+bms_app_dependencies, (required: False), Description: "(Array of) 'Name~~~Version' of a dependency. Use exactly 3 ~(tilde) as delimiter!"
+inst_file_src_dest, (required: False), Description: "Application install file(s) to copy to the DIP-Share, use wildcards for multiple objects."
+read_file_src_dest, (required: False), Description: "Application readme and/or create-log file(s) to copy to the DIP-Share, use wildcards for multiple objects."
+bms_imp_logfile, (required: False), Description: "Path to a logfile for exensive logging of the importer."
+ignore_errors, (required: False), Description: "Ignore any errors during the run."
+```
+
 CreateNextBuild
 ---------------
 Set up a build environment for a given package.
