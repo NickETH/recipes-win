@@ -19,7 +19,7 @@
     <string>com.github.autopkg-win.download.VMwareTools-Win</string>
     <key>Process</key>
     <array>
-<!--         <dict>
+        <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
 			<key>Comment</key>
@@ -29,7 +29,7 @@
                 <key>predicate</key>
                 <string>download_changed == False</string>
             </dict>
-        </dict> -->
+        </dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
