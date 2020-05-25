@@ -116,6 +116,8 @@
                 <string>adm\AcroRdrDC%version_string%_de_DE.msi</string>
                 <key>cab_file</key>
                 <string>Data1</string>
+                <key>cab_dir</key>
+                <string>adm</string>
                 <key>embed_cab</key>
                 <string>True</string>
                 <key>new_packcode</key>

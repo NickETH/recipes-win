@@ -33,7 +33,7 @@
                 <key>file_content</key>
                 <string>%match%</string>
                 <key>file_path</key>
-                <string>%CACHE_DIR%\com.github.autopkg-win.build.GoogleChrome-%PLATFORM%\version.txt</string>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
             </dict>
         </dict>
         <dict>

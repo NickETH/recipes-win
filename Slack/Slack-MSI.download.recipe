@@ -52,7 +52,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>E=hostmaster@slack-corp.com, CN="Slack Technologies, Inc.", O="Slack Technologies, Inc.", L=San Francisco, S=CA, C=US</string>
+                <string>CN="Slack Technologies, Inc.", O="Slack Technologies, Inc.", L=San Francisco, S=California, C=US</string>
             </dict>
         </dict>
         <dict>
