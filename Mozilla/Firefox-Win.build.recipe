@@ -142,6 +142,33 @@
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MozillaOmniUpdate</string>
+			<key>Comment</key>
+			<string>Update the omni.ja file in Mozilla products to allow certain extensions as features</string>
+            <key>Arguments</key>
+            <dict>
+                <key>install_exe</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%-Setup-%PLATFORM_STR%.exe</string>
+                <key>new_features</key>
+				<array>
+					<string>langpack-de@firefox.mozilla.org</string>
+					<string>langpack-fr@firefox.mozilla.org</string>
+					<string>langpack-it@firefox.mozilla.org</string>
+					<string>langpack-rm@firefox.mozilla.org</string>
+					<string>de_CH@dicts.j3e.de</string>
+					<string>fr-dicollecte@dictionaries.addons.mozilla.org</string>
+					<string>it-IT@dictionaries.addons.mozilla.org</string>
+					<string>{73a6fe31-595d-460b-a920-fcc0f8843232}</string>
+					<string>{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}</string>
+				</array>
+                <key>temp_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\adm</string>
+                <key>output_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
+            </dict>
+		</dict>
         <dict>								
             <key>Arguments</key>
             <dict>
