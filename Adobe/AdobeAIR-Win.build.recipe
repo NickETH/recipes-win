@@ -54,7 +54,7 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>ch.ethz.gitlab.id-cd-win.SharedProcessors/RenameVar</string>
+			<string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
             <dict>
                 <key>input_var</key>
