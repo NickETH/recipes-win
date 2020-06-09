@@ -48,14 +48,18 @@ class ExecuteFile(Processor):
     def main(self):
 
         exe_file = self.env.get('exe_file')
+        cmd = self.env.get('exe_file')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
 
         cmd = [exe_file.encode('utf-8')]
+        # cmd = [exe_file]
 
         if "exe_folder" in self.env:
-            build_target = self.env.get('exe_folder')
+            exe_folder = self.env.get('exe_folder')
             self.output("Executing in: %s" % exe_folder)
+            if not os.path.isdir(exe_folder):			        
+                os.mkdir(exe_folder)
             os.chdir(exe_folder)
 
         if "cmdline_args" in self.env:
@@ -65,17 +69,19 @@ class ExecuteFile(Processor):
                 self.env["cmdline_args"] = [self.env["cmdline_args"]]
 
             for arg_cmnd in self.env["cmdline_args"]:
-                cmd.extend([arg_cmnd])
+                cmd.extend([arg_cmnd.encode('utf-8')])
                 # print >> sys.stdout, "cmd %s" % cmd
 
-        print("cmdline %s" % cmd, file=sys.stdout)
+        print("cmdline %s" % (' '.join(cmd)), file=sys.stdout)
         # print >> sys.stdout, "run_folder %s" % os.getcwd()
         try:
             if verbosity > 1:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                #Output = subprocess.Popen(' '.join(cmd))
+                Output = subprocess.check_output(' '.join(cmd))
             else:
-                Output = subprocess.check_output(cmd)
-
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.Popen(' '.join(cmd))
         except:
             if ignore_errors != 'True':
                 raise
