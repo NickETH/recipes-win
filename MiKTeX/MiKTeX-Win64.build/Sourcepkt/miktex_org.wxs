@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmp0F37DE946E45EA85D16DC6F8C4FCD8BD" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey ForceCreateOnInstall="yes" Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9" Root="HKLM" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmp49F6928BA8030C5DB909F20F68338BCE" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey ForceCreateOnInstall="yes" Key="SOFTWARE\MiKTeX.org\MiKTeX" Root="HKLM" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmp67A758E26B4754B45D6AC1A6BD99BCB3" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey ForceCreateOnInstall="yes" Key="SOFTWARE\MiKTeX.org" Root="HKLM" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmpB1F2B926518762E0DBF46E5C58B11C48" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\Setup" Root="HKLM">
+                    <RegistryValue Name="LastAdminDiagnose" Value="1591029891" Type="string" />
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmpB723ACD3A157EA54A7BAFFF6FE84C08A" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\Core" Root="HKLM">
+                    <RegistryValue Name="LastAdminMaintenance" Value="1591029888" Type="string" />
+                    <RegistryValue Name="CommonInstall" Value="C:\APPS\MiKTeX\2.9" Type="string" />
+                    <RegistryValue Name="CommonData" Value="C:\APPS\MiKTeX\data" Type="string" />
+                    <RegistryValue Name="CommonConfig" Value="C:\APPS\MiKTeX\config" Type="string" />
+                    <RegistryValue Name="UserInstall" Value="C:\APPS\MiKTeX\2.9" Type="string" />
+                    <RegistryValue Name="SharedSetup" Value="1" Type="string" />
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmpEF0209F02E21B6C3A3203A133B0DCAA8" Guid="PUT-GUID-HERE" KeyPath="yes">
+                <RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\MPM" Root="HKLM">
+                    <RegistryValue Name="LocalRepository" Value="C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex" Type="string" />
+                    <RegistryValue Name="LastAdminUpdateDb" Value="1591029794" Type="string" />
+                    <RegistryValue Name="AutoInstall" Value="2" Type="string" />
+                </RegistryKey>
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+</Wix>

@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"> -->
+  <?include version.wxi?>
+  <Product Id="$(var.Productcode)" Language="1033" Manufacturer="SourceForge" Name="MiKTeX $(var.version)" UpgradeCode="$(var.Upgradecode)" Version="$(var.version)">
+    <Package Comments="MiKTeX is a widely used LaTex distribution" Compressed="yes" Description='MiKTeX is a widely used LaTex distribution' InstallerVersion="500" Languages="1033" Manufacturer="SourceForge" Platform="x64" />
+	<!-- <WixVariable Id="WixUIDialogBmp" Value="..\sourcepkt\APSideImage.bmp" /> -->
+	<!-- <WixVariable Id="WixUIBannerBmp" Value="..\sourcepkt\APTopImage.bmp" /> -->
+	<!-- <WixVariable Id="WixUIReadmeRtf" Value="$(var.ReadmeRtf)" /> -->
+	
+
+	<Property Id="INSTALLZIP_EXE">
+  <DirectorySearch Id="ZIP_PATH" Path="[SourceDir]" Depth="0">
+    <FileSearch Id="INSTALLZIP_EXE_SEARCH" Name="miktex29.exe" />
+  </DirectorySearch>
+</Property>
+    <Icon Id="MiKTeXIcon.ico" SourceFile="..\sourcepkt\MiKTeXIcon.ico" />
+    <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
+	<!-- <SetProperty Id="Unzip_Files_deferred" Value="&quot;[SourceDir]miktex29.exe -o[INSTALLDIR]&quot;" Sequence="execute" Before="InstallInitialize" /> -->
+	<SetProperty Id="Unzip_Files_deferred" Value="&quot;[INSTALLZIP_EXE]&quot; x -y -o[INSTALLDIR]" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="Unzip_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
+	<SetProperty Id="Delete_Files_deferred" Value="&quot;cmd.exe&quot; /c rmdir /S /Q [INSTALLDIR]" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="Delete_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
+	
+    <Media Id="1" Cabinet="Data1.cab" CompressionLevel="high" EmbedCab="yes" />
+
+    <!-- <UIRef Id="WixUI_InstallDir" /> -->
+	<UI>
+		<UIRef Id="WixUI_InstallDir" />
+		<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">1</Publish>
+		<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">1</Publish>
+	</UI>
+
+<!--     <EnsureTable Id="Class" />
+    <EnsureTable Id="Extension" />
+    <EnsureTable Id="MIME" />
+    <EnsureTable Id="ProgId" />
+    <EnsureTable Id="Verb" /> -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="Apps" Name="APPS">
+        <Directory Id="INSTALLDIR" Name="MiKTeX">
+		    <Directory Id="_2.9" Name="2.9">
+                <Directory Id="_miktex" Name="miktex">
+                    <Directory Id="_bin" Name="bin">
+                        <Directory Id="_x64" Name="x64">
+							<!-- https://docs.microsoft.com/de-de/archive/blogs/alexshev/from-msi-to-wix-part-10-shortcuts -->
+							<Component Id="miktex_texworks_exe" Guid="{5B858F78-A185-4E8D-A5B8-95D489A34A1B}" Win64="yes">
+								<!-- <File Id="miktex_texworks.exe" Source="!(wix.APSourceDir)\2.9\miktex\bin\x64\miktex-texworks.exe" KeyPath="no" /> -->
+								<File Id="miktex_texworks.exe" Source="!(wix.APSourceDir)\miktex-texworks.exe" KeyPath="no" />
+								<Shortcut Id="TeXworks"
+									Directory="ProgramMenuDir"
+									Advertise="no"
+									Name="TeXworks"
+									WorkingDirectory="INSTALLDIR"
+									IconIndex="0"
+									Target="[!miktex_texworks.exe]">
+								</Shortcut>
+								<RegistryKey Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\miktex_texworks.exe" Root="HKLM" >
+									<RegistryValue Id="regAppPath1" Value="[#miktex_texworks.exe]" Type="string" KeyPath="yes" />
+								</RegistryKey>
+								<RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\Setup" Root="HKLM">
+									<RegistryValue Name="LastAdminDiagnose" Value="1591029891" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\Core" Root="HKLM">
+									<RegistryValue Name="LastAdminMaintenance" Value="1591029888" Type="string" />
+									<RegistryValue Name="CommonInstall" Value="[INSTALLDIR]2.9" Type="string" />
+									<RegistryValue Name="CommonData" Value="[INSTALLDIR]data" Type="string" />
+									<RegistryValue Name="CommonConfig" Value="[INSTALLDIR]config" Type="string" />
+									<RegistryValue Name="UserInstall" Value="[INSTALLDIR]2.9" Type="string" />
+									<RegistryValue Name="SharedSetup" Value="1" Type="string" />
+								</RegistryKey>
+<!-- 								<RemoveFolder Id="DeleteShortcutFolder"
+									Directory="ProgramMenuDir"
+									On="uninstall" /> -->
+							</Component>
+							<Component Id="miktex_console_exe" Guid="{8C2924CE-7441-41E4-A756-0FF26072B0D8}" Win64="yes">
+								<!-- <File Id="miktex_console.exe" Source="!(wix.APSourceDir)\2.9\miktex\bin\x64\miktex-console.exe" KeyPath="no" /> -->
+								<File Id="miktex_console.exe" Source="!(wix.APSourceDir)\miktex-console.exe" KeyPath="no" />
+								<Shortcut Id="MiKTeX_Console"
+									Directory="ProgramMenuDir"
+									Advertise="no"
+									Name="MiKTeX Console"
+									WorkingDirectory="INSTALLDIR"
+									IconIndex="0"
+									Target="[!miktex_console.exe]">
+								</Shortcut>
+								<RegistryKey Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\miktex_console.exe" Root="HKLM" >
+									<RegistryValue Id="regAppPath2" Value="[#miktex_console.exe]" Type="string" KeyPath="yes" />
+								</RegistryKey>
+								<RemoveFolder Id="DeleteShortcutFolder"
+									Directory="ProgramMenuDir"
+									On="uninstall" />
+								<RemoveFolder Id="DeleteINSTALLDIRFolder"
+									Directory="INSTALLDIR"
+									On="uninstall" />
+							</Component>
+						</Directory>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+      </Directory>
+	  <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="MiKTeX 2.9" />
+      </Directory>
+    </Directory>
+    <Feature Id="UserSettings" InstallDefault="local" Description="Delivers user settings automatically to each profile." Display="expand" Level="3" Title="User Settings">
+
+      <Feature Id="MiKTeX" InstallDefault="local" Absent="disallow" AllowAdvertise="system" ConfigurableDirectory="INSTALLDIR" Description="Installs the main program." Display="expand" Level="3" Title="MiKTeX">
+		<ComponentRef Id="miktex_texworks_exe" />
+		<ComponentRef Id="miktex_console_exe" />
+        <!-- <ComponentGroupRef Id="MiKTeXFiles" /> -->
+      </Feature>
+
+    </Feature>
+    <Property Id="ETHZBUILD" Value="$(var.version)#$(var.ETHZBuildNr)" />
+    <Property Id="INSTALLLEVEL" Value="3" />
+    <Property Id="ALLUSERS" Value="2" />
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+    <Property Id="ARPPRODUCTICON" Value="MiKTeXIcon.ico" />
+    <Property Id="INSTALLDIR" Secure="yes" />
+
+    <Property Id="UPGRADE_1" Secure="yes" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Upgrade Id="$(var.Upgradecode)">
+      <UpgradeVersion Minimum="0.40.0" Maximum="$(var.version)" Property="UPGRADE_1" IgnoreRemoveFailure="yes" IncludeMinimum="yes" />
+    </Upgrade>
+    <InstallExecuteSequence>
+      <ResolveSource After="CostInitialize">NOT Installed</ResolveSource>
+      <AppSearch After="ResolveSource" />
+      <Custom Action="SetARPINSTALLLOCATION" Sequence="1300" />
+      <RemoveExistingProducts Sequence="1450" />
+	  <Custom Action="Unzip_Files_deferred" After="InstallFiles">NOT Installed</Custom>
+	  <Custom Action="Delete_Files_deferred" Before="RemoveFiles">Installed</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

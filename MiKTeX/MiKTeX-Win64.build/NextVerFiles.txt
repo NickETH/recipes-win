@@ -1,0 +1,7 @@
+read\create-log-MiKTeX_64_VVeerrssiioonn_EN.txt
+read\readme-MiKTeX_64_VVeerrssiioonn_EN.txt
+sourcepkt\*.ico
+wixproject\MiKTeX.wxs
+wixproject\NoKeypathNoExe-x64.xslt
+wixproject\MiKTeX.build
+wixproject\version.wxi

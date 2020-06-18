@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for MiKTex.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.MiKTeX-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>MiKTeX</string>
+        <key>SEARCH_URL</key>
+		<!-- <string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;setup-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+)-x64.exe))</string> -->
+		<string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;miktexsetup-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+)-x64.zip))</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://ctan.org/texarchive/systems/win32/miktex/setup/windows-x64</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_URL%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%dl_link%</string>
+                <key>filename</key>
+                <string>%setup_file%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

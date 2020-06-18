@@ -1,0 +1,27 @@
+
+200113	Create MiKTeX x64 for Windows
+	First we download the x64 offline repository:
+	miktexsetup.exe --verbose --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete download
+
+	Then we install it to user-readable folder:
+	miktexsetup.exe --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete --shared=yes 
+	--common-install=C:\APPS\MiKTeX\2.9 --common-config=C:\APPS\MiKTeX\config --common-data=C:\APPS\MiKTeX\data --user-install=C:\APPS\MiKTeX\2.9 install
+
+	Extract the HKEY_LOCAL_MACHINE\SOFTWARE\MiKTeX.org\MiKTeX\2.9 Regkey to a file.
+	Then convert it with WIX' heat.exe to WIX-code and embedd it into the wxs-file.
+
+	Now, we create a self extracting 7zip archive with maximal compression:
+	7z.exe" a -r -sfx -t7z -v1900m -mx9 "C:\<Path>\miktex29.exe" c:\APPS\MiKTeX\*.*
+
+	Now we build an MSI with just the 2 executables in it, which have shortcuts.
+	C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-texworks.exe
+	C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-console.exe
+	The key paths in the MSI components are set to regkeys.
+	Se the Wix files for this.
+	This MSI expands the archive with: miktex29.exe x -y -o[INSTALDIR]
+
+	And at the end, we uninstall it:
+	miktexsetup.exe --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete --shared=yes 
+	--common-install=C:\APPS\MiKTeX\2.9 --common-config=C:\APPS\MiKTeX\config --common-data=C:\APPS\MiKTeX\data --user-install=C:\APPS\MiKTeX\2.9 uninstall
+
+200113	Version 1.0.0, by AutoPkg

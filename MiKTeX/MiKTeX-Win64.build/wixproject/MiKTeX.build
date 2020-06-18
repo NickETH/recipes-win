@@ -1,0 +1,43 @@
+<!-- <Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5"> -->
+<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+    <PropertyGroup>
+		<!-- Todo: -arch switch  x86/x64 in candle -->
+		<SuppressPdbOutput>True</SuppressPdbOutput>
+		<InstallerPlatform>x64</InstallerPlatform>
+        <BuildDirectory>$(BuildDir)</BuildDirectory>
+        <DestinationDirectory>$(MiKTeXDir)</DestinationDirectory>
+		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
+		<MsiOut>..\Release\MiKTeX_64_$(version)_EN.msi</MsiOut>
+    </PropertyGroup>
+	<!-- The list of WIX input files -->
+	<ItemGroup>
+		<WixCode Include="MiKTeX.wxs" />
+		<!-- <WixCode Include="MiKTeXfiles.wxs" /> -->
+	</ItemGroup>
+
+	<ItemGroup>
+		<WixObject Include="MiKTeX.wixobj" />
+		<!-- <WixObject Include="MiKTeXfiles.wixobj" /> -->
+	</ItemGroup>
+<!-- 	<Target Name="Harvest" >
+		<Exec
+            Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr INSTALLDIR -v -sw5150 -sreg -srd -suid -svb6 -sfrag -cg MiKTeXFiles -var wix.APSourceDir -gg -out MiKTeXfiles.wxs -t NoKeypathNoExe-x64.xslt'
+            ContinueOnError="false"
+            WorkingDirectory="." />
+    </Target> -->
+	<Target Name="WIX">
+<!-- DependsOnTargets="Harvest"> -->
+        <Exec
+            Command='"$(WiX)bin\candle" -arch $(InstallerPlatform) -ext WixUtilExtension -ext WixUIExtension -v -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="$(BuildDirectory)" />
+        <Exec
+            Command='"$(WiX)bin\light" -ext WixUtilExtension -ext WixUIExtension $(LightSrcDir) -v -sice:ICE57 -sice:ICE43 -spdb -sw1076 -sw0204 -out $(MsiOut) @(WixObject, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="." />
+
+
+  <!-- A message at the end -->
+		<Message Text="Install package has been created." />
+	</Target>
+</Project>
