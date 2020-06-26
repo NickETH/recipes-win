@@ -9,9 +9,11 @@
 # Calls the BMS REST API to create a new application.
 # Copies the files to the destination network shares.
 # Extended with port/CM-entry, ApplicationFile and Dependencies, 20200523, Hm
+# Patch subprocess to take unicode, https://bugs.python.org/issue1759845, https://pypi.org/project/subprocessww/, 20200626, Hm
 
 import os
 import sys
+import subprocessww
 import subprocess
 
 from autopkglib import Processor, ProcessorError
@@ -237,12 +239,14 @@ class BMSImporter(Processor):
             bms_imp_logfile = self.env.get('bms_imp_logfile')
             cmd.extend(['-bms_imp_logfile', bms_imp_logfile])
 
-        # print >> sys.stdout, "cmdline %s" % cmd
+        print("cmdline %s" % cmd)
         try:
             if verbosity > 1:
                 Output = subprocess.check_output(cmd)
+
             else:
                 Output = subprocess.check_output(cmd)
+
         except:
             if ignore_errors != 'True':
                 raise
