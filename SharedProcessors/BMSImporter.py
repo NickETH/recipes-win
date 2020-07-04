@@ -239,7 +239,7 @@ class BMSImporter(Processor):
             bms_imp_logfile = self.env.get('bms_imp_logfile')
             cmd.extend(['-bms_imp_logfile', bms_imp_logfile])
 
-        print("cmdline %s" % cmd)
+        #print("cmdline %s" % cmd)
         try:
             if verbosity > 1:
                 Output = subprocess.check_output(cmd)
