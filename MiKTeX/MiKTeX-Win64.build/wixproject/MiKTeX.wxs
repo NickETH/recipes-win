@@ -21,6 +21,8 @@
 	<CustomAction Id="Unzip_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
 	<SetProperty Id="Delete_Files_deferred" Value="&quot;cmd.exe&quot; /c rmdir /S /Q [INSTALLDIR]" Sequence="execute" Before="InstallInitialize" />
 	<CustomAction Id="Delete_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
+	<SetProperty Id="Update_Cmd_deferred" Value="&quot;[!mpm.exe]&quot; --admin --find-updates --quiet" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="Update_Cmd_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
 	
     <Media Id="1" Cabinet="Data1.cab" CompressionLevel="high" EmbedCab="yes" />
 
@@ -94,6 +96,12 @@
 									Directory="INSTALLDIR"
 									On="uninstall" />
 							</Component>
+							<Component Id="mpm_exe" Guid="{7A4F53A1-09AE-4C73-ACA8-C43ED176FB3E}" Win64="yes">
+								<File Id="mpm.exe" Source="!(wix.APSourceDir)\mpm.exe" KeyPath="no" />
+								<RegistryKey Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\mpm.exe" Root="HKLM" >
+									<RegistryValue Id="regAppPath3" Value="[#mpm.exe]" Type="string" KeyPath="yes" />
+								</RegistryKey>
+							</Component>
 						</Directory>
 					</Directory>
 				</Directory>
@@ -109,6 +117,7 @@
       <Feature Id="MiKTeX" InstallDefault="local" Absent="disallow" AllowAdvertise="system" ConfigurableDirectory="INSTALLDIR" Description="Installs the main program." Display="expand" Level="3" Title="MiKTeX">
 		<ComponentRef Id="miktex_texworks_exe" />
 		<ComponentRef Id="miktex_console_exe" />
+		<ComponentRef Id="mpm_exe" />
         <!-- <ComponentGroupRef Id="MiKTeXFiles" /> -->
       </Feature>
 
@@ -132,6 +141,7 @@
       <RemoveExistingProducts Sequence="1450" />
 	  <Custom Action="Unzip_Files_deferred" After="InstallFiles">NOT Installed</Custom>
 	  <Custom Action="Delete_Files_deferred" Before="RemoveFiles">Installed</Custom>
+	  <Custom Action="Update_Cmd_deferred" Before="InstallFinalize">NOT Installed</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>

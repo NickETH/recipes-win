@@ -171,6 +171,21 @@
         </dict>
         <dict>
             <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the miktex-console.exe file to the build dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>C:\APPS\MiKTeX\2.9\miktex\bin\x64\mpm.exe</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\mpm.exe</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/ExecuteFile</string>
 			<key>Comment</key>
             <string>Compress the MiKTeX folder with 7zip to a self extracting archive</string>

@@ -19,6 +19,8 @@
 	The key paths in the MSI components are set to regkeys.
 	Se the Wix files for this.
 	This MSI expands the archive with: miktex29.exe x -y -o[INSTALDIR]
+	At the MSI's very end, we call mpm.exe --admin --find-updates --quiet
+	This initializes the admin console.
 
 	And at the end, we uninstall it:
 	miktexsetup.exe --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete --shared=yes 
