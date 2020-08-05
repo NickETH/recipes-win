@@ -38,6 +38,8 @@
                 <string>%dl_link%</string>
                 <key>filename</key>
                 <string>%setup_file%</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <true/>
             </dict>
         </dict>
         <dict>

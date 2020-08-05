@@ -12,7 +12,8 @@
         <string>Slack</string>
         <key>SEARCH_URL_MSI</key>
 		<!-- https://downloads.slack-edge.com/releases_x64/slack-standalone-4.0.2.0.msi -->
-		<string>(?P&lt;msi_dl_link&gt;https://downloads\.slack-edge.com/releases_x64/slack-standalone-(?P&lt;version&gt;(?P&lt;ver3digit&gt;[0-9]+\.[0-9]+\.[0-9]+)(\.([0-9]+))?)\.msi)</string>
+		<!-- <string>(?P&lt;msi_dl_link&gt;https://downloads\.slack-edge.com/releases_x64/slack-standalone-(?P&lt;version&gt;(?P&lt;ver3digit&gt;[0-9]+\.[0-9]+\.[0-9]+)(\.([0-9]+))?)\.msi)</string> -->
+		<string>(?P&lt;msi_dl_link&gt;https://downloads\.slack-edge\.com/releases/windows/(?P&lt;ver3digit&gt;[0-9]+\.[0-9]+\.[0-9]+)/prod/x64/slack-standalone-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?)\.msi)</string>
 <!-- 		<key>DOWNLOAD_URL_MSI</key>
 		<string>https://downloads.slack-edge.com/releases/windows/%ver3digit%/prod/x64/slack-standalone-%version%.msi</string> -->
 		<key>DOWNLOAD_FILE</key>
