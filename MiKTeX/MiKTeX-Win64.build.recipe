@@ -106,7 +106,7 @@
             <key>Arguments</key>
             <dict>
                 <key>source</key>
-                <string>C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-texworks.exe</string>
+                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktex-texworks.exe</string>
                 <key>target</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\miktex-texworks.exe</string>
                 <key>overwrite</key>
@@ -129,10 +129,10 @@
                     <string>--local-package-repository=%BUILD_DIR%\%pkg_dir%\sourceunzipped\miktex</string>
 					<string>--package-set=complete</string>
 					<string>--shared=yes</string>
-					<string>--common-install=C:\APPS\MiKTeX\2.9</string>
+					<string>--common-install=C:\APPS\MiKTeX\%version%</string>
 					<string>--common-config=C:\APPS\MiKTeX\config</string>
 					<string>--common-data=C:\APPS\MiKTeX\data</string>
-					<string>--user-install=C:\APPS\MiKTeX\2.9</string>
+					<string>--user-install=C:\APPS\MiKTeX\%version%</string>
  					<string>install</string>
 				</array>
                 <key>run_elevated</key>
@@ -147,7 +147,7 @@
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
-                <string>C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-texworks.exe</string>
+                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktex-texworks.exe</string>
                 <key>destination_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\miktex-texworks.exe</string>
                 <key>overwrite</key>
@@ -162,7 +162,7 @@
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
-                <string>C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-console.exe</string>
+                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktex-console.exe</string>
                 <key>destination_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\miktex-console.exe</string>
                 <key>overwrite</key>
@@ -177,7 +177,7 @@
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
-                <string>C:\APPS\MiKTeX\2.9\miktex\bin\x64\mpm.exe</string>
+                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\mpm.exe</string>
                 <key>destination_path</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\mpm.exe</string>
                 <key>overwrite</key>
@@ -274,7 +274,7 @@
             <key>Arguments</key>
             <dict>
                 <key>exe_file</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup.exe</string>
+                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktexsetup.exe</string>
                 <key>exe_folder</key>
                 <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
                 <key>cmdline_args</key>
@@ -282,10 +282,10 @@
                     <string>--local-package-repository=%BUILD_DIR%\%pkg_dir%\sourceunzipped\miktex</string>
 					<string>--package-set=complete</string>
 					<string>--shared=yes</string>
-					<string>--common-install=C:\APPS\MiKTeX\2.9</string>
+					<string>--common-install=C:\APPS\MiKTeX\%version%</string>
 					<string>--common-config=C:\APPS\MiKTeX\config</string>
 					<string>--common-data=C:\APPS\MiKTeX\data</string>
-					<string>--user-install=C:\APPS\MiKTeX\2.9</string>
+					<string>--user-install=C:\APPS\MiKTeX\%version%</string>
  					<string>uninstall</string>
 				</array>
                 <key>run_elevated</key>

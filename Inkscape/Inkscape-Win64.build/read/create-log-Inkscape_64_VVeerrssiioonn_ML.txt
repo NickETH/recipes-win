@@ -1,0 +1,12 @@
+
+200113	Create Inkscape x64 for Windows
+	We alter a few things:
+	The desktop shortcut is disabled by default by a condition in the components table:
+	CM_SHORTCUT_DESKTOP_inkscape	{83FFBB0F-8DB6-51BC-A883-9CFFFB3673AF}	DesktopFolder	260	DESKTOPSC=1	regC64A5F27E31F95994CD738A4D6A296E9
+
+	We move the shortcuts in the menu folder to a subfolder 'Graphics'
+	See the recipe for the exact alterations.
+
+	And we insert the upgrade codes from previous version to make sure, they will be removed.
+
+200113	Version 1.0.0.0, by AutoPkg

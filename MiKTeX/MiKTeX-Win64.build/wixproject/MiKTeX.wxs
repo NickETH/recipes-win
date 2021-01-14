@@ -41,13 +41,13 @@
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="Apps" Name="APPS">
         <Directory Id="INSTALLDIR" Name="MiKTeX">
-		    <Directory Id="_2.9" Name="2.9">
+		    <Directory Id="_$(var.version)" Name="$(var.version)">
                 <Directory Id="_miktex" Name="miktex">
                     <Directory Id="_bin" Name="bin">
                         <Directory Id="_x64" Name="x64">
 							<!-- https://docs.microsoft.com/de-de/archive/blogs/alexshev/from-msi-to-wix-part-10-shortcuts -->
 							<Component Id="miktex_texworks_exe" Guid="{5B858F78-A185-4E8D-A5B8-95D489A34A1B}" Win64="yes">
-								<!-- <File Id="miktex_texworks.exe" Source="!(wix.APSourceDir)\2.9\miktex\bin\x64\miktex-texworks.exe" KeyPath="no" /> -->
+								<!-- <File Id="miktex_texworks.exe" Source="!(wix.APSourceDir)\$(var.version)\miktex\bin\x64\miktex-texworks.exe" KeyPath="no" /> -->
 								<File Id="miktex_texworks.exe" Source="!(wix.APSourceDir)\miktex-texworks.exe" KeyPath="no" />
 								<Shortcut Id="TeXworks"
 									Directory="ProgramMenuDir"
@@ -65,10 +65,10 @@
 								</RegistryKey>
 				                <RegistryKey Key="SOFTWARE\MiKTeX.org\MiKTeX\2.9\Core" Root="HKLM">
 									<RegistryValue Name="LastAdminMaintenance" Value="1591029888" Type="string" />
-									<RegistryValue Name="CommonInstall" Value="[INSTALLDIR]2.9" Type="string" />
+									<RegistryValue Name="CommonInstall" Value="[INSTALLDIR]$(var.version)" Type="string" />
 									<RegistryValue Name="CommonData" Value="[INSTALLDIR]data" Type="string" />
 									<RegistryValue Name="CommonConfig" Value="[INSTALLDIR]config" Type="string" />
-									<RegistryValue Name="UserInstall" Value="[INSTALLDIR]2.9" Type="string" />
+									<RegistryValue Name="UserInstall" Value="[INSTALLDIR]$(var.version)" Type="string" />
 									<RegistryValue Name="SharedSetup" Value="1" Type="string" />
 								</RegistryKey>
 <!-- 								<RemoveFolder Id="DeleteShortcutFolder"
@@ -76,7 +76,7 @@
 									On="uninstall" /> -->
 							</Component>
 							<Component Id="miktex_console_exe" Guid="{8C2924CE-7441-41E4-A756-0FF26072B0D8}" Win64="yes">
-								<!-- <File Id="miktex_console.exe" Source="!(wix.APSourceDir)\2.9\miktex\bin\x64\miktex-console.exe" KeyPath="no" /> -->
+								<!-- <File Id="miktex_console.exe" Source="!(wix.APSourceDir)\$(var.version)\miktex\bin\x64\miktex-console.exe" KeyPath="no" /> -->
 								<File Id="miktex_console.exe" Source="!(wix.APSourceDir)\miktex-console.exe" KeyPath="no" />
 								<Shortcut Id="MiKTeX_Console"
 									Directory="ProgramMenuDir"
@@ -109,7 +109,7 @@
 		</Directory>
       </Directory>
 	  <Directory Id="ProgramMenuFolder" Name="Programs">
-        <Directory Id="ProgramMenuDir" Name="MiKTeX 2.9" />
+        <Directory Id="ProgramMenuDir" Name="MiKTeX $(var.version)" />
       </Directory>
     </Directory>
     <Feature Id="UserSettings" InstallDefault="local" Description="Delivers user settings automatically to each profile." Display="expand" Level="3" Title="User Settings">

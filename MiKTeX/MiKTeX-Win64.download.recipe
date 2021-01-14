@@ -12,12 +12,26 @@
         <string>MiKTeX</string>
         <key>SEARCH_URL</key>
 		<!-- <string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;setup-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+)-x64.exe))</string> -->
-		<string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;miktexsetup-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+)-x64.zip))</string>
+		<!-- <string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;miktexsetup-(?P&lt;version&gt;[0-9]+\.[0-9]+\.[0-9]+)-x64.zip))</string> -->
+		<string>(?P&lt;dl_link&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file&gt;miktexsetup-([0-9]+\.)*[0-9]+-x64.zip))</string>
+		<key>VERSION_URL</key>
+		<string>(?P&lt;dl_link_check&gt;http://mirrors.ctan.org/systems/win32/miktex/setup/windows-x64/(?P&lt;setup_file_check&gt;basic-miktex-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-x64.exe))</string>
     </dict>
     <key>MinimumVersion</key>
     <string>1.0.5</string>
     <key>Process</key>
     <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://ctan.org/texarchive/systems/win32/miktex/setup/windows-x64</string>
+                <key>re_pattern</key>
+                <string>%VERSION_URL%</string>
+            </dict>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>URLTextSearcher</string>
@@ -35,9 +49,9 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>%dl_link%</string>
+                <string>%dl_link_check%</string>
                 <key>filename</key>
-                <string>%setup_file%</string>
+                <string>%setup_file_check%</string>
                 <key>CHECK_FILESIZE_ONLY</key>
                 <true/>
             </dict>
@@ -51,7 +65,19 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
-
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%dl_link%</string>
+                <key>filename</key>
+                <string>%setup_file%</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <true/>
+            </dict>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

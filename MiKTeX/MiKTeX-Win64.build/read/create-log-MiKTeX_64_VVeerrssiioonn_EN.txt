@@ -13,17 +13,17 @@
 	Now, we create a self extracting 7zip archive with maximal compression:
 	7z.exe" a -r -sfx -t7z -v1900m -mx9 "C:\<Path>\miktex29.exe" c:\APPS\MiKTeX\*.*
 
-	Now we build an MSI with just the 2 executables in it, which have shortcuts.
+	And finally, we build an MSI with just the 2 executables in it, which have shortcuts.
 	C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-texworks.exe
 	C:\APPS\MiKTeX\2.9\miktex\bin\x64\miktex-console.exe
 	The key paths in the MSI components are set to regkeys.
 	Se the Wix files for this.
 	This MSI expands the archive with: miktex29.exe x -y -o[INSTALDIR]
-	At the MSI's very end, we call mpm.exe --admin --find-updates --quiet
-	This initializes the admin console.
 
 	And at the end, we uninstall it:
-	miktexsetup.exe --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete --shared=yes 
+	From version 20.xx onward, the uninstall function is only possible with the miktexsetup from the installation-folder:
+	C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktexsetup.exe
+	C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktexsetup.exe --local-package-repository=C:\_Projekte\MSI\MiKTeX_64_2.9.7442_EN\sourceunzipped\miktex --package-set=complete --shared=yes 
 	--common-install=C:\APPS\MiKTeX\2.9 --common-config=C:\APPS\MiKTeX\config --common-data=C:\APPS\MiKTeX\data --user-install=C:\APPS\MiKTeX\2.9 uninstall
 
 200113	Version 1.0.0, by AutoPkg
