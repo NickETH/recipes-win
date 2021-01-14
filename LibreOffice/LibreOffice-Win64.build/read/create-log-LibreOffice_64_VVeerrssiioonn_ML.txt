@@ -1,0 +1,7 @@
+
+200113	Create Libre Office x64 for Windows
+	No Alterations at all. We only use the command line to set the features/prefs needed.
+	Commandline: ALLUSERS=1 ADDLOCAL=ALL REMOVE=gm_o_Onlineupdate,gm_o_Activexcontrol CREATEDESKTOPLINK=0 AgreeToLicense=Yes ISCHECKFORPRODUCTUPDATES=0 RebootYesNo=No VC_REDIST=0 REGISTER_NO_MSO_TYPES=1
+
+200113	Version 1.0.0.0, by AutoPkg
+	
