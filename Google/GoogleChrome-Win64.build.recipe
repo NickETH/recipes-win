@@ -111,24 +111,6 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
-            <key>Arguments</key>
-            <dict>
-                <key>msi_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release\GoogleChrome_64_%version%_ML.msi</string>
-                <key>SQL_command</key>
-				<array>
-					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%msiversion%' WHERE `Property`.`Property`='ProductVersion']]></string>
-					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Condition`='((?ProductClientState=3) AND ($ProductClientState=2) AND NOT UPGRADINGPRODUCTCODE) AND UNINSTALLCMDLINE AND UNINSTALLCMDARGS' WHERE `InstallExecuteSequence`.`Action`='CallUninstaller']]></string>
-					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='UPGRADEFOUND']]></string>
-					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='NEWPRODUCTFOUND']]></string>
-					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','0.0.0','%msiversion%',768,'UPGRADEFOUND')]]></string>
-					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','%msiversion%','',0,'NEWPRODUCTFOUND')]]></string>
-				</array>
-				</dict>
-		</dict>
-        <dict>
-            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
 			<string>Applies the Settings-Transform to the GoogleChrome.msi in the release folder</string>
@@ -140,6 +122,126 @@
                 <string>%BUILD_DIR%\%pkg_dir%\helpers\GChrome64_ETHZchanges.mst</string>
                 <key>mode</key>
                 <string>-a</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>get the ProductCode GUID from the MSI</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\GoogleChrome_64_%version%_ML.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductCode']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/ChromiumSettings</string>
+			<key>Comment</key>
+			<string>Generate the settings JSON and encode it</string>
+            <key>Arguments</key>
+            <dict>
+                <key>product_GUID</key>
+    	        <string>%msi_value%</string>
+                <key>new_settings</key>
+                <dict>
+    	            <key>homepage</key>
+        	        <string>http://www.ethz.ch</string>
+            	    <key>homepage_is_newtabpage</key>
+					<false/>
+	                <key>session.restore_on_startup</key>
+    	            <integer>1</integer>
+					<key>first_run_tabs</key>
+				    <array>
+						<string>chrome://newtab</string>
+					</array>
+	                <key>browser</key>
+				    <dict>
+						<key>check_default_browser</key>
+						<false/>
+						<key>show_home_button</key>
+						<true/>
+					</dict>
+	                <key>bookmark_bar</key>
+				    <dict>
+						<key>show_on_all_tabs</key>
+						<true/>
+					</dict>
+        	        <key>sync_promo</key>
+				    <dict>
+						<key>show_on_first_run_allowed</key>
+						<false/>
+					</dict>
+    	            <key>distribution</key>
+				    <dict>
+						<key>msi</key>
+						<true/>
+						<key>allow_downgrade</key>
+						<string>[AllowDowngradeSubstitution]</string>
+						<key>create_all_shortcuts</key>
+						<false/>
+						<key>do_not_create_desktop_shortcut</key>
+						<true/>
+						<key>do_not_create_quick_launch_shortcut</key>
+						<true/>
+						<key>do_not_create_taskbar_shortcut</key>
+						<true/>
+						<key>do_not_launch_chrome</key>
+						<true/>
+						<key>do_not_register_for_update_launch</key>
+						<true/>
+						<key>import_bookmarks</key>
+						<false/>
+						<key>import_history</key>
+						<false/>
+						<key>import_home_page</key>
+						<false/>
+						<key>import_search_engine</key>
+						<false/>
+						<key>make_chrome_default</key>
+						<false/>
+						<key>make_chrome_default_for_user</key>
+						<false/>
+						<key>require_eula</key>
+						<false/>
+						<key>show_welcome_page</key>
+						<false/>
+						<key>skip_first_run_ui</key>
+						<true/>
+						<key>suppress_first_run_bubble</key>
+						<true/>
+						<key>suppress_first_run_default_browser_prompt</key>
+						<true/>
+						<key>system_level</key>
+						<true/>
+						<key>verbose_logging</key>
+						<true/>
+					</dict>
+				</dict>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Set the correct version / Harden the uninstall command / set the install options</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\GoogleChrome_64_%version%_ML.msi</string>
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%msiversion%' WHERE `Property`.`Property`='ProductVersion']]></string>
+					<string><![CDATA[UPDATE `Property` SET `Property`.`Value`='%chrm_settings_url%' WHERE `Property`.`Property`='MASTER_PREFERENCES']]></string>
+					<string><![CDATA[UPDATE `InstallExecuteSequence` SET `InstallExecuteSequence`.`Condition`='((?ProductClientState=3) AND ($ProductClientState=2) AND NOT UPGRADINGPRODUCTCODE) AND UNINSTALLCMDLINE AND UNINSTALLCMDARGS' WHERE `InstallExecuteSequence`.`Action`='CallUninstaller']]></string>
+					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='UPGRADEFOUND']]></string>
+					<string><![CDATA[DELETE FROM `Upgrade` WHERE `Upgrade`.`ActionProperty`='NEWPRODUCTFOUND']]></string>
+					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','0.0.0','%msiversion%',768,'UPGRADEFOUND')]]></string>
+					<string><![CDATA[INSERT INTO `Upgrade` (`Upgrade`.`UpgradeCode`,`Upgrade`.`VersionMin`,`Upgrade`.`VersionMax`,`Upgrade`.`Attributes`, `Upgrade`.`ActionProperty`) VALUES ('{C1DFDF69-5945-32F2-A35E-EE94C99C7CF4}','%msiversion%','',0,'NEWPRODUCTFOUND')]]></string>
+				</array>
 			</dict>
 		</dict>
         <dict>
@@ -156,11 +258,11 @@
                 <key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Version %match% for ETHZ ID. %us_date% by AutoPkg</string>
+                    <string>Version %build_ver% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
-                    <string>Google Chrome x64 %match% ML</string>
+                    <string>Google Chrome x64 %build_ver% ML</string>
 				    <key>/t</key>
-                    <string>Google Chrome x64 %match% ML</string>
+                    <string>Google Chrome x64 %build_ver% ML</string>
 				</dict>
 			</dict>
 		</dict>
