@@ -5,6 +5,9 @@
 # Created by Nick Heim (heim)@ethz.ch) on 2019-11-03.
 #
 # Extracts version info from Windows PE-executable (.exe/.dll) file.
+# 20210121 Nick Heim: Added the checkbool function to handle flag/bool checking more loosely.
+#                     Added the option to get the product version.
+
 # pywin32 is required. Install: pip install pywin32
 
 import os
@@ -16,6 +19,19 @@ from autopkglib import Processor, ProcessorError
 
 
 __all__ = ["WinPEVersionExtractor"]
+
+#https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
+def checkbool(v):
+    # makes checking a bool argument a lot easier...
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+    # end of checkbool()
 
 def get_version_number (filename):
     try:
@@ -32,6 +48,10 @@ class WinPEVersionExtractor(Processor):
         "exe_path": {
             "required": False,
             "description": "Path to exe or msi, defaults to %pathname%",
+        },
+        "product_version": {
+            "required": False,
+            "description": "Set this flag to get the product version instead of the file version.",
         },
         "ignore_errors": {
             "required": False,
@@ -55,11 +75,22 @@ class WinPEVersionExtractor(Processor):
 
         # print ".".join ([str (i) for i in get_version_number (exe_path)])
 
-        try:
-            self.env['version'] = ".".join ([str (i) for i in get_version_number (exe_path)])
-        except:
-            if ignore_errors != 'True':
-                raise
+        if "product_version" in self.env:
+            product_version = self.env.get('product_version')
+            if checkbool(product_version):
+                try:
+					lang, codepage = GetFileVersionInfo(exe_path, '\\VarFileInfo\\Translation')[0]
+					strInfoPath = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, 'ProductVersion')
+					self.env['version'] = GetFileVersionInfo(exe_path, strInfoPath).encode('ascii', 'ignore')
+                except:
+                    if ignore_errors != 'True':
+                        raise
+            else:						
+                try:
+                    self.env['version'] = ".".join ([str (i) for i in get_version_number (exe_path)])
+                except:
+                    if ignore_errors != 'True':
+                        raise
      
         self.output("Found Version: %s" % (self.env['version']))
 
