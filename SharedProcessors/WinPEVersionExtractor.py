@@ -91,7 +91,13 @@ class WinPEVersionExtractor(Processor):
                 except:
                     if ignore_errors != 'True':
                         raise
-     
+        else:						
+            try:
+                self.env['version'] = ".".join ([str (i) for i in get_version_number (exe_path)])
+            except:
+                if ignore_errors != 'True':
+                    raise
+						
         self.output("Found Version: %s" % (self.env['version']))
 
 if __name__ == '__main__':

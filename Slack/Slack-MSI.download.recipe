@@ -45,7 +45,7 @@
                 <key>filename</key>
                 <string>%NAME%_%PLATFORM%.msi</string>
                 <key>CHECK_FILESIZE_ONLY</key>
-                <string>False</string>
+                <false/>
             </dict>
         </dict>
         <dict>
