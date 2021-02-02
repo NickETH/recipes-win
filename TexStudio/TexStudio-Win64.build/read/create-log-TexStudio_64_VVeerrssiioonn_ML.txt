@@ -1,0 +1,12 @@
+
+200113	Create TexStudio for Windows
+	Download the Windows exe installer
+	Install it to the build machine. (This could be simplified by sing the zip source from the portable version. Should be the same binaries, said the developer)
+	Build it to an MSI. Disable key path in the MSI components.
+	Create an Icon with Greenfish Icon Editor Pro.
+	...Open x\images\icon.png, Choose Create Windows Icon from image..., then save as x-Icon.ico
+	File associations are maintained.
+	The path to miktex' x64 bin folder need to be set.
+
+200113	Version 1.0.0, by AutoPkg
+	

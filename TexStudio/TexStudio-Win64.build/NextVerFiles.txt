@@ -1,0 +1,9 @@
+read\create-log-TexStudio_64_VVeerrssiioonn_ML.txt
+read\readme-TexStudio_64_VVeerrssiioonn_ML.txt
+wixproject\Main.wxs
+wixproject\NoExe.xslt
+wixproject\TexStudio.build
+wixproject\version.wxi
+wixproject\Includes\*.*
+wixproject\Resources\*.*
+wixproject\Lang\*.*

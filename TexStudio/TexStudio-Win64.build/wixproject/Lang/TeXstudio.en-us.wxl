@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="ProductLanguage">1033</String>
+	<String Id="ProductName">TeXstudio</String>
+	<String Id="ProductHelpLink">https://www.texstudio.org/</String>
+  <String Id="ProductUrlInfoAbout">https://www.texstudio.org/</String>
+  <String Id="ProductUrlUpdateInfo">https://github.com/texstudio-org/texstudio</String>
+	<String Id="PackageDescription">TeXstudio</String>
+	<String Id="FeatureStartMenuShortcut">Start Menu shortcut</String>
+	<String Id="FeatureDesktopShortcut">Desktop shortcut</String>
+	<String Id="NewerVersionInstalled">Newer version of TeXstudio is already installed.</String>
+	<String Id="OSVersionRequired">Windows 7 or later is required.</String>
+	<String Id="WixUI_ExitDialogOptionalCheckboxText">Launch TeXstudio</String>
+</WixLocalization>
