@@ -10,6 +10,8 @@
 # Copies the files to the destination network shares.
 # Extended with port/CM-entry, ApplicationFile and Dependencies, 20200523, Hm
 # Patch subprocess to take unicode, https://bugs.python.org/issue1759845, https://pypi.org/project/subprocessww/, 20200626, Hm
+# Extended with UseBBT-option and explicit options for uninstall, 20210207, Hm
+# Todo: Generic read function for optional parameter processing with for statement and value types
 
 import os
 import sys
@@ -77,6 +79,10 @@ class BMSImporter(Processor):
             "required": False,
             "description": "Application install option <reboot behaviour> in BMS.",
         },
+        "bms_app_iopt_usebbt": {
+            "required": False,
+            "description": "Application install option <support bbt> in BMS.",
+		},
         "bms_app_iopt_copylocal": {
             "required": False,
             "description": "Application install option <copy locally> in BMS.",
@@ -105,6 +111,14 @@ class BMSImporter(Processor):
             "required": False,
             "description": "Application uninstall parameters in BMS.",
         },
+        "bms_app_uopt_rebootbhv": {
+            "required": False,
+            "description": "Application uninstall option <reboot behaviour> in BMS.",
+        },
+        "bms_app_uopt_usebbt": {
+            "required": False,
+            "description": "Application uninstall option <support bbt> in BMS.",
+		},
         "bms_app_localfilecopy": {
             "required": False,
             "description": "File to copy locally.",
@@ -178,6 +192,10 @@ class BMSImporter(Processor):
             bms_app_iopt_rebootbhv = self.env.get('bms_app_iopt_rebootbhv')
             cmd.extend(['-bms_app_iopt_rebootbhv', bms_app_iopt_rebootbhv])
 
+        if "bms_app_iopt_usebbt" in self.env:
+            bms_app_iopt_usebbt = self.env.get('bms_app_iopt_usebbt')
+            cmd.extend(['-bms_app_iopt_usebbt', bms_app_iopt_usebbt])
+
         if "bms_app_iopt_copylocal" in self.env:
             bms_app_iopt_copylocal = self.env.get('bms_app_iopt_copylocal')
             cmd.extend(['-bms_app_iopt_copylocal', bms_app_iopt_copylocal])
@@ -209,6 +227,14 @@ class BMSImporter(Processor):
         if "bms_app_uninstparm" in self.env:
             bms_app_uninstparm = self.env.get('bms_app_uninstparm')
             cmd.extend(['-bms_app_uninstparm', bms_app_uninstparm])
+
+        if "bms_app_uopt_rebootbhv" in self.env:
+            bms_app_uopt_rebootbhv = self.env.get('bms_app_uopt_rebootbhv')
+            cmd.extend(['-bms_app_uopt_rebootbhv', bms_app_uopt_rebootbhv])
+
+        if "bms_app_uopt_usebbt" in self.env:
+            bms_app_uopt_usebbt = self.env.get('bms_app_uopt_usebbt')
+            cmd.extend(['-bms_app_uopt_usebbt', bms_app_uopt_usebbt])
 
         if "bms_app_localfilecopy" in self.env:
             bms_app_localfilecopy = self.env.get('bms_app_localfilecopy')

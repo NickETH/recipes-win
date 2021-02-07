@@ -1,7 +1,8 @@
 # Create a new BMS Application
 
 # PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%cd%\BMSImporter.ps1'"
-# Todo: Logfile based on the presence of a bms_imp_logfile parameter
+# Todo: Logfile based on the presence of a bms_imp_logfile parameter, better parameter read function(s).
+# Extended with UseBBT-option and explicit options for uninstall, 20210207, Hm
 
 param(
     [Parameter(mandatory=$true)][string]$bms_serverurl,
@@ -18,6 +19,7 @@ param(
     [Parameter(mandatory=$false)][string]$bms_app_installparm,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_rebootbhv,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_copylocal,
+    [Parameter(mandatory=$false)][string]$bms_app_iopt_usebbt,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_reinstall,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_target,
     [Parameter(mandatory=$false)][string]$bms_app_comment,
@@ -25,6 +27,8 @@ param(
     [Parameter(mandatory=$false)][string]$bms_app_conschecks,
     [Parameter(mandatory=$false)][string]$bms_app_uninstcmd,
     [Parameter(mandatory=$false)][string]$bms_app_uninstparm,
+    [Parameter(mandatory=$false)][string]$bms_app_uopt_rebootbhv,
+    [Parameter(mandatory=$false)][string]$bms_app_uopt_usebbt,
 	[Parameter(mandatory=$false)][string]$bms_app_localfilecopy,
     [Parameter(mandatory=$false)][string]$bms_app_dependencies,
     [Parameter(mandatory=$false)][string]$inst_file_src_dest,
@@ -98,22 +102,16 @@ foreach ($Application in $All_Apps_in_BMS) {
     }
 }
 
-# Create the options hash tables for install and uninstall
-if ($bms_app_iopt_rebootbhv -or $bms_app_iopt_copylocal -or $bms_app_iopt_reinstall -or $bms_app_target) {
+# Create the options hash table for install
+if ($bms_app_iopt_rebootbhv -or $bms_app_iopt_copylocal -or $bms_app_iopt_usebbt -or $bms_app_iopt_reinstall -or $bms_app_target) {
     $InstallOptArgs = @{ }
     echo "InstallOptions inside If" | Out-File $logfile -Append
     echo ("bms_app_iopt_copylocal in If: " + $bms_app_iopt_copylocal) | Out-File $logfile -Append
 
     # echo @InstallOptArgs | Out-File $logfile -Append
-    if ($bms_app_iopt_rebootbhv) { 
-		$InstallOptArgs['RebootBehaviour'] = $bms_app_iopt_rebootbhv
-		# uninstall options are quick and dirty implemented here, because there is just this one for now.
-		# if there will be more, this has to be relocated...
-		$UnInstallOptArgs = @{ }
-		$UnInstallOptArgs['RebootBehaviour'] = $bms_app_iopt_rebootbhv
-		$UnInstallOptions = New-bConnectApplicationInstallOptions @UnInstallOptArgs
-	}
+    if ($bms_app_iopt_rebootbhv) { $InstallOptArgs['RebootBehaviour'] = $bms_app_iopt_rebootbhv}
     if ($bms_app_iopt_copylocal ) { $InstallOptArgs['CopyLocally'] = (ParseBool($bms_app_iopt_copylocal)) }
+    if ($bms_app_iopt_usebbt ) { $InstallOptArgs['UsebBT'] = (ParseBool($bms_app_iopt_usebbt)) }
     if ($bms_app_iopt_reinstall ) { $InstallOptArgs['AllowReinstall'] = (ParseBool($bms_app_iopt_reinstall)) }
     if ($bms_app_iopt_target) { $InstallOptArgs['Target'] = $bms_app_iopt_target }
     # echo @InstallOptArgs | Out-File $logfile -Append
@@ -121,7 +119,15 @@ if ($bms_app_iopt_rebootbhv -or $bms_app_iopt_copylocal -or $bms_app_iopt_reinst
     echo @InstallOptArgs | Out-File $logfile -Append
     echo "1" | Out-File $logfile -Append
 }
-
+# Create the options hash table for uninstall
+# Special case for reboot behaviour: If it is set on install, we use it also for uninstall as default. But if it set for uninstall explicitley, we take this one.
+if ($bms_app_iopt_rebootbhv -or $bms_app_uopt_rebootbhv -or $bms_app_uopt_usebbt) {
+	$UnInstallOptArgs = @{ }
+	if ($bms_app_iopt_rebootbhv) { $UnInstallOptArgs['RebootBehaviour'] = $bms_app_iopt_rebootbhv}
+	if ($bms_app_uopt_rebootbhv) { $UnInstallOptArgs['RebootBehaviour'] = $bms_app_uopt_rebootbhv}
+	if ($bms_app_uopt_usebbt) { $UnInstallOptArgs['UsebBT'] = (ParseBool($bms_app_uopt_usebbt)) }
+	$UnInstallOptions = New-bConnectApplicationInstallOptions @UnInstallOptArgs
+}
 $installDataArgs = @{
     Command	   = $bms_app_installcmd;
 }
