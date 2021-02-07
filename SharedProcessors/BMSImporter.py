@@ -10,7 +10,7 @@
 # Copies the files to the destination network shares.
 # Extended with port/CM-entry, ApplicationFile and Dependencies, 20200523, Hm
 # Patch subprocess to take unicode, https://bugs.python.org/issue1759845, https://pypi.org/project/subprocessww/, 20200626, Hm
-# Extended with UseBBT-option and explicit options for uninstall, 20210207, Hm
+# Extended with UseBBT-option and explicit options for uninstall, hardened boolean recipe reading from recipe 20210207, Hm
 # Todo: Generic read function for optional parameter processing with for statement and value types
 
 import os
@@ -194,15 +194,15 @@ class BMSImporter(Processor):
 
         if "bms_app_iopt_usebbt" in self.env:
             bms_app_iopt_usebbt = self.env.get('bms_app_iopt_usebbt')
-            cmd.extend(['-bms_app_iopt_usebbt', bms_app_iopt_usebbt])
+            cmd.extend(['-bms_app_iopt_usebbt', str(bms_app_iopt_usebbt)])
 
         if "bms_app_iopt_copylocal" in self.env:
             bms_app_iopt_copylocal = self.env.get('bms_app_iopt_copylocal')
-            cmd.extend(['-bms_app_iopt_copylocal', bms_app_iopt_copylocal])
+            cmd.extend(['-bms_app_iopt_copylocal', str(bms_app_iopt_copylocal)])
 
         if "bms_app_iopt_reinstall" in self.env:
             bms_app_iopt_reinstall = self.env.get('bms_app_iopt_reinstall')
-            cmd.extend(['-bms_app_iopt_reinstall', bms_app_iopt_reinstall])
+            cmd.extend(['-bms_app_iopt_reinstall', str(bms_app_iopt_reinstall)])
 
         if "bms_app_iopt_target" in self.env:
             bms_app_iopt_target = self.env.get('bms_app_iopt_target')
@@ -234,7 +234,7 @@ class BMSImporter(Processor):
 
         if "bms_app_uopt_usebbt" in self.env:
             bms_app_uopt_usebbt = self.env.get('bms_app_uopt_usebbt')
-            cmd.extend(['-bms_app_uopt_usebbt', bms_app_uopt_usebbt])
+            cmd.extend(['-bms_app_uopt_usebbt', str(bms_app_uopt_usebbt)])
 
         if "bms_app_localfilecopy" in self.env:
             bms_app_localfilecopy = self.env.get('bms_app_localfilecopy')
