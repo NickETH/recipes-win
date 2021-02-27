@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for Lenovo Thinkpad-SystemUpdate.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.ThinkpadSystemUpdate-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>ThinkpadSystemUpdate</string>
+        <key>SEARCH_URL</key>
+		<string>&lt;SourcePath&gt;UTS/(?P&lt;dl_exe&gt;systemupdate.*.exe)&lt;/SourcePath&gt;</string>
+        <key>SEARCH_VER</key>
+		<string>&lt;Version&gt;(?P&lt;major_minor&gt;[0-9]+\.[0-9]+).*&lt;/Version&gt;</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://download.lenovo.com/ibmdl/pub/pc/pccbbs/agent/SSClientCommon/UTS/executables.xml</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_URL%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://download.lenovo.com/ibmdl/pub/pc/pccbbs/agent/SSClientCommon/UTS/executables.xml</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_VER%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://download.lenovo.com/ibmdl/pub/pc/pccbbs/agent/SSClientCommon/UTS/%dl_exe%</string>
+                <key>filename</key>
+                <string>%NAME%.exe</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <false/>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Lenovo, OU=G08, O=Lenovo, L=Morrisville, S=North Carolina, C=US</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

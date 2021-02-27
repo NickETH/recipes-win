@@ -1,0 +1,10 @@
+
+200113	Packaging Lenovo Thinkpad-System-Update for Windows
+	We download and distribute the package as is.
+	For the download links, see the recipe.
+	Command line: /SP- /VERYSILENT /NORESTART /LOG="{%TEMP%}\i_sysupd_20210211.log"
+
+	Uninstall: "C:\Program Files (x86)\Lenovo\System Update\unins000.exe" /SILENT
+
+
+200113	Version 1.0.0, by AutoPkg
