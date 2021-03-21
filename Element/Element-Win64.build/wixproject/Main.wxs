@@ -17,7 +17,6 @@
     <Property Id="ALLUSERS" Value="1" />
 	<Property Id="DESKTOP_SC" Value="0" />
     <Property Id="ARPPRODUCTICON" Value="ElementIcon.exe" />
-	<!-- <SetProperty Id="APPLICATIONFOLDERPROPUNIN" Secure="yes" Value="[APPLICATIONFOLDER]" /> -->
 	<SetProperty Id="SetDefaultServer" After="CostFinalize" Value="[#Config.json]" Sequence="execute"/>
     <SetProperty Id="ARPINSTALLLOCATION" Value="[APPLICATIONFOLDER]" After="CostFinalize" />
 
@@ -72,18 +71,8 @@
 		  WorkingDirectory="APPLICATIONFOLDER"
 		  Icon="ElementIcon.exe">
 		</Shortcut>
-		<!-- Target="[!Element.exe]"> -->
         <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="StartMenuShortcutInstalled" Type="integer" Value="1" />
 		<RegistryValue Id="registry1" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\Element.exe" Value="[APPLICATIONFOLDER]Element.exe" Type="string" />
-<!--         <RegistryValue Id="registry2" Root="HKCR" Key="Element.tex\shell\open\command" Value="[APPLICATIONFOLDER]TeXstudio.exe &quot;%1&quot;" Type="string" />
-        <RegistryValue Id="registry3" Root="HKCR" Key="TeXstudio.tex" Value="TeXstudio" Type="string" />
-		<RegistryValue Id="registry4" Root="HKCR" Key="TeXstudio.tex\DefaultIcon" Value="[APPLICATIONFOLDER]TeXstudio_$(var.ProductVersion).exe,-2" Type="string" />        
-		<RegistryValue Id="registry5" Root="HKCR" Key=".tex\OpenWithList\TeXstudio.exe" Value="" Type="string" />
-		<RegistryValue Id="registry6" Root="HKCR" Key="Applications\TeXstudio.exe\shell\open\command" Value="[APPLICATIONFOLDER]TeXStudio.exe &quot;%1&quot;" Type="string" />
-		<RegistryValue Id="registry7" Root="HKCR" Key="Applications\TeXstudio.exe\SupportedTypes" Name=".tex" Value="" Type="string" /> -->
-		<!-- <RemoveFolder Id="DeleteShortcutFolder"
-          Directory="ProgramMenuDir"
-          On="uninstall" /> -->
 	  </Component>
 	  <Component Id="Config_JSON" Guid="{E802F643-5319-4B76-8F0A-CEA421DCA20A}" Win64="yes" KeyPath="yes">
 		<File Id="Config.json"
@@ -98,19 +87,6 @@
 		<RegistryValue Id="RegHKLM3" Root="HKLM" Key="SOFTWARE\Microsoft\Active Setup\Installed Components\[UpgradeCode]" Value="[ProductName]" Type="string" />
 	  </Component>
     </DirectoryRef>
-<!--     <DirectoryRef Id="ProgramMenuFolder">
-      <Component Id="StartMenuShortcut" Guid="*">
-        <Shortcut Id="AppStartMenuShortcut" Advertise="no" Name="$(var.ProductNameWithVersion)" Target="[APPLICATIONFOLDER]TeXstudio.exe" WorkingDirectory="APPLICATIONFOLDER" />
-        <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="StartMenuShortcutInstalled" Type="integer" Value="1" KeyPath="yes" />
-		<RegistryValue Id="registry1" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\TeXstudio.exe" Value="[APPLICATIONFOLDER]TeXstudio.exe" Type="string" />
-        <RegistryValue Id="registry2" Root="HKCR" Key="TeXstudio.tex\shell\open\command" Value="[APPLICATIONFOLDER]TeXstudio.exe &quot;%1&quot;" Type="string" />
-        <RegistryValue Id="registry3" Root="HKCR" Key="TeXstudio.tex" Value="TeXstudio" Type="string" />
-		<RegistryValue Id="registry4" Root="HKCR" Key="TeXstudio.tex\DefaultIcon" Value="[APPLICATIONFOLDER]TeXstudio_$(var.ProductVersion).exe,-2" Type="string" />        
-		<RegistryValue Id="registry5" Root="HKCR" Key=".tex\OpenWithList\TeXstudio.exe" Value="" Type="string" />
-		<RegistryValue Id="registry6" Root="HKCR" Key="Applications\TeXstudio.exe\shell\open\command" Value="[APPLICATIONFOLDER]TeXStudio.exe &quot;%1&quot;" Type="string" />
-		<RegistryValue Id="registry7" Root="HKCR" Key="Applications\TeXstudio.exe\SupportedTypes" Name=".tex" Value="" Type="string" />
-      </Component>
-    </DirectoryRef> -->
     <DirectoryRef Id="DesktopFolder">
       <Component Id="DesktopShortcut" Guid="*">
 	  <Condition>DESKTOP_SC=1</Condition>
@@ -135,7 +111,6 @@
 		<ComponentRef Id="Config_JSON" />
 		<ComponentRef Id="ActiveSetup64" />
         <ComponentRef Id="DesktopShortcut" />
-        <!-- <ComponentRef Id="StartMenuShortcut" /> -->
         <ComponentGroupRef Id="AppFiles" />
       </Feature>
     </Feature>
