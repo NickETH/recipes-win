@@ -1,0 +1,14 @@
+
+200113	Create Element x64 for Windows
+	Download the Windows exe installer
+	Extract the nupkg file and get the sources from it
+	Build it to an MSI.
+	We create an advertised shortcut and an Active Setup component to copy the config.json to each user profile.
+	And advertised shortcut needs an exe icon-file.
+	Create an Icon-file with Greenfish Icon Editor Pro.
+	New library, import the element.ico and save it as icon library with an .exe extension in 32-bit PE format.
+	The inner name seems not to be important.
+	Active Setup is a standard aproach with a extra top level feature.
+	
+200113	Version 1.0.0, by AutoPkg
+	

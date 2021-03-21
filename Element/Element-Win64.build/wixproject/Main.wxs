@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+  <?include version.wxi?>
+  <?include $(sys.CURRENTDIR)Includes\ElementVariables.wxi ?>
+
+  <Product Id="$(var.Productcode)" Name="$(var.ProductNameWithVersion)" Language="$(var.ProductLanguage)" Version="$(var.ProductVersion)" Manufacturer="$(var.ProductManufacturerLong)" UpgradeCode="$(var.ProductUpgradeCode)">
+    <Package Description="!(loc.PackageDescription)" Manufacturer="$(var.ProductManufacturerLong)" InstallerVersion="200" Compressed="yes" />
+    <Media Id="1" Cabinet="Data1.cab" EmbedCab="yes" CompressionLevel="high" />
+	<Binary Id="JSONStreamEditor" SourceFile="$(var.SetupResourcesDir)\jj.exe" />
+	<CustomAction Id="SetDefaultServer" BinaryKey="JSONStreamEditor" ExeCommand="-p -v [DEFAULTSERVER] -i &quot;[SetDefaultServer]&quot; -o &quot;[SetDefaultServer]&quot; default_server_name" Execute="deferred" Impersonate="no" />
+    <Icon Id="ElementIcon.exe" SourceFile="$(var.SetupResourcesDir)\Element-Icon.exe" />
+	<Property Id="DEFAULTSERVER" Value="0" />
+	<PropertyRef Id="WIX_DIR_PROFILE" />
+    <Property Id="ARPHELPLINK" Value="!(loc.ProductHelpLink)" />
+    <Property Id="ARPURLINFOABOUT" Value="!(loc.ProductUrlInfoAbout)" />
+    <Property Id="ARPURLUPDATEINFO" Value="!(loc.ProductUrlUpdateInfo)" />
+    <Property Id="ALLUSERS" Value="1" />
+	<Property Id="DESKTOP_SC" Value="0" />
+    <Property Id="ARPPRODUCTICON" Value="ElementIcon.exe" />
+	<!-- <SetProperty Id="APPLICATIONFOLDERPROPUNIN" Secure="yes" Value="[APPLICATIONFOLDER]" /> -->
+	<SetProperty Id="SetDefaultServer" After="CostFinalize" Value="[#Config.json]" Sequence="execute"/>
+    <SetProperty Id="ARPINSTALLLOCATION" Value="[APPLICATIONFOLDER]" After="CostFinalize" />
+
+    <!-- Windows 7 and later is required. -->
+    <Condition Message="!(loc.OSVersionRequired)"><![CDATA[Installed OR VersionNT >= 601]]></Condition>
+
+    <Upgrade Id="$(var.ProductUpgradeCode)">
+      <UpgradeVersion OnlyDetect="yes" Minimum="$(var.ProductVersion)" Property="NEWPRODUCTFOUND" IncludeMinimum="no" />
+      <UpgradeVersion Minimum="$(var.RTMProductVersion)" IncludeMinimum="yes" Maximum="$(var.ProductVersion)" Property="UPGRADEFOUND" IncludeMaximum="no" MigrateFeatures="yes" />
+    </Upgrade>
+    <CustomAction Id="PreventDowngrading" Error="!(loc.NewerVersionInstalled)" />
+
+    <InstallExecuteSequence>
+		<Custom Action="PreventDowngrading" After="FindRelatedProducts"><![CDATA[NEWPRODUCTFOUND]]></Custom>
+		<RemoveExistingProducts Before="InstallInitialize" />
+		<Custom Action="SetDefaultServer" After="InstallFiles"><![CDATA[NOT DEFAULTSERVER="0"]]></Custom>
+	</InstallExecuteSequence>
+	<InstallUISequence>
+		<Custom Action="PreventDowngrading" After="FindRelatedProducts"><![CDATA[NEWPRODUCTFOUND]]></Custom>
+	</InstallUISequence>
+
+    <!-- Define the directory structure -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+          <Directory Id="APPLICATIONFOLDER" Name="$(var.ProductNameWithVersion)" />
+      </Directory>
+      <Directory Id="ProgramMenuFolder" />
+      <Directory Id="DesktopFolder" />
+	  <Directory Id="AppDataFolder" />
+	</Directory>
+    <!--
+      RemoveFolderEx requires that we "remember" the path for uninstall.
+      This workaround is only required for the uninstall.
+    -->
+    <Property Id="APPLICATIONFOLDER">
+      <RegistrySearch Id="APPLICATIONFOLDER_REGSEARCH" Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="Path" Type="raw" Win64="$(var.Win64)" />
+    </Property>
+
+    <!-- Add the shortcuts to your installer package -->
+    <DirectoryRef Id="APPLICATIONFOLDER">
+      <Component Id="CleanupMainApplicationFolder" Guid="*">
+        <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="Path" Type="string" Value="[APPLICATIONFOLDER]" KeyPath="yes" />
+        <!-- We need to use APPLICATIONFOLDER variable here or RemoveFolderEx will not remove on "install". -->
+        <util:RemoveFolderEx On="uninstall" Property="APPLICATIONFOLDER" />
+      </Component>
+      <Component Id="Element_exe" Guid="{5E44308A-A383-4A7D-948E-83ECBB4AE300}" Win64="yes" >
+        <File Id="Element.exe" Vital="yes" KeyPath="yes" Source="!(wix.APSourceDir)\Element.exe" />
+		<Shortcut Id="AppStartMenuShortcut"
+		  Directory="ProgramMenuFolder"
+		  Advertise="yes"
+		  Name="$(var.ProductNameWithVersion)"
+		  WorkingDirectory="APPLICATIONFOLDER"
+		  Icon="ElementIcon.exe">
+		</Shortcut>
+		<!-- Target="[!Element.exe]"> -->
+        <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="StartMenuShortcutInstalled" Type="integer" Value="1" />
+		<RegistryValue Id="registry1" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\Element.exe" Value="[APPLICATIONFOLDER]Element.exe" Type="string" />
+<!--         <RegistryValue Id="registry2" Root="HKCR" Key="Element.tex\shell\open\command" Value="[APPLICATIONFOLDER]TeXstudio.exe &quot;%1&quot;" Type="string" />
+        <RegistryValue Id="registry3" Root="HKCR" Key="TeXstudio.tex" Value="TeXstudio" Type="string" />
+		<RegistryValue Id="registry4" Root="HKCR" Key="TeXstudio.tex\DefaultIcon" Value="[APPLICATIONFOLDER]TeXstudio_$(var.ProductVersion).exe,-2" Type="string" />        
+		<RegistryValue Id="registry5" Root="HKCR" Key=".tex\OpenWithList\TeXstudio.exe" Value="" Type="string" />
+		<RegistryValue Id="registry6" Root="HKCR" Key="Applications\TeXstudio.exe\shell\open\command" Value="[APPLICATIONFOLDER]TeXStudio.exe &quot;%1&quot;" Type="string" />
+		<RegistryValue Id="registry7" Root="HKCR" Key="Applications\TeXstudio.exe\SupportedTypes" Name=".tex" Value="" Type="string" /> -->
+		<!-- <RemoveFolder Id="DeleteShortcutFolder"
+          Directory="ProgramMenuDir"
+          On="uninstall" /> -->
+	  </Component>
+	  <Component Id="Config_JSON" Guid="{E802F643-5319-4B76-8F0A-CEA421DCA20A}" Win64="yes" KeyPath="yes">
+		<File Id="Config.json"
+			Name="Config.json"
+			Vital="yes"
+			Source="$(var.SetupResourcesDir)\Config.json">
+		</File>
+	  </Component>
+	  <Component Id="ActiveSetup64" Guid="{960D003B-DA8E-431B-81C4-3D9323B4E390}">
+		<RegistryValue Id="RegHKLM2" Root="HKLM" Key="SOFTWARE\Microsoft\Active Setup\Installed Components\[UpgradeCode]" Name="Version" Value="$(var.ASVersion)" Type="string" KeyPath="yes" />
+		<RegistryValue Id="RegHKLM1" Root="HKLM" Key="SOFTWARE\Microsoft\Active Setup\Installed Components\[UpgradeCode]" Name="Stubpath" Value="msiexec /i [ProductCode] REINSTALL=UserSettings REINSTALLMODE=up /qn" Type="string" />
+		<RegistryValue Id="RegHKLM3" Root="HKLM" Key="SOFTWARE\Microsoft\Active Setup\Installed Components\[UpgradeCode]" Value="[ProductName]" Type="string" />
+	  </Component>
+    </DirectoryRef>
+<!--     <DirectoryRef Id="ProgramMenuFolder">
+      <Component Id="StartMenuShortcut" Guid="*">
+        <Shortcut Id="AppStartMenuShortcut" Advertise="no" Name="$(var.ProductNameWithVersion)" Target="[APPLICATIONFOLDER]TeXstudio.exe" WorkingDirectory="APPLICATIONFOLDER" />
+        <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="StartMenuShortcutInstalled" Type="integer" Value="1" KeyPath="yes" />
+		<RegistryValue Id="registry1" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\TeXstudio.exe" Value="[APPLICATIONFOLDER]TeXstudio.exe" Type="string" />
+        <RegistryValue Id="registry2" Root="HKCR" Key="TeXstudio.tex\shell\open\command" Value="[APPLICATIONFOLDER]TeXstudio.exe &quot;%1&quot;" Type="string" />
+        <RegistryValue Id="registry3" Root="HKCR" Key="TeXstudio.tex" Value="TeXstudio" Type="string" />
+		<RegistryValue Id="registry4" Root="HKCR" Key="TeXstudio.tex\DefaultIcon" Value="[APPLICATIONFOLDER]TeXstudio_$(var.ProductVersion).exe,-2" Type="string" />        
+		<RegistryValue Id="registry5" Root="HKCR" Key=".tex\OpenWithList\TeXstudio.exe" Value="" Type="string" />
+		<RegistryValue Id="registry6" Root="HKCR" Key="Applications\TeXstudio.exe\shell\open\command" Value="[APPLICATIONFOLDER]TeXStudio.exe &quot;%1&quot;" Type="string" />
+		<RegistryValue Id="registry7" Root="HKCR" Key="Applications\TeXstudio.exe\SupportedTypes" Name=".tex" Value="" Type="string" />
+      </Component>
+    </DirectoryRef> -->
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="*">
+	  <Condition>DESKTOP_SC=1</Condition>
+        <Shortcut Id="AppDesktopShortcut" Advertise="no" Name="$(var.ProductNameWithVersion)" Target="[APPLICATIONFOLDER]Element.exe" WorkingDirectory="APPLICATIONFOLDER" Directory="DesktopFolder" />
+        <RegistryValue Root="HKLM" Key="Software\$(var.AppVendor)\$(var.AppName)" Name="DesktopShortcutInstalled" Type="integer" Value="[DESKTOP_SC]" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+	<DirectoryRef Id="AppDataFolder">
+		<Directory Id="Element_User" Name="Element">
+			<Component Id="UserSettingsRepair" Guid="{535CAF3C-C126-4144-9AF8-21A07A5FC5A3}">
+				<CopyFile Id="DupFile1" SourceProperty="APPLICATIONFOLDER" SourceName="config.json" DestinationProperty="Element_User" DestinationName="config.json" />
+				<RegistryValue Id="regHKCU2" Root="HKCU" Key="SOFTWARE\Classes\Element" Name="Config_JSON" Value="1" Type="integer" KeyPath="yes" />
+			</Component>
+		</Directory>
+    </DirectoryRef>
+    <!-- List of features to install -->
+    <Feature Id="UserSettings" InstallDefault="local" Description="Delivers user settings automatically to each profile." Display="expand" Level="1" Title="User Settings">
+      <ComponentRef Id="UserSettingsRepair" />
+	  <Feature Id="MainApplication" ConfigurableDirectory="APPLICATIONFOLDER" Level="1" Title="$(var.AppName)" Absent="disallow" Display="expand" AllowAdvertise="yes" InstallDefault="local">
+        <ComponentRef Id="Element_exe" />
+		<ComponentRef Id="CleanupMainApplicationFolder" />
+		<ComponentRef Id="Config_JSON" />
+		<ComponentRef Id="ActiveSetup64" />
+        <ComponentRef Id="DesktopShortcut" />
+        <!-- <ComponentRef Id="StartMenuShortcut" /> -->
+        <ComponentGroupRef Id="AppFiles" />
+      </Feature>
+    </Feature>
+
+    <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONFOLDER" />
+    <WixVariable Id="WixUIDialogBmp" Value="$(var.SetupResourcesDir)\SideImage.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="$(var.SetupResourcesDir)\TopImage.bmp" />
+    <UI>
+      <UIRef Id="WixUI_InstallDir" />
+      <!-- Skip license dialog. -->
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="5">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="5">1</Publish>
+    </UI>
+  </Product>
+</Wix>

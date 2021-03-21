@@ -1,0 +1,9 @@
+read\create-log-Element_64_VVeerrssiioonn_ML.txt
+read\readme-Element_64_VVeerrssiioonn_ML.txt
+wixproject\Main.wxs
+wixproject\NoExe.xslt
+wixproject\Element.build
+wixproject\version.wxi
+wixproject\Includes\*.*
+wixproject\Resources\*.*
+wixproject\Lang\*.*
