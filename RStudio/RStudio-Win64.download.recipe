@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest RStudio installer for Windows.</string>
+    <key>Identifier</key>
+	<string>com.github.autopkg-win.download.RStudio-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>RStudio</string>
+        <key>SEARCH_URL</key>
+        <string>https://www.rstudio.com/products/rstudio/download/</string>
+        <key>SEARCH_PATTERN</key>
+        <string>(?P&lt;exe&gt;RStudio-(?P&lt;version&gt;[0-9.]+)\.exe)</string>
+        <key>DOWNLOAD_MIRROR</key>
+		<!-- https://download1.rstudio.org/desktop/windows/RStudio-1.4.1106.exe -->
+        <string>https://download1.rstudio.org/desktop/windows</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.5.1</string>
+    <key>Process</key>
+    <array>
+       <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_PATTERN%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%DOWNLOAD_MIRROR%/%exe%</string>
+                <key>filename</key>
+                <string>%NAME%.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN="RStudio, Inc.", O="RStudio, Inc.", L=Boston, S=Massachusetts, C=US</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

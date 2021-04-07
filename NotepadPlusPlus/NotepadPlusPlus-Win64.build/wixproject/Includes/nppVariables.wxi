@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- Setup UI strings. -->
+  <?if $(var.Platform)=x86?>
+    <?define ProgramFilesFolder="ProgramFilesFolder" ?>
+    <?define Win64="no" ?>
+    <?define Arch="(x86)" ?>
+  <?else?>
+    <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
+    <?define Win64="yes" ?>
+    <?define Arch="(x64)" ?>
+  <?endif?>
+
+  <?define ProductVersion="$(var.version)" ?>
+  <?define ProductMajorVersion="$(var.MajorVersion)" ?>
+  <?define ProductMinorVersion="$(var.MinorVersion)" ?>
+  <?define ProductMaintenanceVersion="$(var.MaintenanceVersion)" ?>
+  <?define ProductName="!(loc.ProductName)" ?>
+  <?define ProductNameWithVersion="!(loc.ProductName) $(var.version) $(var.Arch)" ?>
+  <?define ProductLanguage="!(loc.ProductLanguage)" ?>
+  <?define AppName="Notepad++" ?>
+  <?define AppVendor="Notepad" ?>
+  <?define AppFolder="Notepad++" ?>
+  <?define ProductManufacturerShort="Notepad++" ?>
+  <?define ProductManufacturerLong="Notepad++" ?>
+
+  <!-- Static settings, DO NOT TOUCH or upgrades will break! -->
+    <!-- <?define ProductUpgradeCode="{99536D2F-AEEF-440A-98D9-2322DE8D3B21}" ?> -->
+  <?define ProductUpgradeCode="$(var.Upgradecode)" ?>
+  <?define RTMProductVersion="0.0.1" ?>
+</Include>

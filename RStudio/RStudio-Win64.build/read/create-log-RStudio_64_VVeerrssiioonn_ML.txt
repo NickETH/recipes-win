@@ -1,0 +1,8 @@
+
+200113	Create RStudio for Windows
+	Download the Windows exe installer
+	Build it to an MSI.
+	File associations are maintained.
+
+200113	Version 1.0.0, by AutoPkg
+	

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+   <dict>
+      <key>Description</key>
+      <string>Downloads the latest Microsoft Edge Enterprise x64 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.MicrosoftEdgeMSI-Win</string>
+      <key>MinimumVersion</key>
+      <string>1.0.0</string>
+      <key>Input</key>
+      <dict>
+         <key>NAME</key>
+         <string>Microsoft Edge</string>
+         <key>VENDOR</key>
+         <string>Microsoft</string>
+         <key>SOFTWARETITLE</key>
+         <string>EdgeEnterprise</string>
+         <key>PLATFORM</key>
+         <string>x64</string>
+         <key>PRODUCTID</key>
+         <string>2093437</string>
+         <key>DOWNLOADURL</key>
+         <string>https://go.microsoft.com/fwlink/?linkid=%PRODUCTID%</string>
+      </dict>
+      <key>Process</key>
+      <array>
+         <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+               <key>url</key>
+               <string>%DOWNLOADURL%</string>
+               <key>filename</key>
+               <string>%VENDOR%_%SOFTWARETITLE%_%PLATFORM%.msi</string>
+            </dict>
+         </dict>
+         <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+         </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

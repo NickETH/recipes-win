@@ -1,0 +1,48 @@
+<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+    <PropertyGroup>
+		<!-- Todo: -arch switch  x86/x64 in candle -->
+		<InstallerPlatform>x64</InstallerPlatform>
+		<Platform>$(InstallerPlatform)</Platform>
+		<PRODUCT_SKU>Rstudio</PRODUCT_SKU>
+		<CULTURE>en-us</CULTURE>
+		<LANGIDS>1033</LANGIDS>
+        <BuildDirectory>$(BuildDir)</BuildDirectory>
+        <DestinationDirectory>$(RStudioDir)</DestinationDirectory>
+		<CandleVar>-dPlatform=$(InstallerPlatform) -dSetupResourcesDir=$(BuildDir)\Resources</CandleVar>
+		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
+		<MsiOut>..\Release\Rstudio_64_$(version)_ML.msi</MsiOut>
+    </PropertyGroup>
+	<!-- The list of WIX input files -->
+	<ItemGroup>
+		<WixCode Include="Main.wxs" />
+		<WixCode Include="RStudiofiles.wxs" />
+		<WixCode Include=".\Fragments\regFrag.wxs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<WixObject Include="Main.wixobj" />
+		<WixObject Include="RStudiofiles.wixobj" />
+		<WixObject Include="regFrag.wixobj" />
+	</ItemGroup>
+	<Target Name="Harvest" >
+		<Exec
+            Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr APPLICATIONFOLDER -v -sw5150 -sreg -srd -suid -svb6 -sfrag -cg AppFiles -var wix.APSourceDir -gg -out RStudiofiles.wxs -t NoExe.xslt'
+            ContinueOnError="false"
+            WorkingDirectory="." />
+    </Target>
+	<Target Name="WIX"
+		DependsOnTargets="Harvest">
+        <Exec
+            Command='"$(WiX)bin\candle" -arch x64 -ext WixUtilExtension -ext WixUIExtension $(CandleVar) -v -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="$(BuildDirectory)" />
+        <Exec
+            Command='"$(WiX)bin\light" -ext WixUtilExtension -ext WixUIExtension $(LightSrcDir) -v -sice:ICE57 -sice:ICE43  -sw1076 -sw0204 -loc "Lang\$(PRODUCT_SKU).$(CULTURE).wxl" -cultures:$(CULTURE) -out $(MsiOut) @(WixObject, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="." />
+		<Delete Files="$(MsiOut.Replace('.msi', '.wixpdb'))" />
+
+  <!-- A message at the end -->
+		<Message Text="Install package has been created." />
+	</Target>
+</Project>

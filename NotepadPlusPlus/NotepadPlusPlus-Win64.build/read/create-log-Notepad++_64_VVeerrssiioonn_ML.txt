@@ -1,0 +1,8 @@
+
+200113	Create Notepad++ for Windows
+	Download the Notepad++ installer
+	Repack it and build it to an MSI.
+	File associations are maintained.
+
+200113	Version 1.0.0, by AutoPkg
+	

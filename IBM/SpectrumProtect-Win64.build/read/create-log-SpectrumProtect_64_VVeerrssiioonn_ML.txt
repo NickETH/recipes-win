@@ -1,0 +1,8 @@
+
+200113	Create SpectrumProtect x64 for Windows
+	Download the Windows exe archive
+	Extract the exe file and get the sources from it
+
+	
+200113	Version 1.0.0, by AutoPkg
+	

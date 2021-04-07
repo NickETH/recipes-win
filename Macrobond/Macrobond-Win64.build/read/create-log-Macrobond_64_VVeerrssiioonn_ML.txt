@@ -1,0 +1,9 @@
+
+200113	Create Macrobond x64 for Windows
+	Download the Windows zip archive
+	Extract the zip file and get the sources from it
+	Apply the patch to the main MSI.
+
+	
+200113	Version 1.0.0, by AutoPkg
+	

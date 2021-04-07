@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest IBM Spectrum Protect installer package for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.SpectrumProtect-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>SpectrumProtect</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.3.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- <string>http://tsm-repo.ethz.ch/win/</string> -->
+				<string>https://public.dhe.ibm.com/storage/tivoli-storage-management/catalog/client/catalog.json</string>
+				<key>re_pattern</key>
+				<!-- We are searching for the last match here with a negative lookahead assertion -->
+				<!-- <string>(?P&lt;exe&gt;(?P&lt;version&gt;[0-9.]+).*TSMBAC-WinX64\.exe)</string> -->
+				<!-- See https://www.reddit.com/r/regex/comments/gnvr69/find_and_capture_last_occurrence_of_a_pattern/</string> -->
+				<!-- v8r1/Windows/autodeploy/v8111/8.1.11.0-TIV-TSMBAC-WinX64.exp -->
+				<!-- <string>(?s)((?P&lt;version&gt;([0-9.]+))-TIV-TSMBAC-WinX64\.exe)(?!.*(([0-9.]+)-TIV-TSMBAC-WinX64\.exe))</string> -->
+				<string>(?s)((?P&lt;partone&gt;v[0-9]r[0-9]/Windows/)autodeploy(?P&lt;parttwo&gt;/v[0-9]+/(?P&lt;version&gt;([0-9.]+))-TIV-TSMBAC-WinX64))\.exp(?!.*(v[0-9]r[0-9]/Windows/autodeploy/v[0-9]+/([0-9.]+)-TIV-TSMBAC-WinX64\.exp))</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- <string>http://tsm-repo.ethz.ch/win/%match%</string> -->
+				<!-- https://public.dhe.ibm.com/storage/tivoli-storage-management/maintenance/client/v8r1/Windows/x64/v8111/ -->
+				<string>https://public.dhe.ibm.com/storage/tivoli-storage-management/maintenance/client/%partone%x64%parttwo%.exe</string>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,2 @@
+read\create-log-VisualStudioCode_64_VVeerrssiioonn_ML.txt
+read\readme-VisualStudioCode_64_VVeerrssiioonn_ML.txt

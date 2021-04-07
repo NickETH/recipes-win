@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest LibreOffice. Set RELEASE to either "fresh" or "still".
+
+LibreOffice Still is the stable version that has undergone more testing (over a longer time). It is usually recommended for more conservative use.
+LibreOffice Fresh is the stable version with the most recent features. Users interested in taking advantage of our most innovative features should download and use our fresh version.</string>
+	<key>Identifier</key>
+	<!-- <string>io.github.hjuutilainen.download.LibreOffice</string> -->
+	<string>com.github.autopkg-win.download.LibreOffice-Win</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>LibreOffice</string>
+		<key>RELEASE</key>
+		<string>fresh</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.2.0</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				<string>(?P&lt;DOWNLOAD_URL&gt;download.documentfoundation.org/libreoffice/stable/[\d\.]+/win/x86_64/LibreOffice_(?P&lt;version&gt;[\d\.]+)_Win_x64.msi)</string>
+				<key>url</key>
+				<string>https://www.libreoffice.org/download/libreoffice-%RELEASE%/?type=win-x86_64</string>
+				<key>request_headers</key>
+				<dict>
+					<key>User-Agent</key>
+					<string>Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; AS; rv:11.0) like Gecko</string>
+				</dict>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://%DOWNLOAD_URL%</string>
+				<key>filename</key>
+				<string>%NAME%.msi</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>E=info@documentfoundation.org, CN=The Document Foundation, O=The Document Foundation, OU=LibreOffice Build Team, L=Berlin, S=Berlin, C=DE</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

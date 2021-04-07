@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<FileZilla3>
+    <Settings>
+      	<Setting name="Config Location">$LOCALAPPDATA\FileZilla\</Setting>
+	<Setting name="Kiosk mode">0</Setting>
+	<Setting name="Disable update check">1</Setting>
+    </Settings>
+</FileZilla3>

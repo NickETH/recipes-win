@@ -1,0 +1,3 @@
+read\create-log-Putty_64_VVeerrssiioonn_EN.txt
+read\readme-Putty_64_VVeerrssiioonn_EN.txt
+release\noDTSC.mst

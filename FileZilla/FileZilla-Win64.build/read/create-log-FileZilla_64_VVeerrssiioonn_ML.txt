@@ -1,0 +1,11 @@
+
+200113	Create Filezilla for Windows
+	Download the Windows exe installer
+	Build it to an MSI.
+	https://svn.filezilla-project.org/filezilla/FileZilla3/trunk/data/install.nsi.in?view=markup
+	https://www.trishtech.com/2016/02/how-to-disable-frequent-updates-in-filezilla-ftp-client/
+	https://wiki.filezilla-project.org/Fzdefaults.xml
+	File associations are maintained.
+
+200113	Version 1.0.0, by AutoPkg
+	

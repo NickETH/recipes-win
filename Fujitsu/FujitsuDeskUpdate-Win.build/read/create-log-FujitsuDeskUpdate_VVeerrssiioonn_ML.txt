@@ -1,0 +1,10 @@
+
+200113	Packaging Fujitsu DeskUpdate for Windows
+	We download and distribute the package as is.
+	For the download links, see the recipe.
+	Command line: /VERYSILENT /LANG=en /TASKS="*!checkdesktopicon,*!checkquicklaunchicon,checkstartmenu"
+
+	Uninstall: "C:\Program Files (x86)\Lenovo\System Update\unins000.exe" /VERYSILENT
+
+
+200113	Version 1.0.0, by AutoPkg

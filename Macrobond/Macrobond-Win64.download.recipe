@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Macrobond installer package for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.Macrobond-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Macrobond</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.3.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- <string>https://techinfo.macrobond.com/installation-mainapp/</string> -->
+				<string>https://techinfo.macrobond.com/installation-mainapp/</string>
+				<key>re_pattern</key>
+				<!-- Patch-1.24.0.6388-release.x64.msp -->
+				<string>(?P&lt;PatchFileMSP&gt;Patch-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-release\.x64\.msp)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- <string>https://techinfo.macrobond.com/installation-mainapp/</string> -->
+				<string>https://techinfo.macrobond.com/installation-mainapp/</string>
+				<key>re_pattern</key>
+				<!-- https://download.macrobond.com/installation/mainapp/1.23.0.3853-release/Macrobond.x64-1.24.0.zip -->
+				<string>(?P&lt;match&gt;https://download.macrobond.com/installation/mainapp/([0-9]+\.)*[0-9]+-release/Macrobond.x64-([0-9]+\.)*[0-9]+\.zip)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%match%</string>
+				<key>filename</key>
+				<string>%NAME%.zip</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

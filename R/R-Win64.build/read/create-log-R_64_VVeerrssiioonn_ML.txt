@@ -1,0 +1,26 @@
+
+200113	Create R x64 for Windows
+	First we download the R installer and do a silent install to C:\APPS\R
+	R.exe /VERYSILENT /DIR="C:\APPS\R\R-version" /COMPONENTS="main,x64,translations" /TASKS="recordversion,associate" /LANG=en
+
+
+	Install additional packages:
+	C:\APPS\R\R-version\bin\x64\Rterm.exe --no-restore --no-save --file=.\helpers\install-r-pkg-STUD_AP_4x.txt >.\helpers\install-r-pkg-STUD_AP_4x.log
+
+	The file Renviron.site must go into the etc dir. To supress the update dialogs.
+
+	Now, we create a self extracting 7zip archive with maximal compression:
+	7z.exe" a -r -sfx -t7z -v1900m -mx9 "C:\<Path>\Rfiles.exe" c:\APPS\R\*.*
+
+	And finally, we build an MSI with just the Rgui executables in it, which have shortcuts.
+	C:\APPS\R\version\bin\x64\Rgui.exe
+	This MSI expands the archive with: Rfiles.exe x -y -o[INSTALLDIR]
+
+	And at the end, we uninstall it:
+	C:\APPS\R\R-version\unins000.exe /VERYSILENT
+
+	Finally, we clean up the install dir:
+	rmdir /S /Q C:\APPS\R
+
+
+200113	Version 1.0.0, by AutoPkg

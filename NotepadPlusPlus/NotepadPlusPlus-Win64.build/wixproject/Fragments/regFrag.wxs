@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<?include $(sys.CURRENTDIR)version.wxi ?>
+	<?include $(sys.CURRENTDIR)Includes\nppVariables.wxi ?>
+    <Fragment>
+        <ComponentGroup Id="nppRegistryGroup">
+            <Component Id="cmpF971ED006DF427344D364C4667E1ACB6" Directory="TARGETDIR" Guid="{B1451F7A-82F6-460F-AE2D-BD84D7CC957F}" KeyPath="yes">
+                <RegistryKey Key="*\shellex\ContextMenuHandlers\ANotepad++64" Root="HKCR">
+                    <RegistryValue Value="{B298D29A-A6ED-11DE-BA8C-A68E55D89593}" Type="string" />
+				</RegistryKey>
+				<RegistryKey Key="CLSID\{B298D29A-A6ED-11DE-BA8C-A68E55D89593}" Root="HKCR">
+                    <RegistryValue Value="ANotepad++64" Type="string" />
+                </RegistryKey>
+                <RegistryKey Key="CLSID\{B298D29A-A6ED-11DE-BA8C-A68E55D89593}\InprocServer32" Root="HKCR">
+                    <RegistryValue Value="[APPLICATIONFOLDER]NppShell_06.dll" Type="string" />
+                    <RegistryValue Name="ThreadingModel" Value="Apartment" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="CLSID\{B298D29A-A6ED-11DE-BA8C-A68E55D89593}\Settings" Root="HKCR">
+                    <RegistryValue Name="Custom" Value="" Type="string" />
+                    <RegistryValue Name="Dynamic" Value="1" Type="integer" />
+                    <RegistryValue Name="Maxtext" Value="25" Type="integer" />
+                    <RegistryValue Name="Path" Value="[APPLICATIONFOLDER]notepad++.exe" Type="string" />
+                    <RegistryValue Name="ShowIcon" Value="1" Type="integer" />
+                    <RegistryValue Name="Title" Value="Edit with &amp;Notepad++" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Microsoft\Windows\CurrentVersion\App Paths\notepad++.exe" Root="HKLM">
+                    <RegistryValue Value="[APPLICATIONFOLDER]notepad++.exe" Type="string" />
+                </RegistryKey>
+				<RegistryKey Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\$(var.Productcode)" Root="HKLM">
+                    <RegistryValue Name="MajorVersion" Value="$(var.ProductMajorVersion)" Type="string" />
+					<RegistryValue Name="MinorVersion" Value="$(var.ProductMinorVersion)$(var.ProductMaintenanceVersion)" Type="string" />
+                    <RegistryValue Name="NoRepair" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_ActionScript" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_afrikaans" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_albanian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_arabic" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_aragonese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_aranese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_AutoIt" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_AutoUpdater" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_azerbaijani" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_BaanC" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_basque" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_BATCH" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_belarusian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_bengali" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Bespin" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_BlackBoard" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_bosnian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_brazilian_portuguese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_breton" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_bulgarian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_C" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_C#" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_C++" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_catalan" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_chineseSimplified" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_chineseTraditional" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Choco" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_CMAKE" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_CoffeeScript" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_Converter" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_corsican" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_croatian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_CSS" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_czech" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_danish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_DeepBlack" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_DocBook" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_DSpellCheck" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_dutch" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_english_customizable" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_esperanto" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_estonian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_explorerContextMenu" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_extremaduran" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_farsi" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_finnish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_french" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_friulian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_galician" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_georgian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_german" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_greek" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_gujarati" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_hebrew" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_HelloKitty" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_hindi" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_HotFudgeSundae" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_HTML" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_hungarian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_indonesian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_italian" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_japanese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Java" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_JavaScript" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_kannada" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_kazakh" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_khaki" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_korean" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_kurdish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_kyrgyz" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_latvian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_ligurian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_LISP" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_lithuanian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Lua" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_luxembourgish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_macedonian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_malay" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_marathi" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_MimeTools" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_mongolian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_MonoIndustrial" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_Monokai" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_MossyLawn" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_Navajo" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_norwegian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_NSIS" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_nynorsk" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Obsidian" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_occitan" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Perl" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_PHP" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_piglatin" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_PlasticCodeWrap" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_PluginsAdmin" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_polish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_portuguese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_punjabi" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Python" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_RC" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_romanian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_RubyBlue" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_russian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_samogitian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_sardinian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_serbian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_serbianCyrillic" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_sinhala" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_slovak" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_slovenian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Solarized" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_Solarized-light" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_spanish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_spanish_ar" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_SQL" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_swedish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_tagalog" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_tajik" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_tamil" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_tatar" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_telugu" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_TeX" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_thai" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_turkish" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Twilight" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_ukrainian" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_urdu" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_uyghur" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_uzbek" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_uzbekCyrillic" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_VB" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_VHDL" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_VibrantInk" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_vietnamese" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_vimDarkBlue" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_welsh" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSection_Zenburn" Value="1" Type="integer" />
+                    <RegistryValue Name="MementoSection_zulu" Value="0" Type="integer" />
+                    <RegistryValue Name="MementoSectionUsed" Value="" Type="string" />
+                </RegistryKey>
+            </Component>
+                                    
+        </ComponentGroup>
+    </Fragment>
+</Wix>

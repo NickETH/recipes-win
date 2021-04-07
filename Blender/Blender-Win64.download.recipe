@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Blender. The only supported architecture is (since v2.72) x86_64.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.Blender-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Blender</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.4.2</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Comment</key>
+			<string>Get a link to a redirect page from the official download page</string>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://www.blender.org/download/</string>
+				<key>re_pattern</key>
+				<string>(?P&lt;url&gt;https://www.blender.org/download/Blender[0-9a-zA-Z\.]+/blender-(?P&lt;version&gt;[0-9a-zA-Z\.]+)-windows64.msi)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Comment</key>
+			<string>Get the page from the previous URLTextSearcher match and find the actual (mirrored) download URL</string>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				<string>(?P&lt;url&gt;https://.*/blender-(?P&lt;version&gt;[0-9a-zA-Z\.]+)-windows64.msi)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%-x64.msi</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Stichting Blender Foundation, O=Stichting Blender Foundation, L=Amsterdam, S=Noord-Holland, C=NL</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+	</array>
+</dict>
+</plist>

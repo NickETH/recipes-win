@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"> -->
+  <?include version.wxi?>
+  <Product Id="$(var.Productcode)" Language="1033" Manufacturer="SourceForge" Name="R $(var.version)" UpgradeCode="$(var.Upgradecode)" Version="$(var.version)">
+    <Package Comments="R is a free software environment for statistical computing and graphics" Compressed="yes" Description='The R language is widely used among statisticians and data miners for developing statistical software and data analysis' InstallerVersion="500" Languages="1033" Manufacturer="SourceForge" Platform="x64" />
+	<!-- <WixVariable Id="WixUIDialogBmp" Value="..\sourcepkt\APSideImage.bmp" /> -->
+	<!-- <WixVariable Id="WixUIBannerBmp" Value="..\sourcepkt\APTopImage.bmp" /> -->
+	<!-- <WixVariable Id="WixUIReadmeRtf" Value="$(var.ReadmeRtf)" /> -->
+	
+
+	<Property Id="INSTALLZIP_EXE">
+  <DirectorySearch Id="ZIP_PATH" Path="[SourceDir]" Depth="0">
+    <FileSearch Id="INSTALLZIP_EXE_SEARCH" Name="Rfiles.exe" />
+  </DirectorySearch>
+</Property>
+    <Icon Id="Ricon.exe" SourceFile="..\sourcepkt\Ricon.exe" />
+    <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
+	<SetProperty Id="Unzip_Files_deferred" Value="&quot;[INSTALLZIP_EXE]&quot; x -y -o[INSTALLDIR]" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="Unzip_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
+	<SetProperty Id="Delete_Files_deferred" Value="&quot;cmd.exe&quot; /c rmdir /S /Q [INSTALLDIR]" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="Delete_Files_deferred" BinaryKey="WixCA" DllEntry="WixQuietExec64" Execute="deferred" Return="check" Impersonate="no"/>
+	
+    <Media Id="1" Cabinet="Data1.cab" CompressionLevel="high" EmbedCab="yes" />
+
+    <!-- <UIRef Id="WixUI_InstallDir" /> -->
+	<UI>
+		<UIRef Id="WixUI_InstallDir" />
+		<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">1</Publish>
+		<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">1</Publish>
+	</UI>
+
+<!--     <EnsureTable Id="Class" />
+    <EnsureTable Id="Extension" />
+    <EnsureTable Id="MIME" />
+    <EnsureTable Id="ProgId" />
+    <EnsureTable Id="Verb" /> -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="Apps" Name="APPS">
+        <Directory Id="INSTALLDIR" Name="R">
+		    <Directory Id="R_$(var.version)" Name="R-$(var.version)">
+			
+                    <Directory Id="_bin" Name="bin">
+                        <Directory Id="_x64" Name="x64">
+							<!-- https://docs.microsoft.com/de-de/archive/blogs/alexshev/from-msi-to-wix-part-10-shortcuts -->
+							<Component Id="Rgui_exe" Guid="{7CF4329C-93AC-4F87-838A-48E10593697C}" Win64="yes">
+								
+								<File Id="Rgui.exe" Source="!(wix.APSourceDir)\Rgui.exe" KeyPath="no" />
+								<Shortcut Id="Rgui"
+									Directory="ProgramMenuDir"
+									Advertise="no"
+									Name="R x64 $(var.version)"
+									WorkingDirectory="R_$(var.version)"
+									IconIndex="0"
+									Target="[Rgui.exe]">
+								</Shortcut>
+<!-- 								<RegistryKey Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\miktex_texworks.exe" Root="HKLM" >
+									<RegistryValue Id="regAppPath1" Value="[#miktex_texworks.exe]" Type="string" KeyPath="yes" />
+								</RegistryKey> -->
+								<RegistryKey Key="SOFTWARE\R-core\R" Root="HKLM">
+									<RegistryValue Name="InstallPath" Value="[R_$(var.version)]" Type="string" />
+									<RegistryValue Name="Current Version" Value="$(var.version)" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="SOFTWARE\R-core\R\$(var.version)" Root="HKLM">
+									<RegistryValue Name="InstallPath" Value="[R_$(var.version)]" Type="string" />
+								</RegistryKey>
+								<RegistryKey Key="SOFTWARE\R-core\R64" Root="HKLM">
+									<RegistryValue Name="InstallPath" Value="[R_$(var.version)]" Type="string" />
+									<RegistryValue Name="Current Version" Value="$(var.version)" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="SOFTWARE\R-core\R64\$(var.version)" Root="HKLM">
+									<RegistryValue Name="InstallPath" Value="[R_$(var.version)]" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="RWorkspace" Root="HKCR">
+									<RegistryValue Value="R Workspace" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="RWorkspace\DefaultIcon" Root="HKCR">
+									<RegistryValue Value="[#Rgui_exe],0" Type="string" />
+								</RegistryKey>
+				                <RegistryKey Key="RWorkspace\shell\open\command" Root="HKCR">
+									<RegistryValue Value="&quot;[#Rgui.exe]&quot; --workspace=&quot;%1&quot;" Type="string" />
+								</RegistryKey>
+<!-- 								<RemoveFolder Id="DeleteShortcutFolder"
+									Directory="ProgramMenuDir"
+									On="uninstall" /> -->
+							</Component>
+<!-- 							<Component Id="Set_Path" Guid="{8B5AFFAD-6CB6-4F2B-B7BD-8243BCECAE85}" Win64="yes">
+								<Environment Id="PATH" Name="PATH" Value="[_x64]" Permanent="no" Part="last" Action="set" System="yes" />
+							</Component> -->
+						</Directory>
+					</Directory>
+				
+			</Directory>
+		</Directory>
+      </Directory>
+	  <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="R" />
+      </Directory>
+    </Directory>
+    <Feature Id="UserSettings" InstallDefault="local" Description="Delivers user settings automatically to each profile." Display="expand" Level="3" Title="User Settings">
+
+      <Feature Id="MiKTeX" InstallDefault="local" Absent="disallow" AllowAdvertise="system" ConfigurableDirectory="INSTALLDIR" Description="Installs the main program." Display="expand" Level="3" Title="MiKTeX">
+		<ComponentRef Id="Rgui_exe" />
+		<!-- <ComponentRef Id="Set_Path" /> -->
+        <!-- <ComponentGroupRef Id="MiKTeXFiles" /> -->
+      </Feature>
+
+    </Feature>
+    <Property Id="ETHZBUILD" Value="$(var.version)#$(var.ETHZBuildNr)" />
+    <Property Id="INSTALLLEVEL" Value="3" />
+    <Property Id="ALLUSERS" Value="2" />
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+    <Property Id="ARPPRODUCTICON" Value="Ricon.exe" />
+    <Property Id="INSTALLDIR" Secure="yes" />
+
+    <Property Id="UPGRADE_1" Secure="yes" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Upgrade Id="$(var.Upgradecode)">
+      <UpgradeVersion Minimum="0.40.0" Maximum="$(var.version)" Property="UPGRADE_1" IgnoreRemoveFailure="yes" IncludeMinimum="yes" />
+    </Upgrade>
+	<CustomActionRef Id="WixBroadcastEnvironmentChange" />
+    <InstallExecuteSequence>
+      <ResolveSource After="CostInitialize">NOT Installed</ResolveSource>
+      <AppSearch After="ResolveSource" />
+      <Custom Action="SetARPINSTALLLOCATION" Sequence="1300" />
+      <RemoveExistingProducts Sequence="1450" />
+	  <Custom Action="Unzip_Files_deferred" After="InstallFiles">NOT Installed</Custom>
+	  <Custom Action="Delete_Files_deferred" Before="RemoveFiles">Installed</Custom>
+    </InstallExecuteSequence>
+  </Product>
+</Wix>

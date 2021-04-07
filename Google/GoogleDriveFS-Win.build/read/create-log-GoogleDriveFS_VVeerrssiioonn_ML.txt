@@ -1,0 +1,10 @@
+
+200113	Packaging GoogleDrive File Stream for Windows
+	We download and distribute the package as is.
+	https://support.google.com/a/answer/7491144
+	For the download links, see the recipe.
+	Command line: --silent --skip_google_update --skip_launch_new --gsuite_shortcuts=false
+	Uninstall: "C:\Program Files\Google\Drive File Stream\xxx-Version-xxx\uninstall.exe" --silent --force_stop
+
+
+200113	Version 1.0.0.0, by AutoPkg

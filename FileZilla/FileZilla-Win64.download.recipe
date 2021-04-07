@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest FileZilla installer for Windows.</string>
+    <key>Identifier</key>
+	<string>com.github.autopkg-win.download.FileZilla-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>FileZilla</string>
+        <key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Windows NT 6.3; Win64, x64; Trident/7.0; rv:11.0) like Gecko</string>
+        <key>SEARCH_URL</key>
+        <string>https://filezilla-project.org/download.php?show_all=1</string>
+        <key>SEARCH_PATTERN</key>
+        <!-- <string>(https.*FileZilla.*_win64.*(?P&lt;version&gt;([0-9]+\.)*[0-9]+))"</string> -->
+		<!-- <string>(https.*client/FileZilla_(?P&lt;version&gt;([0-9]+\.)*[0-9]+)_win64.zip.*)"\srel="nofollow"</string> -->
+		<string>(https.*client/FileZilla_(?P&lt;version&gt;([0-9]+\.)*[0-9]+)_win64-setup.exe.*)"\srel="nofollow"</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.5.1</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_PATTERN%</string>
+                <key>result_output_var_name</key>
+                <string>match</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%match%</string>
+                <key>filename</key>
+                <!-- <string>%NAME%.zip</string> -->
+				<string>%NAME%.exe</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Tim Kosse, O=Tim Kosse, STREET=Lukasstr. 10, L=Köln, S=NRW, PostalCode=50823, C=DE</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

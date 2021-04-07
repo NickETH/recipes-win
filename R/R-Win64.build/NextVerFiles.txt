@@ -1,0 +1,8 @@
+read\create-log-R_64_VVeerrssiioonn_ML.txt
+read\readme-R_64_VVeerrssiioonn_ML.txt
+helpers\install-r-pkg-STUD_AP_4x.txt
+helpers\Renviron.site
+sourcepkt\*.exe
+wixproject\R.wxs
+wixproject\R.build
+wixproject\version.wxi

@@ -1,0 +1,10 @@
+read\create-log-Notepad++_64_VVeerrssiioonn_ML.txt
+read\readme-Notepad++_64_VVeerrssiioonn_ML.txt
+wixproject\Main.wxs
+wixproject\NoExe.xslt
+wixproject\Notepad++.build
+wixproject\version.wxi
+wixproject\Includes\*.*
+wixproject\Resources\*.*
+wixproject\Lang\*.*
+wixproject\Fragments\*.*

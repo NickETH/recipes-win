@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <ComponentGroup Id="FileZillaRegistryGroup">
+			<Component Id="REGfzshellext_64" Directory="TARGETDIR" Guid="{CD13121F-E980-4B26-B214-0F08C5856D9F}" Win64="yes">
+                <RegistryValue Id="registry91" Root="HKCR" Key="CLSID\{DB70412E-EEC9-479C-BBA9-BE36BFDDA41B}" Value="FileZilla 3 Shell Extension" Type="string" />
+                <RegistryValue Id="registry124" Root="HKCR" Key="Directory\shellex\CopyHookHandlers\FileZilla3CopyHook" Value="{DB70412E-EEC9-479C-BBA9-BE36BFDDA41B}" Type="string" />
+                <RegistryValue Id="registry17" Root="HKLM" Key="SOFTWARE\FileZilla 3\fzshellext" Name="Enable" Value="1" Type="integer" />
+                <RegistryValue Id="registry102" Root="HKCR" Key="CLSID\{DB70412E-EEC9-479C-BBA9-BE36BFDDA41B}\InProcServer32" Value="[APPLICATIONFOLDER]fzshellext_64.dll" Type="string" />
+                <RegistryValue Id="registry113" Root="HKCR" Key="CLSID\{DB70412E-EEC9-479C-BBA9-BE36BFDDA41B}\InProcServer32" Name="ThreadingModel" Value="Apartment" Type="string" />
+            </Component>          
+        </ComponentGroup>
+    </Fragment>
+</Wix>

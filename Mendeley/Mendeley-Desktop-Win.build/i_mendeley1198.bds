@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<baramundiDeployScript Version="2010" LastChange="26.03.2021 00:27:36">
+<META>
+<INFO Vendor="" Name="" Version="" Author="Blatter  Markus (4ea)" Comment=""/>
+<STATICVARS LoadInstallIni="1">
+<BMSVars></BMSVars>
+</STATICVARS>
+</META>
+<ACTIONS>
+<ACTION type="LaunchProcess" level="0" breakpoint="0" ignore_error="0" comment="0" is_included="0" logging_enabled="1">
+<DATA>
+<COMMAND>{DIP}\Apl\Mendeley_Desktop\1_19_8\ML\Mendeley-Desktop-1.19.8-win32.exe</COMMAND>
+<PARAM>/S</PARAM>
+<RETURNCODES>0,1223</RETURNCODES>
+<VARNAME></VARNAME>
+<PIDVARNAME></PIDVARNAME>
+<OPTIONS>1</OPTIONS>
+</DATA>
+</ACTION>
+<ACTION type="DeleteFiles" level="0" breakpoint="0" ignore_error="0" comment="0" is_included="0" logging_enabled="1">
+<DATA>
+<NAME>{%PUBLIC%}\Desktop\Mendeley Desktop.lnk</NAME>
+</DATA>
+</ACTION>
+<ACTION type="DeleteFiles" level="0" breakpoint="0" ignore_error="0" comment="0" is_included="0" logging_enabled="1">
+<DATA>
+<NAME>{%ALLUSERSPROFILE%}\Microsoft\Windows\Start Menu\Programs\Mendeley Desktop\Uninstall.lnk</NAME>
+</DATA>
+</ACTION>
+</ACTIONS>
+</baramundiDeployScript>

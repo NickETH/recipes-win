@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest PuTTY x64.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.PuTTY-Win64</string>
+	<key>Input</key>
+	<dict>
+        <key>NAME</key>
+        <string>PuTTY</string>
+        <key>SEARCH_URL</key>
+        <string>https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html</string>
+        <key>SEARCH_PATTERN</key>
+        <string>(https.*\/putty-64bit-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-installer.msi)</string>
+        <key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Windows NT 6.3; Win64, x64; Trident/7.0; rv:11.0) like Gecko</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Comment</key>
+			<string>Get a link to a redirect page from the official download page</string>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_PATTERN%</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+                <key>url</key>
+                <string>%match%</string>
+                <key>request_headers</key>
+                <dict>
+					<key>user-agent</key>
+					<string>%USER_AGENT%</string>
+                </dict>
+				<key>filename</key>
+                <string>%NAME%.msi</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Simon Tatham, O=Simon Tatham, L=Cambridge, S=Cambridgeshire, C=GB</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+	</array>
+</dict>
+</plist>

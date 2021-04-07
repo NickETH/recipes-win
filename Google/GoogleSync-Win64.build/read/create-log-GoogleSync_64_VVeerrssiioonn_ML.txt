@@ -1,0 +1,27 @@
+
+200113	Create Google Backup and Sync x64 for Windows
+	No Alterations at all. We only use the command line to set the features/prefs needed.
+	Commandline: ALLUSERS=1
+
+	We do the following changes:	
+	1. Remove the Google Updater
+	2. Remove the Desktop Shortcuts.
+
+	Remove from Binary Table:
+	GoogleUpdateSetup	[Binary Data]
+
+	Remove from CustomAction Table:
+	RunGoogleUpdateSetup	3074	GoogleUpdateSetup	/install "runtime=true&needsadmin=true" /silent	
+
+	Remove from InstallExecuteSequence Table:
+	RunGoogleUpdateSetup	NOT (EXISTINGEXE OR EXISTINGEXEOTHER) AND NOT REMOVE="ALL"	4001
+
+	Remove from Registry Table:
+	regC630DDCE73AB93333FC40024328151D2	2	Software\Google\Update\ClientState\{3C122445-AECE-4309-90B7-85A6AEF42AC0}	pv	3.53.3404.7585	DriveOmahaIntegration
+
+	Change lines in Component Table:
+	GoogleSheetsDesktopShortcutComponent	{5E28D31A-6DFD-4D25-BAE6-FF38F9B3D478}	DesktopFolder	260	GOOGLESHEETSDESKTOPSHORTCUT	reg4D910B17D411901ECF3D2B62E84129E1
+	GoogleSlidesDesktopShortcutComponent	{6FF0F7BD-0271-4659-B06D-2B39FAAFFCB8}	DesktopFolder	260	GOOGLESLIDESDESKTOPSHORTCUT	regF8D023243DEB8C6D28D19972C1CA75B8
+	GoogleDocsDesktopShortcutComponent	{A584238C-5AF3-4880-B76D-1E32ECF85367}	DesktopFolder	260	GOOGLEDOCSDESKTOPSHORTCUT	reg0C7351C70F61F26AD3B3A1E15F0B273C
+
+200113	Version 1.0.0.0, by AutoPkg

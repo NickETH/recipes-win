@@ -1,0 +1,10 @@
+read\create-log-RStudio_64_VVeerrssiioonn_ML.txt
+read\readme-RStudio_64_VVeerrssiioonn_ML.txt
+wixproject\Main.wxs
+wixproject\NoExe.xslt
+wixproject\RStudio.build
+wixproject\version.wxi
+wixproject\Includes\*.*
+wixproject\Resources\*.*
+wixproject\Lang\*.*
+wixproject\Fragments\*.*

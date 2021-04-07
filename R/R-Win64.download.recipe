@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest R installer package for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.R-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>R</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.3.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- https://cloud.r-project.org/bin/windows/base/R-4.0.4-win.exe -->
+				<string>https://cran.r-project.org/bin/windows/base/</string>
+				<key>re_pattern</key>
+				<string>(?P&lt;exe&gt;R-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-win\.exe)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://cloud.r-project.org/bin/windows/base/%match%</string>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Jeroen Ooms, OU=IT, O=Jeroen Ooms, STREET=Rolderiephof 211, L=Utrecht, S=Utrecht, PostalCode=3521DD, C=NL</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>
