@@ -1,12 +1,12 @@
-Adobe AIR Runtime 32.0.0.89 ENU (sprachneutral)
+Harman AIR Runtime 1.0.0.1 ENU
 
-Plugin um AIR Inhalte anzeigen zu können.
+Plugin to display AIR content.
+This software is now distributed by Harman (was formerly an Adobe product)
 
-Leicht angepasste Orginalversionen von Adobe (Bugfixes + Konfiguration).
-
+Changed configuration settings:
 Folgendene Konfigurations-Einstellungen sind gegenüber dem Orginal angepasst:
-- Auto Update ist ausgeschalten.
-- Installation von "Untrusted Applications" ist ausgeschalten.
-- EULA wird beim 1. Start nicht angezeigt.
+- Auto Update is disabled.
+- Installation of "Untrusted Applications" is disabled.
+- The EULA will not being displayed on the first run.
 
 20190218, Nick Heim

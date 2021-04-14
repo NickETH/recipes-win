@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- 
-Transform to alter the output from heat.exe for Filezilla
+Transform to alter the output from heat.exe for GitHub Desktop
 Main functions:
--Remove filezilla.exe', 'fzputtygen.exe' and 'fzsftp.exe' from PackageFiles.wxs
-Version 1.0, 20210406, Nick Heim, ETHZ, ID-CD
+-Remove the "GitHubDesktop.exe", it is contained in Main.wxs
+Version 1.0, 20210412, Nick Heim, ETHZ, ID-CD
 -->
 <xsl:stylesheet version="1.0"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -20,8 +20,8 @@ Version 1.0, 20210406, Nick Heim, ETHZ, ID-CD
 		</xsl:copy>
 	</xsl:template>
 
-	<!-- Filter out the exe files -->
-	<xsl:key name="exe-search" match="wix:Component[contains(wix:File/@Id, 'filezilla.exe') or contains(wix:File/@Id, 'fzputtygen.exe') or contains(wix:File/@Id, 'fzsftp.exe')]" use="@Id" />
+	<!-- Filter out the exe file -->
+	<xsl:key name="exe-search" match="wix:Component[contains(wix:File/@Id, 'GitHubDesktop.exe')]" use="@Id" />
 	<xsl:template match="wix:Component[key('exe-search', @Id)]" />
 	<xsl:template match="wix:ComponentRef[key('exe-search', @Id)]" />
 

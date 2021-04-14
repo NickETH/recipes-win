@@ -1,38 +1,38 @@
-<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="Current">
+<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
     <PropertyGroup>
-		<InstallerPlatform>$(BuildPlatform)</InstallerPlatform>
+		<!-- Todo: -arch switch  x86/x64 in candle -->
+		<InstallerPlatform>x64</InstallerPlatform>
 		<Platform>$(InstallerPlatform)</Platform>
-		<PRODUCT_SKU>$(BuildName)</PRODUCT_SKU>
+		<PRODUCT_SKU>Element</PRODUCT_SKU>
 		<CULTURE>en-us</CULTURE>
 		<LANGIDS>1033</LANGIDS>
         <BuildDirectory>$(BuildDir)</BuildDirectory>
-		<SourceDirectory>$(SourceDir)</SourceDirectory>
-		<CandleVar>-dPlatform=$(InstallerPlatform) -dSetupResourcesDir=$(BuildDir)\Resources</CandleVar>
-		<LightSrcDir>-dAPSourceDir=$(SourceDirectory)</LightSrcDir>
-		<MsiOut>..\Release\$(BuildName)_$(InstallerPlatform.Substring(1,2))_$(version)_ML.msi</MsiOut>
+        <DestinationDirectory>$(ElementDir)</DestinationDirectory>
+		<ASVersion>$(version.Replace('.', ','))</ASVersion>
+		<CandleVar>-dPlatform=$(InstallerPlatform) -dSetupResourcesDir=$(BuildDir)\Resources -dASVersion=$(ASVersion)</CandleVar>
+		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
+		<MsiOut>..\Release\Element_64_$(version)_ML.msi</MsiOut>
     </PropertyGroup>
 	<!-- The list of WIX input files -->
 	<ItemGroup>
 		<WixCode Include="Main.wxs" />
-		<WixCode Include="PackageFiles.wxs" />
-		<WixCode Include=".\Fragments\regFrag.wxs" />
+		<WixCode Include="Elementfiles.wxs" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<WixObject Include="Main.wixobj" />
-		<WixObject Include="PackageFiles.wixobj" />
-		<WixObject Include="regFrag.wixobj" />
+		<WixObject Include="Elementfiles.wixobj" />
 	</ItemGroup>
 	<Target Name="Harvest" >
 		<Exec
-            Command='"$(WIX)bin\heat" dir $(SourceDirectory) -dr APPLICATIONFOLDER -v -sw5150 -sreg -srd -suid -svb6 -sfrag -cg AppFiles -var wix.APSourceDir -gg -out PackageFiles.wxs -t NoExe.xslt'
+            Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr APPLICATIONFOLDER -v -sw5150 -sreg -srd -suid -svb6 -sfrag -cg AppFiles -var wix.APSourceDir -gg -out Elementfiles.wxs -t NoExe.xslt'
             ContinueOnError="false"
             WorkingDirectory="." />
     </Target>
 	<Target Name="WIX"
 		DependsOnTargets="Harvest">
         <Exec
-            Command='"$(WiX)bin\candle" -arch $(InstallerPlatform) -ext WixUtilExtension -ext WixUIExtension $(CandleVar) -v -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
+            Command='"$(WiX)bin\candle" -arch x64 -ext WixUtilExtension -ext WixUIExtension $(CandleVar) -v -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
             ContinueOnError="true"
             WorkingDirectory="$(BuildDirectory)" />
         <Exec

@@ -3,13 +3,13 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Extracts the current SpectrumProtect x64 MSI-package.</string>
+    <string>Package the current Github Desktop x64 release to an MSI-package.</string>
     <key>Identifier</key>
-	<string>com.github.autopkg-win.build.SpectrumProtect-Win64</string>
+    <string>com.github.autopkg-win.build.GithubDesktop-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
-        <string>SpectrumProtect</string>
+        <string>GithubDesktop</string>
         <key>PLATFORM</key>
         <string>x64</string>
         <key>PF_STRING</key>
@@ -18,23 +18,25 @@
     <key>MinimumVersion</key>
     <string>1.0.5</string>
 	<key>ParentRecipe</key>
-	<string>com.github.autopkg-win.download.SpectrumProtect-Win64</string>
+	<string>com.github.autopkg-win.download.GithubDesktop-Win64</string>
     <key>Process</key>
     <array>
-		<dict>
+	    <dict>
             <key>Processor</key>
-            <string>StopProcessingIf</string>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
             <key>Arguments</key>
             <dict>
-                <key>predicate</key>
-                <string>download_changed == False</string>
+                <key>exe_path</key>
+				<string>%pathname%</string>
+                <key>product_version</key>
+                <string>True</string>
             </dict>
         </dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
 			<key>Comment</key>
-            <string>Create a build enviroment to deploy the MSI</string>
+            <string>Create a build enviroment to build the MSI with Wix</string>
             <key>Arguments</key>
             <dict>
                 <key>build_dir</key>
@@ -46,13 +48,13 @@
                 <key>org_ver</key>
                 <string>%version%</string>
                 <key>ver_fields</key>
-                <string>4</string>
+                <string>3</string>
 				<key>create_AS_ver</key>
 				<string>True</string>
                 <key>pkg_dir</key>
 				<string>%NAME%%PF_STRING%_::VVeerrssiioonn::_ML</string>
                 <key>folder_list</key>
-                <string>sourcepkt:release:read:helpers</string>
+                <string>sourcepkt:sourceunzipped:release:read:helpers:wixproject:wixproject\%NAME%:wixproject\Includes:wixproject\Resources:wixproject\Lang</string>
                 <key>BuildFiles</key>
                 <string>NextVerFiles.txt</string>
 			</dict>
@@ -72,7 +74,7 @@
             <key>Processor</key>
             <string>Copier</string>
 			<key>Comment</key>
-            <string>Copy the SpectrumProtect installer file to the build dir</string>
+            <string>Copy the GithubDesktop installer file to the build dir</string>
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
@@ -86,20 +88,57 @@
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
-            <key>Comment</key>
-            <string>Extract the SpectrumProtect zip archive</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>
-                <string>%RECIPE_CACHE_DIR%\downloads\%filename%</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%filename%</string>
                 <key>extract_dir</key>
-                <string>%BUILD_DIR%\%pkg_dir%\release</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\</string>
+                <key>extract_file</key>
+                <string>GithubDesktop-*-full.nupkg</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\GithubDesktop-*-full.nupkg</string>
+            </dict>
+            <key>Processor</key>
+            <string>FileFinder</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Comment</key>
+            <string>Extract the autopkg zip archive</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%found_filename%</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
                 <key>preserve_paths</key>
                 <string>True</string>
                 <key>extract_file</key>
                 <string>*</string>
                 <key>ignore_pattern</key>
                 <string></string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the GithubDesktop installer file to the build dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\lib\net45\</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\GithubDesktop\</string>
+                <key>overwrite</key>
+                <string>true</string>
             </dict>
         </dict>
         <dict>
@@ -127,6 +166,38 @@
             </dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WixDefaults</string>
+			<key>Comment</key>
+            <string>Set the actual version strings to the version.wxi file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%</string>
+                <key>build_ver</key>
+                <string>%build_ver%</string>
+                <key>org_ver</key>
+                <string>%build_ver%</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSBuildRun</string>
+			<key>Comment</key>
+            <string>Run the MSBuild script to generate the GithubDesktop MSI installer</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_file</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\GithubDesktop.build</string>
+                <key>build_folder</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject</string>
+                <key>build_target</key>
+                <string>WIX</string>
+                <key>build_property</key>
+				<string>BuildPlatform=%PLATFORM%;BuildName=%NAME%;BuildDir=%BUILD_DIR%\%pkg_dir%\wixproject;SourceDir=%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%;version=%build_ver%</string>
+            </dict>
         </dict>
 	</array>
 </dict>

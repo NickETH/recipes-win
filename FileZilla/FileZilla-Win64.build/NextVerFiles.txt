@@ -1,10 +1,10 @@
 read\create-log-FileZilla_64_VVeerrssiioonn_ML.txt
 read\readme-FileZilla_64_VVeerrssiioonn_ML.txt
+helpers\fzdefaults.xml
 wixproject\Main.wxs
 wixproject\NoExe.xslt
 wixproject\FileZilla.build
 wixproject\version.wxi
-wixproject\FileHash.cmd
 wixproject\Includes\*.*
 wixproject\Resources\*.*
 wixproject\Lang\*.*

@@ -7,6 +7,7 @@
 # Execute a file.
 # With the "elevated" flag, it is possible to run commands that would otherwise raise an elevation popup.
 # This function needs the AutoPkg Taskrunner utility, which is only available from v2.x
+# 20210328: Changed the command exchange with the service to the file AutopkgTaskrunnerCMD.apkcmd
 
 from __future__ import absolute_import
 from __future__ import print_function
@@ -107,14 +108,23 @@ class ExecuteFile(Processor):
             if checkbool(run_elevated):
                 try:
                     comnd_value = ''.join(cmd) + '~~~' + (' '.join(cmd_args)).lstrip()
-                    taskrunnerpath = 'Software\AutoPkg\TaskRunner\Command'
                     print("TaskRunnerCommand: %s" % comnd_value)
-                    reg_write(taskrunnerpath, comnd_value)
+                    AutopkgTaskrunnerCMDfile = os.path.join(self.env['AUTOPKG_DIR'], "APkgUtils", "AutopkgTaskrunnerCMD.apkcmd")
+                    with open(AutopkgTaskrunnerCMDfile, "w") as fileref:
+                       fileref.write(comnd_value)
                 except BaseException as err:
                     raise ProcessorError(
-                        "Can't write command to %s: %s" % (taskrunnerpath, err)
+                        "Can't change file %s: %s" % (AutopkgTaskrunnerCMDfile, err)
                     )
-                while (reg_read(taskrunnerpath) != "0"):
+                while (comnd_value != '0'):
+                    try:
+                        with open(AutopkgTaskrunnerCMDfile, "r") as fileref:
+                            comnd_value = fileref.read().replace('\n', '')
+                        #print("comnd_value: %s" % comnd_value)
+                    except BaseException as err:
+                        raise ProcessorError(
+                            "Can't read file %s: %s" % (AutopkgTaskrunnerCMDfile, err)
+                        )
                     time.sleep(5)
 
             else:

@@ -11,7 +11,8 @@
         <key>NAME</key>
         <string>AdobeAIR</string>
         <key>DOWNLOAD_URL</key>
-        <string>https://airdownload.adobe.com/air/win/download/latest/AdobeAIRInstaller.exe</string>
+        <!-- <string>https://airdownload.adobe.com/air/win/download/latest/AdobeAIRInstaller.exe</string> -->
+		<string>https://airsdk.harman.com/assets/downloads/AdobeAIR.exe</string>
     </dict>
     <key>MinimumVersion</key>
     <string>1.0.5</string>
@@ -19,6 +20,17 @@
     <string>com.github.autopkg-win.download.AdobeAIR-Win</string>
     <key>Process</key>
     <array>
+	    <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+				<string>%pathname%</string>
+                <key>product_version</key>
+                <string>False</string>
+            </dict>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>
@@ -28,7 +40,7 @@
                 <string>download_changed == False</string>
             </dict>
         </dict>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
             <key>Arguments</key>
@@ -62,7 +74,7 @@
                 <key>rename_var</key>
                 <string>version</string>
             </dict>
-		</dict>		
+		</dict>	 -->	
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
@@ -76,6 +88,8 @@
                 <string>%RECIPE_PATH%</string>
                 <key>org_ver</key>
                 <string>%version%</string>
+                <key>ver_fields</key>
+                <string>4</string>
                 <key>pkg_dir</key>
                 <string>Adobe_AIR_%version%_ENU</string>
                 <key>folder_list</key>
@@ -189,7 +203,7 @@
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
-                <string>[0-9][0-9]\.0\.0\.[0-9]+</string>				
+				<string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>
             </dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
@@ -202,7 +216,7 @@
                 <key>new_ver</key>
                 <string>%version%</string>
                 <key>re_pattern</key>
-                <string>[0-9][0-9]\.0\.0\.[0-9]+</string>				
+                <string>[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+</string>
             </dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>

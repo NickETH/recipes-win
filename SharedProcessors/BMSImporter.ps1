@@ -15,8 +15,9 @@ param(
     [Parameter(mandatory=$true)][string]$bms_app_version,
     [Parameter(mandatory=$true)][string]$bms_app_valid4os,
     [Parameter(mandatory=$true)][string]$bms_app_seccont,
-    [Parameter(mandatory=$true)][string]$bms_app_installcmd,
-    [Parameter(mandatory=$false)][string]$bms_app_installparm,
+    [Parameter(mandatory=$false)][string]$bms_app_installcmd,
+    [Parameter(mandatory=$false)][string]$bms_app_installbds,
+	[Parameter(mandatory=$false)][string]$bms_app_installparm,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_rebootbhv,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_copylocal,
     [Parameter(mandatory=$false)][string]$bms_app_iopt_usebbt,
@@ -26,6 +27,7 @@ param(
     [Parameter(mandatory=$false)][string]$bms_app_category,
     [Parameter(mandatory=$false)][string]$bms_app_conschecks,
     [Parameter(mandatory=$false)][string]$bms_app_uninstcmd,
+	[Parameter(mandatory=$false)][string]$bms_app_uninstbds,
     [Parameter(mandatory=$false)][string]$bms_app_uninstparm,
     [Parameter(mandatory=$false)][string]$bms_app_uopt_rebootbhv,
     [Parameter(mandatory=$false)][string]$bms_app_uopt_usebbt,
@@ -128,19 +130,47 @@ if ($bms_app_iopt_rebootbhv -or $bms_app_uopt_rebootbhv -or $bms_app_uopt_usebbt
 	if ($bms_app_uopt_usebbt) { $UnInstallOptArgs['UsebBT'] = (ParseBool($bms_app_uopt_usebbt)) }
 	$UnInstallOptions = New-bConnectApplicationInstallOptions @UnInstallOptArgs
 }
-$installDataArgs = @{
-    Command	   = $bms_app_installcmd;
+
+if ($bms_app_installbds -and $bms_app_installcmd) {
+	$installDataArgs = @{
+		Command	   = $bms_app_installcmd;
+		EngineFile	   = $bms_app_installbds;
+	}
 }
+elseif ($bms_app_installcmd) {
+	$installDataArgs = @{
+		Command	   = $bms_app_installcmd;
+	}
+}
+elseif ($bms_app_installbds) {
+	$installDataArgs = @{
+		EngineFile	   = $bms_app_installbds;
+	}
+}
+
 if ($bms_app_installparm) { $installDataArgs['Parameter'] = $bms_app_installparm }
 if ($InstallOptions) { $installDataArgs['Options'] = $InstallOptions }
 $InstallationData = New-bConnectApplicationInstallationData @installDataArgs
 echo @InstallationData | Out-File $logfile -Append
 echo "2" | Out-File $logfile -Append
 
-if ($bms_app_uninstcmd -or $bms_app_uninstparm) {
-    $UnInstallDataArgs = @{
-            Command	   = $bms_app_uninstcmd;
-    }
+if ($bms_app_uninstcmd -or $bms_app_uninstbds -or $bms_app_uninstparm) {
+	if ($bms_app_uninstcmd -and $bms_app_uninstbds) {
+		$UnInstallDataArgs = @{
+			Command = $bms_app_uninstcmd;
+			EngineFile = $bms_app_uninstbds;
+		}
+	}
+	elseif ($bms_app_uninstcmd) {
+		$UnInstallDataArgs = @{
+			Command	= $bms_app_uninstcmd;
+		}
+	}
+	elseif ($bms_app_uninstbds) {
+		$UnInstallDataArgs = @{
+			EngineFile = $bms_app_uninstbds;
+		}
+	}
     if ($bms_app_uninstparm) { $UnInstallDataArgs['Parameter'] = $bms_app_uninstparm }
 	if ($UnInstallOptions) { $UnInstallDataArgs['Options'] = $UnInstallOptions }
     $UninstallationData = New-bConnectApplicationInstallationData @UnInstallDataArgs

@@ -329,6 +329,18 @@ class MozillaOmniUpdate(Processor):
             "required": True,
             "description": "(Array of) extension name(s) to add, required",
         },
+        "omni_path": {
+            "default": "core\\browser\\omni.ja",
+            #"default": "core\\omni.ja",
+            "required": False,
+            "description": "Internal Path to omni.ja in the exe file, absolute",
+        },
+        "built_in_addons_path": {
+            "default": "chrome\\browser\\content\\browser\\built_in_addons.json",
+            #"default": "chrome\\browser\\content\\built_in_addons.json",
+            "required": False,
+            "description": "Internal Path to built_in_addons.json in the omni.ja file, absolute",
+        },
         "temp_path": {
             "required": False,
             "description": "Path to the folder where temporary files are stored, absolute",
@@ -356,6 +368,8 @@ class MozillaOmniUpdate(Processor):
         new_features = self.env.get('new_features')
         working_directory = self.env.get('RECIPE_CACHE_DIR')
         extract_directory = self.env.get('temp_path', 'working_directory')
+        omni_path = self.env.get('omni_path')
+        built_in_addons_path = self.env.get('built_in_addons_path')
         output_path = self.env.get('output_path', 'working_directory')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
@@ -365,7 +379,7 @@ class MozillaOmniUpdate(Processor):
 
         sevenzipcmd = self.env.get('7ZIP_PATH')
         self.output("Extracting: %s" % install_exe)
-        cmd = [sevenzipcmd, 'e', '-y', '-o%s' % extract_directory , install_exe, 'core\\browser\\omni.ja']
+        cmd = [sevenzipcmd, 'e', '-y', '-o%s' % extract_directory , install_exe, omni_path]
         #cmd = [sevenzipcmd, 'e', '-y', '-o%s' % extract_directory , install_exe, 'omni.ja']
         print("cmd: %s" % cmd)
         try:
@@ -380,7 +394,7 @@ class MozillaOmniUpdate(Processor):
         self.output("Extracted Archive Path: %s" % extract_directory)
         shutil.move(os.path.join(extract_directory, 'omni.ja'), os.path.join(extract_directory, 'omni.jar'))
         deoptimize(extract_directory, extract_directory, extract_directory)
-        cmd = [sevenzipcmd, 'x', '-y', '-o%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), 'chrome\\browser\\content\\browser\\built_in_addons.json']
+        cmd = [sevenzipcmd, 'x', '-y', '-o%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), built_in_addons_path]
 
         try:
             if verbosity > 1:
@@ -390,7 +404,7 @@ class MozillaOmniUpdate(Processor):
         except:
             if ignore_errors != 'True':
                 raise
-        json_file_name = os.path.join(extract_directory, 'chrome\\browser\\content\\browser\\built_in_addons.json')
+        json_file_name = os.path.join(extract_directory, built_in_addons_path)
         with open(json_file_name, "r") as read_file:
             json_data = json.load(read_file)
         json_data_sys = json_data["system"]
@@ -410,7 +424,7 @@ class MozillaOmniUpdate(Processor):
         with open(json_file_name, 'w') as write_file:
             json.dump(json_data, write_file)
         os.chdir(extract_directory)
-        cmd = [sevenzipcmd, 'u', '-y', '-w%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), 'chrome\\browser\\content\\browser\\built_in_addons.json', '-mm=Copy', '-mx0', '-mtc=off']
+        cmd = [sevenzipcmd, 'u', '-y', '-w%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), built_in_addons_path, '-mm=Copy', '-mx0', '-mtc=off']
         print("cmd: %s" % cmd)
         try:
             if verbosity > 1:

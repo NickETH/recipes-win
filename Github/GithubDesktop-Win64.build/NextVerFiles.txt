@@ -1,0 +1,9 @@
+read\create-log-GithubDesktop_64_VVeerrssiioonn_ML.txt
+read\readme-GithubDesktop_64_VVeerrssiioonn_ML.txt
+wixproject\Main.wxs
+wixproject\NoExe.xslt
+wixproject\GithubDesktop.build
+wixproject\version.wxi
+wixproject\Includes\*.*
+wixproject\Resources\*.*
+wixproject\Lang\*.*

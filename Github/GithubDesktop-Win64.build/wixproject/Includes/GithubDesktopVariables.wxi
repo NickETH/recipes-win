@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include>
+  <!-- Setup UI strings. -->
+  <?if $(var.Platform)="x86"?>
+    <?define ProgramFilesFolder="ProgramFilesFolder" ?>
+    <?define Win64="no" ?>
+    <?define Arch="(x86)" ?>
+  <?else?>
+    <?define ProgramFilesFolder="ProgramFiles64Folder" ?>
+    <?define Win64="yes" ?>
+    <?define Arch="(x64)" ?>
+  <?endif?>
+
+  <?define ProductVersion="$(var.version)" ?>
+  <?define ProductName="!(loc.ProductName)" ?>
+  <?define ProductNameWithVersion="!(loc.ProductName) $(var.version) $(var.Arch)" ?>
+  <?define ProductLanguage="!(loc.ProductLanguage)" ?>
+  <?define AppName="GithubDesktop" ?>
+  <?define AppVendor="Github Inc." ?>
+  <?define AppFolder="GithubDesktop" ?>
+  <?define ProductManufacturerShort="Github" ?>
+  <?define ProductManufacturerLong="Github Inc." ?>
+
+  <?define ProductUpgradeCode="$(var.Upgradecode)" ?>
+  <?define RTMProductVersion="0.0.1" ?>
+</Include>

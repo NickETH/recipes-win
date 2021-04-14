@@ -34,7 +34,7 @@
 
     <!-- Define the directory structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="$(var.ProgramFiles64Folder)">
+      <Directory Id="ProgramFiles64Folder">
         <Directory Id="APPLICATIONFOLDER" Name="$(var.AppFolder)" />
       </Directory>
       <Directory Id="ProgramMenuFolder" />
@@ -57,9 +57,9 @@
         <util:RemoveFolderEx On="uninstall" Property="APPLICATIONFOLDER" />
       </Component>
 	  <Component Id="filezilla.exe" Guid="{77F3609A-8CC4-4F20-9320-5DEE9E5F1C36}">
-                <File Id="filezilla.exe" Name="filezilla.exe" KeyPath="yes" Vital="no" Checksum="yes" DiskId="1" Source="$(var.ReproDir)\filezilla.exe" />
-                <File Id="fzsftp.exe" Name="fzsftp.exe" Vital="no" Checksum="yes" DiskId="1" Source="$(var.ReproDir)\fzsftp.exe" />
-                <File Id="fzputtygen.exe" Name="fzputtygen.exe" Vital="no" Checksum="yes" DiskId="1" Source="$(var.ReproDir)\fzputtygen.exe" />
+                <File Id="filezilla.exe" Name="filezilla.exe" KeyPath="yes" Vital="no" Checksum="yes" DiskId="1" Source="!(wix.APSourceDir)\filezilla.exe" />
+                <File Id="fzsftp.exe" Name="fzsftp.exe" Vital="no" Checksum="yes" DiskId="1" Source="!(wix.APSourceDir)\fzsftp.exe" />
+                <File Id="fzputtygen.exe" Name="fzputtygen.exe" Vital="no" Checksum="yes" DiskId="1" Source="!(wix.APSourceDir)\fzputtygen.exe" />
       </Component>   
     </DirectoryRef>
     <DirectoryRef Id="ProgramMenuFolder">
@@ -83,7 +83,6 @@
       <ComponentRef Id="DesktopShortcut" />
       <ComponentRef Id="StartMenuShortcut" />
       <ComponentGroupRef Id="AppFiles" />
-      <ComponentGroupRef Id="nppRegistryGroup" />
 	  <ComponentGroupRef Id="FileZillaRegistryGroup" />
     </Feature>
 

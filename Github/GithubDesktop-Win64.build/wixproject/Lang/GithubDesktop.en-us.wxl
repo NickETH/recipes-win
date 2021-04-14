@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<WixLocalization Culture="en-us" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+	<String Id="ProductLanguage">1033</String>
+	<String Id="ProductName">GithubDesktop</String>
+	<String Id="ProductHelpLink">https://desktop.github.com/</String>
+  <String Id="ProductUrlInfoAbout">https://desktop.github.com/</String>
+  <String Id="ProductUrlUpdateInfo">https://desktop.github.com/release-notes/</String>
+	<String Id="PackageDescription">GithubDesktop</String>
+	<String Id="FeatureStartMenuShortcut">Start Menu shortcut</String>
+	<String Id="FeatureDesktopShortcut">Desktop shortcut</String>
+	<String Id="NewerVersionInstalled">Newer version of GithubDesktop is already installed.</String>
+	<String Id="OSVersionRequired">Windows 7 or later is required.</String>
+	<String Id="WixUI_ExitDialogOptionalCheckboxText">Launch GithubDesktop</String>
+</WixLocalization>

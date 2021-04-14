@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Package the current FileZilla x64 release to an MSI-package.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.test.FileZilla-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>FileZilla</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_STRING</key>
+        <string>_64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+<!-- 	<key>ParentRecipe</key>
+	<string>com.github.autopkg-win.download.FileZilla-Win64</string> -->
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIAddFileHash</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>C:\Temp\fz\FZ-Test.msi</string>
+                <key>File2Hash</key>
+				<array>
+					<string>fzputtygen.exe|||C:\Temp\fz\fzputtygen.exe</string>
+					<string>fzsftp.exe|||C:\Temp\fz\fzsftp.exe</string>
+				</array>
+				<key>remove_version_field</key>
+				<!-- <true/> -->
+				<string>1</string>
+            </dict>
+		</dict>
+	</array>
+</dict>
+</plist>

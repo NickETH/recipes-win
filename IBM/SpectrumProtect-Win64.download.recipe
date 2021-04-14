@@ -21,7 +21,6 @@
 			<key>Arguments</key>
 			<dict>
 				<key>url</key>
-				<!-- <string>http://tsm-repo.ethz.ch/win/</string> -->
 				<string>https://public.dhe.ibm.com/storage/tivoli-storage-management/catalog/client/catalog.json</string>
 				<key>re_pattern</key>
 				<!-- We are searching for the last match here with a negative lookahead assertion -->
@@ -38,7 +37,6 @@
 			<key>Arguments</key>
 			<dict>
 				<key>url</key>
-				<!-- <string>http://tsm-repo.ethz.ch/win/%match%</string> -->
 				<!-- https://public.dhe.ibm.com/storage/tivoli-storage-management/maintenance/client/v8r1/Windows/x64/v8111/ -->
 				<string>https://public.dhe.ibm.com/storage/tivoli-storage-management/maintenance/client/%partone%x64%parttwo%.exe</string>
 				<key>filename</key>

@@ -23,10 +23,24 @@ $fldr_seprtr = "|",":"
 $split_optn = [System.StringSplitOptions]::RemoveEmptyEntries
 $folder_ary = $folder_list.Split($fldr_seprtr,$split_optn)
 
-# echo ("ver_fields: " + $ver_fields)
-$Ver_Regex = "^\d+"
 If ($ver_fields){
-	$ver_fields = $ver_fields - 2
+	$VerArray = $org_ver.Split(".")
+	$VerArray = $VerArray + @('0','0','0','0')
+	$build_ver = $VerArray[0] 
+
+    for ($i=1; $i -lt $ver_fields; $i++) {
+		$build_ver = $build_ver + "." + $VerArray[$i]
+	    echo ("build_ver: " + $build_ver)
+    }
+}
+else{
+    $build_ver = $org_ver
+}
+# echo ("ver_fields: " + $ver_fields)
+
+<#$Ver_Regex = "^\d+"
+If ($ver_fields){
+	$ver_fields = $ver_fields - 1
     for ($i=1; $i -le $ver_fields; $i++) {
 		$Ver_Regex = $Ver_Regex + "\.\d+"
 	    echo ("Regex: " + $Ver_Regex)
@@ -47,7 +61,7 @@ If ($ver_fields){
 else{
     $build_ver = $org_ver
 }
-
+#>
 $Return_string = "Buildversion: " + $build_ver
 
 If ($AS_ver){
@@ -101,9 +115,11 @@ if ($BuildFiles -and $recipe_path) {
         }
         if ($line -match '\*') {
             Copy-Item -Force -Recurse ($recipe_path + "\" + $line) ($build_dir + "\" + $pkg_dir + "\" + $line.Substring(0, $line.IndexOf("*")))
+			#echo ("BuildFiles-Foreach: " + $build_dir + "\" + $pkg_dir + "\" + $line.Substring(0, $line.IndexOf("*")))
         }
         else{
             Copy-Item -Force ($recipe_path + "\" + $line) ($build_dir + "\" + $pkg_dir + "\" + $line_build)
+			#echo ("BuildFiles-Foreach: " + $build_dir + "\" + $pkg_dir + "\" + $line)
         }
     }
 }

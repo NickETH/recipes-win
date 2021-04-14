@@ -15,13 +15,13 @@
 	<ItemGroup>
 		<WixCode Include="Main.wxs" />
 		<WixCode Include="PackageFiles.wxs" />
-		<WixCode Include=".\Fragments\regFrag.wxs" />
+		<!-- <WixCode Include=".\Fragments\regFrag.wxs" /> -->
 	</ItemGroup>
 
 	<ItemGroup>
 		<WixObject Include="Main.wixobj" />
 		<WixObject Include="PackageFiles.wixobj" />
-		<WixObject Include="regFrag.wixobj" />
+		<!-- <WixObject Include="regFrag.wixobj" /> -->
 	</ItemGroup>
 	<Target Name="Harvest" >
 		<Exec

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest Github Desktop Matrix Client for Windows x64.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.GithubDesktop-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>DOWNLOAD_URL</key>
+		<string>https://central.github.com/deployments/desktop/desktop/latest/win32</string>
+		<key>NAME</key>
+		<string>GithubDesktop</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.0.0</string>
+	<key>Process</key>
+	<array>
+<!-- 		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				https://packages.riot.im/desktop/install/win32/x64/Element%20Setup.exe
+				<string>"(?P&lt;match&gt;https://packages\.riot\.im/desktop/install/win32/x64/Element.*\.exe)"</string>
+				<key>url</key>
+				<string>%DOWNLOAD_URL%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict> -->
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+				<key>url</key>
+				<string>%DOWNLOAD_URL%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN="GitHub, Inc.", O="GitHub, Inc.", L=San Francisco, S=California, C=US</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

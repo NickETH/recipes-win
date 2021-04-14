@@ -68,8 +68,12 @@ class BMSImporter(Processor):
             "description": "Application's security context in BMS, required",
         },
         "bms_app_installcmd": {
-            "required": True,
-            "description": "Application install command line in BMS, required",
+            "required": False,
+            "description": "Application install command line in BMS",
+        },
+        "bms_app_installbds": {
+            "required": False,
+            "description": "BDS installscript path line in BMS",
         },
         "bms_app_installparm": {
             "required": False,
@@ -106,6 +110,10 @@ class BMSImporter(Processor):
         "bms_app_uninstcmd": {
             "required": False,
             "description": "Application uninstall command line in BMS.",
+        },
+        "bms_app_uninstbds": {
+            "required": False,
+			"description": "BDS uninstall script path line in BMS",
         },
         "bms_app_uninstparm": {
             "required": False,
@@ -160,7 +168,7 @@ class BMSImporter(Processor):
         bms_app_version = self.env.get('bms_app_version')
         bms_app_valid4os = self.env.get('bms_app_valid4os')
         bms_app_seccont = self.env.get('bms_app_seccont')
-        bms_app_installcmd = self.env.get('bms_app_installcmd')
+        # bms_app_installcmd = self.env.get('bms_app_installcmd')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 5)
         print >> sys.stdout, "bms_app_name %s" % bms_app_name
@@ -181,8 +189,15 @@ class BMSImporter(Processor):
             bms_app_parentid,
             bms_app_version,
             bms_app_valid4os,
-            bms_app_seccont,
-            bms_app_installcmd,]
+            bms_app_seccont,]
+
+        if "bms_app_installcmd" in self.env:
+            bms_app_installcmd = self.env.get('bms_app_installcmd')
+            cmd.extend(['-bms_app_installcmd', bms_app_installcmd])
+
+        if "bms_app_installbds" in self.env:
+            bms_app_installbds = self.env.get('bms_app_installbds')
+            cmd.extend(['-bms_app_installbds', bms_app_installbds])
 
         if "bms_app_installparm" in self.env:
             bms_app_installparm = self.env.get('bms_app_installparm')
@@ -223,6 +238,10 @@ class BMSImporter(Processor):
         if "bms_app_uninstcmd" in self.env:
             bms_app_uninstcmd = self.env.get('bms_app_uninstcmd')
             cmd.extend(['-bms_app_uninstcmd', bms_app_uninstcmd])
+
+        if "bms_app_uninstbds" in self.env:
+            bms_app_uninstbds = self.env.get('bms_app_uninstbds')
+            cmd.extend(['-bms_app_uninstbds', bms_app_uninstbds])
 
         if "bms_app_uninstparm" in self.env:
             bms_app_uninstparm = self.env.get('bms_app_uninstparm')
