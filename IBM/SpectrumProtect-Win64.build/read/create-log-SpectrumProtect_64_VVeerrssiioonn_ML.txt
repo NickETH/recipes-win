@@ -1,6 +1,7 @@
 
 200113	Create SpectrumProtect x64 for Windows
-	Download the Windows exe archive
+	Download the Windows exe archive from:
+	ftp://public.dhe.ibm.com/storage/tivoli-storage-management/maintenance/client/v8r1/Windows/x64/
 	Extract the exe file and get the sources from it
 
 	

@@ -12,8 +12,10 @@
         <string>Thunderbird_64</string>
         <key>SEARCH_URL</key>
         <string><![CDATA[https://download.mozilla.org/?product=thunderbird-latest&amp;os=win64&amp;lang=en-US]]></string>
+		<!-- <string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win64/en-US/</string> -->
         <key>DOWNLOAD_URL</key>
         <string>https://download.mozilla.org/?product=thunderbird-latest&amp;os=win64&amp;lang=en-US</string>
+		<!-- <string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win64/en-US/Thunderbird%20Setup%2068.12.1.exe</string> -->
         <key>PLATFORM_STR</key>
         <string>x64</string>
     </dict>
@@ -126,6 +128,42 @@
             <key>Processor</key>
             <string>Copier</string>
         </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MozillaOmniUpdate</string>
+			<key>Comment</key>
+			<string>Update the omni.ja file in Mozilla products to allow certain extensions as features</string>
+            <key>Arguments</key>
+            <dict>
+                <key>install_exe</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%-Setup-%PLATFORM_STR%.exe</string>
+                <key>new_features</key>
+				<array>
+					<string>langpack-de@thunderbird.mozilla.org</string>
+					<string>langpack-fr@thunderbird.mozilla.org</string>
+					<string>langpack-it@thunderbird.mozilla.org</string>
+					<string>langpack-rm@thunderbird.mozilla.org</string>
+					<string>de_CH@dicts.j3e.de</string>
+					<string>French-GC-TB@grammalecte.net</string>
+					<string>it-IT@dictionaries.addons.mozilla.org</string>
+					<string>{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}</string>
+					<string>compactHeaders@dillinger</string>
+					<string>dav4tbsync@jobisoft.de</string>
+					<string>eas4tbsync@jobisoft.de</string>
+					<string>sieve@mozdev.org</string>
+					<string>tbsync@jobisoft.de</string>
+					<string>lookout@s3_fix_version</string>
+				</array>
+                <key>omni_path</key>
+				<string>core\omni.ja</string>
+                <key>built_in_addons_path</key>
+				<string>chrome\browser\content\built_in_addons.json</string>
+                <key>temp_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\adm</string>
+                <key>output_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
+            </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>

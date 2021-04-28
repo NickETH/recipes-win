@@ -13,3 +13,4 @@ TBdav-4-tbsync.xpi.wxs
 TBgoogle-4-tbsync.xpi.wxs
 TBeas-4-tbsync.xpi.wxs
 TBCompactHeader.xpi.wxs
+TBLookOut.xpi.wxs

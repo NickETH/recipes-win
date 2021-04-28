@@ -41,7 +41,7 @@
             <Directory Id="ProgramFiles64Folder" SourceName="Program Files">
 				<Directory Id="APPLICATIONFOLDER" Name="Mozilla Thunderbird" ShortName="THNDBIRD">
 					<Directory Id="INSTALLDIR" Name="." >
-						<Directory Id="EXTENSIONS" Name="extensions" ShortName="EXTENS~1" />
+						<Directory Id="EXTENSIONS" Name="features" />
 					</Directory>
 				</Directory>
             </Directory>			
@@ -95,16 +95,20 @@
 					<ComponentGroupRef Id="ExtEAS4TBSyncFiles" />
 				</Feature>
 				
-                <Feature Id="Sieve" AllowAdvertise="system" Description="This installs the ManageSieve protocol for securely managing Sieve Script on a remote IMAP server" Display="expand" Level="3" Title="Sieve protocol">
+                <Feature Id="Sieve" AllowAdvertise="system" Description="This installs the Sieve extensions" Display="expand" Level="100" Title="Sieve">
 					<ComponentGroupRef Id="ExtSieveFiles" />
 				</Feature>
-							
-                <Feature Id="Lightning" AllowAdvertise="system" Description="The Lightning calendar as an extension in Thunderbird." Display="expand" Level="100" Title="Lightning Calendar">
+
+                <Feature Id="LookOut" AllowAdvertise="system" Description="This installs the LookOut extensions" Display="expand" Level="100" Title="LookOut">
+					<ComponentGroupRef Id="ExtLookOutFiles" />
+				</Feature>
+				
+<!--                 <Feature Id="Lightning" AllowAdvertise="system" Description="The Lightning calendar as an extension in Thunderbird." Display="expand" Level="100" Title="Lightning Calendar">
 					<ComponentGroupRef Id="ExtLightningFiles" />
-<!--                     <ComponentGroupRef Id="ExtVCS_SupportFiles" /> -->
-                </Feature>
+                    <ComponentGroupRef Id="ExtVCS_SupportFiles" />
+                </Feature> -->
                 <!-- <Feature Id="Extras" AllowAdvertise="system" Description="Exchange Calendar Conn. + Compact Header" Display="expand" Level="100" Title="Extras"> -->
-                <Feature Id="Extras" AllowAdvertise="system" Description="Compact Header" Display="expand" Level="100" Title="Extras">
+                <Feature Id="CompactHeader" AllowAdvertise="system" Description="This installs the Compact Header extensions" Display="expand" Level="100" Title="Compact Header">
 					<!--
                     <ComponentGroupRef Id="ExtExtraFolColFiles" />
                     <ComponentGroupRef Id="ExtExchangeCalendar" />

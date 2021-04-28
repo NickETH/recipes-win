@@ -1,0 +1,2 @@
+read\create-log-NetopVisionPro_64_VVeerrssiioonn_EN.txt
+read\readme-NetopVisionPro_64_VVeerrssiioonn_EN.txt

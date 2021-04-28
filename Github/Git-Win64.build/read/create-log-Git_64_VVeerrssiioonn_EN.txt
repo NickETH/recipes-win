@@ -1,0 +1,10 @@
+
+200113	Packaging Git for Windows x64
+	We download and distribute the package as is.
+	For the download links, see the recipe.
+	Command line: /VERYSILENT
+
+	Uninstall: "C:\Program Files (x86)\XnView\unins000.exe" /VERYSILENT
+
+
+200113	Version 1.0.0, by AutoPkg

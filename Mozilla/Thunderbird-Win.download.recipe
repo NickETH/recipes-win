@@ -20,6 +20,7 @@
             <dict>
                 <key>url</key>
                 <string>%SEARCH_URL%</string>
+                <!-- <string>%DOWNLOAD_URL%</string> -->
                 <key>filename</key>
                 <string>%NAME%-Setup-%PLATFORM_STR%.exe</string>
             </dict>

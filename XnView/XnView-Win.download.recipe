@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for XnView.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.XnView-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>XnView</string>
+		<key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+			<string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://download.xnview.com/XnView-win-full.exe</string>
+                <key>request_headers</key>
+                <dict>
+                    <key>user-agent</key>
+                    <string>%USER_AGENT%</string>
+                </dict>
+			    <key>filename</key>
+                <string>%NAME%.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Pierre GOUGELET, O=Pierre GOUGELET, L=BETHENY, C=FR</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

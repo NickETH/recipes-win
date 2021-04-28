@@ -6,6 +6,7 @@
 #
 # Adjust an MSI-file, using msidb.exe.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
+# 210417 Nick Heim: Corrected the -e/-i mode case. Needed to insert the workfile parameter to set the table(s) to work with.
 
 import os
 import sys
@@ -85,8 +86,11 @@ class MSIDbWorker(Processor):
         if mode.lower() in ["-e","-i"]:
             if {"workfolder"}.issubset(self.env):
                 workfolder = self.env.get('workfolder')
-
-            cmd_patch = [msidb_exe, '-d', msi_path, mode, '-f', workfolder]
+            if {"workfile"}.issubset(self.env):
+                workfile = self.env.get('workfile')
+            else:
+                workfile = '*'
+            cmd_patch = [msidb_exe, '-d', msi_path, mode, workfile, '-f', workfolder]
             try:
                 Output = subprocess.check_output(cmd_patch)
             except:

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Download recipe for VMware VMRC</string>
+	<key>Identifier</key>
+    <string>com.github.autopkg-win.download.VMwareVMRC-Win</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>com.vmware.VMRC</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.4.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>VMwareVMRCURLProvider</string>
+			<key>Arguments</key>
+			<dict>
+				<key>product_name</key>
+				<string>vmrc-windows.xml</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>filename</key>
+				<string>%NAME%.zip.tar</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

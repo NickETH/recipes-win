@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest Netop Vision Pro x64 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.build.NetopVisionPro-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NetopVisionPro</string>
+        <key>SEARCH_URL</key>
+        <!-- <string>https://www.netop.com/edu/downloads.htm</string> -->
+		<string>https://www.netop.com/vision/downloads/vision-pro/</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_DIGIT</key>
+        <string>64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg-win.download.NetopVisionPro-Win</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+			<key>Comment</key>
+			<string>Uses the Python eval function, looking at download_changed</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%pathname%</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>ver_fields</key>
+                <string>4</string>
+                <key>pkg_dir</key>
+                <string>%NAME%_%PF_DIGIT%_::VVeerrssiioonn::_EN</string>
+                <key>folder_list</key>
+                <string>sourcepkt:sourceunzipped:release:read</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%NAME%_%PF_DIGIT%_%build_ver%_EN</string>
+                <key>rename_var</key>
+                <string>pkg_dir</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+			<key>Comment</key>
+            <string>Extract the MSI file from exe</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%pathname%</string>
+                <key>archive_type</key>
+                <string>#</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>
+                <key>extract_file</key>
+                <string>2.msi</string>
+                <key>preserve_paths</key>
+                <string>False</string>
+                <key>recursive</key>
+                <string>True</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>pattern</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\*.msi</string>
+            </dict>
+            <key>Processor</key>
+            <string>FileFinder</string>
+			<key>Comment</key>
+			<string>Get the filename of the extracted MSI file</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileMover</string>
+			<key>Comment</key>
+			<string>Move the MSI file to the release dir.</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source</key>
+                <string>%found_filename%</string>
+                <key>target</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PF_DIGIT%_%build_ver%_EN.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+			<key>Comment</key>
+			<string>Generate the INI-file in the release dir.</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\Vision.ini</string>
+                <key>file_content</key>
+                <string>[PROPERTIES]
+COMPANYNAME=Your company
+USERNAME=Your username
+MESETUPTYPE=USER
+MESTARTUPTYPE=BEFORELOGON
+MEENVIRONMENTSCHEME=DIDACTIC
+MEINSTALLGINA=0
+MECHROMEINCOGNITO=0
+</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%_%PF_DIGIT%_%build_ver%_EN.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%_%PF_DIGIT%_%build_ver%_EN.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+			<key>Comment</key>
+			<string>Save a copy of the downloaded EXE to the build dir.</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%filename%</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+            <key>Processor</key>
+            <string>Copier</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%_%PF_DIGIT%_%build_ver%_EN.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>%NAME% %version% EN</string>
+				    <key>/t</key>
+                    <string>%NAME% %version% EN</string>
+				</dict>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

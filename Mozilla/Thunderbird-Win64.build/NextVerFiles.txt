@@ -1,7 +1,5 @@
 read\create-log-Thunderbird_64_VVeerrssiioonn_ML.txt
 read\readme-Thunderbird_64_VVeerrssiioonn_ML.txt
-sourcepkt\exchangecalendar-test-ethz.xpi
-sourcepkt\sieve@mozdev.org.xpi
 sourcepkt\Thunderbird-Icons.exe
 sourcepkt\SC_Scripts.vbs
 sourcepkt\SideImage.bmp

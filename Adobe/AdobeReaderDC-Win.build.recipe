@@ -12,12 +12,10 @@
         <string>AdobeReaderDC</string>
         <key>SEARCH_URL</key>
         <string>https://www.adobe.com/devnet-docs/acrobatetk/tools/ReleaseNotesDC/index.html</string>
-    <!-- 
-        <key>DOWNLOAD_URL</key>
-        <string>ftp://ftp.adobe.com/pub/adobe/reader/win/AcrobatDC/%version_string%/AcroRdrDCUpd%version_string%.msp</string>
-	-->
+		<key>SEARCH_PATTERN</key>
+		<string>/AcroRdrDCUpd(?P&lt;version_string&gt;(?P&lt;ver_major&gt;[0-9]{2})(?P&lt;ver_majorminor&gt;[0-9]{3})(?P&lt;ver_minor&gt;[0-9]{5}))\.msp</string>
         <key>DOWNLOAD_FILE</key>
-        <string>active_x.msi</string>
+        <string>AdobeReaderDCUpd.msp</string>
     </dict>
     <key>MinimumVersion</key>
     <string>1.0.5</string>
@@ -171,7 +169,7 @@
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSITransformer</string>
 			<key>Comment</key>
-			<string>Applies the Settings-Transform to the AdobeReaderDC.msi in the release folder</string>
+			<string>Applies the transforms to the AdobeReaderDC.msi in the release folder</string>
             <key>Arguments</key>
             <dict>
                 <key>msi_path</key>

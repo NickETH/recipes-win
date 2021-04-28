@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for Git.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.Git-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Git</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+			<string>GitHubReleasesInfoProvider</string>
+			<key>Arguments</key>
+			<dict>
+				<key>github_repo</key>
+				<string>git-for-windows/git</string>
+				<key>asset_regex</key>
+				<!-- <string>Git-.*-64-bit\.exe</string> -->
+				<string>Git-[0-9\.]+-64-bit\.exe</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+			<string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+			    <key>filename</key>
+                <string>%NAME%-x64.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Johannes Schindelin, O=Johannes Schindelin, STREET=Raderberger Str. 178, L=Köln, S=North Rhine-Westphalia, PostalCode=50968, C=DE</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

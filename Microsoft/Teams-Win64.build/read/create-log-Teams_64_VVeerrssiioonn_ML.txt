@@ -1,0 +1,16 @@
+
+200113	Create Teams x64 for Windows
+	We build 2 versions of it.
+	The first one with no alterations at all.
+	Commandline: /qn /norestart ALLUSERS=1 OPTIONS="noAutoStart=true"
+
+	The second one as per computer installation into the program files.
+	For this, we need some tweeks.
+	The most important things from here with an MST: https://www.masterpackager.com/blog/mst-to-install-microsoft-teams-msi-vdi-to-regular-windows-10
+	This gives us the installation mode like in a VDI environment.
+	Additionally, we insert an upgrade code. 
+	The autorun at login is disabled.
+	At last, we configure the firewall with the insertion of the WIX-firewall CA.
+
+200113	Version 1.0.0.0, by AutoPkg
+	

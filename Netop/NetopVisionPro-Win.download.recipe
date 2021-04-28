@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Netop Vision Pro x86/x64 MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.NetopVisionPro-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>NetopVisionProX64</string>
+        <key>SEARCH_URL</key>
+        <!-- <string>https://www.netop.com/edu/downloads.htm</string> -->
+		<string>https://www.netop.com/vision/downloads/vision-pro/</string>
+        <key>PLATFORM</key>
+        <string>Win64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%SEARCH_URL%</string> -->
+				<string>https://www.netop.com/vision/downloads/vision-pro/</string>
+                <key>re_pattern</key>
+                <!-- 
+				https://download.netop.com/Vision/97/Vision_9.7_EnSetup.exe
+				-->
+				<string>(?P&lt;msi_dl_link&gt;https://download\.netop\.com/Vision/(?P&lt;shortver&gt;[0-9]+)/Vision_(?P&lt;version&gt;[0-9]+(\.[0-9]+)?)_EnSetup\.exe)</string>
+
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>Vision_%version%_EnSetup.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=NETOP BUSINESS SOLUTIONS A/S, O=NETOP BUSINESS SOLUTIONS A/S, STREET=Bregnerodvej 139, L=Birkerod, S=Hovedstaden, PostalCode=3460, C=DK, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.3=DK, SERIALNUMBER=20077948</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

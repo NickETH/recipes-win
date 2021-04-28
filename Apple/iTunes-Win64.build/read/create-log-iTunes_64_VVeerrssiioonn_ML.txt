@@ -4,6 +4,7 @@
 	Analyzing the package, we need to alter this issues:
 	1. There are things in iTunesSetup.exe we don't need/want, like Bonjour and AppleSoftwareUpdate.
 	   We extract AppleApplicationSupport.msi, AppleMobileDeviceSupport.msi and iTunes.msi
+	   As of Sept 2020, AppleApplicationSupport.msi is not part of the package anymore!
 	2. User settings are not making it to different users on a machine. We need to provide a run once for those settings.
 	   Active Setup is the way to go.
 	3. Auto update has to be disabled. We need the AdminFlags Regkey. See: https://support.apple.com/en-us/HT201677

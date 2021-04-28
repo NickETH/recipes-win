@@ -1,0 +1,14 @@
+.
+190207	We download from: https://www.netop.com/edu/downloads.htm
+	The license, classroom aso. just all the settings are put into the INI-file "Vision.ini"
+	This file must be present side by side with the MSI-file on the install location.
+	The teacher- and student version use the same MSI-file. The diffrences are all set through "Vision.ini"
+	There is an example "Vision.ini" commented out in the build recipe.
+
+	To create an initial Vision.ini file, start the MSI-file by hand and select the prefered options on the wizards dialogs.
+	The INI-file will then be written to the output directory.
+
+	For a clean uninstall, a forced reboot is needed.
+	Therefore set the REBOOT=FORCE option on the command line.
+
+190207	Release V1.0.1.1

@@ -18,14 +18,15 @@
 	<property name="TBdir" value="Mozilla Thunderbird" />
 
 	<property name="shortlang" value="en-US" />
-	<property name="ThunderbirdSRC" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/${shortlang}/Thunderbird Setup ${TBVersion}.exe" />
-	<property name="TBlpDEsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/de.xpi" />
+	<!-- <property name="ThunderbirdSRC" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/linux-x86_64/${shortlang}/Thunderbird Setup ${TBVersion}.exe" /> -->
+	<property name="ThunderbirdSRC" value="https://releases.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/${shortlang}/Thunderbird Setup ${TBVersion}.exe" />
+	<property name="TBlpDEsrc" value="https://releases.mozilla.org/pub/thunderbird/releases/${TBVersion}/linux-x86_64/xpi/de.xpi" />
 	<property name="TBlpDExpi" value="de.xpi" />
-	<property name="TBlpFRsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/fr.xpi" />
+	<property name="TBlpFRsrc" value="https://releases.mozilla.org/pub/thunderbird/releases/${TBVersion}/linux-x86_64/xpi/fr.xpi" />
 	<property name="TBlpFRxpi" value="fr.xpi" />
-	<property name="TBlpITsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/it.xpi" />
+	<property name="TBlpITsrc" value="https://releases.mozilla.org/pub/thunderbird/releases/${TBVersion}/linux-x86_64/xpi/it.xpi" />
 	<property name="TBlpITxpi" value="it.xpi" />
-	<property name="TBlpRMsrc" value="http://ftp.mozilla.org/pub/thunderbird/releases/${TBVersion}/win64/xpi/rm.xpi" />
+	<property name="TBlpRMsrc" value="https://releases.mozilla.org/pub/thunderbird/releases/${TBVersion}/linux-x86_64/xpi/rm.xpi" />
 	<property name="TBlpRMxpi" value="rm.xpi" />
 	<property name="TBdicDESRC" value="https://addons.mozilla.org/firefox/downloads/latest/9360/addon-9360-latest.xpi" />
 	<property name="TBdicDEXPI" value="woerterbuch_deutsch_de_ch_neue_rechtschreibung.xpi" />
@@ -34,7 +35,9 @@
 	<property name="TBdicITSRC" value="https://addons.mozilla.org/firefox/downloads/latest/3053/platform:5/addon-3053-latest.xpi" />
 	<property name="TBdicITXPI" value="dizionario_italiano.xpi" />
 <!-- 	<property name="ExchCalendarXPI" value="exchangecalendar-test-ethz.xpi" /> -->
+	<property name="SieveSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/sieve/addon-2548-latest.xpi" />
 	<property name="SieveXPI" value="sieve@mozdev.org.xpi" />
+
 	<property name="TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/tbsync/addon-773590-latest.xpi" />
 	<property name="TBSyncXPI" value="tbsync.xpi" />
 	<property name="DAV4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/dav-4-tbsync/addon-986258-latest.xpi" />
@@ -43,12 +46,13 @@
 	<property name="Google4TBSyncXPI" value="google-4-tbsync.xpi" />
 	<property name="EAS4TBSyncSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/eas-4-tbsync/addon-986338-latest.xpi" />
 	<property name="EAS4TBSyncXPI" value="eas-4-tbsync.xpi" />
-	<property name="LightningXPI" value="lightning.xpi" />
-	<property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" />
+	<!-- <property name="LightningXPI" value="lightning.xpi" /> -->
+	<!-- <property name="CompactHeaderSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/13564/addon-13564-latest.xpi" /> -->
+	<property name="CompactHeaderSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/compact-headers/addon-987783-latest.xpi" />
 	<property name="CompactHeaderXPI" value="CompactHeader.xpi" />
+	<property name="LookOutSRC" value="https://addons.thunderbird.net/thunderbird/downloads/latest/lookout-fix-version/addon-711780-latest.xpi" />
+	<property name="LookOutXPI" value="LookOut.xpi" />
 <!--
-	<property name="QuickLocaleSwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/1333/addon-1333-latest.xpi" />
-	<property name="QuickLocaleSwitcherXPI" value="QuickLocaleSwitcher.xpi" />
 	<property name="DictionarySwitcherSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/3414/addon-3414-latest.xpi" />
 	<property name="DictionarySwitcherXPI" value="DictionarySwitcher.xpi" />
 	<property name="VCS-SupportSRC" value="https://addons.mozilla.org/thunderbird/downloads/latest/4721/addon-4721-latest.xpi" />
@@ -76,7 +80,7 @@
 		<call target="instTBmain" />
 		<call target="installTBlp" />
 
-		<call target="install-Lightning" />
+<!-- 		<call target="install-Lightning" /> -->
 
 		<call target="install-CompactHeader" />
 		<call target="install-Sieve" />
@@ -84,7 +88,7 @@
 		<call target="install-DAV4TBSync" />
 		<call target="install-Google4TBSync" />
 		<call target="install-EAS4TBSync" />
-
+		<call target="install-LookOut" />
 		<!--
 		<call target="install-ExchangeCalendar" />
 		<call target="install-TBGPOExt" />
@@ -103,7 +107,7 @@
                 <include name="${TBmsi}"/>
                 <include name="*.wixobj"/>
 				<include name="TB*.wxs"/>
-				<include name=".\Extensions\"/>
+				<include name=".\features\"/>
 				<include name=".\lightning\"/>
 				<include name="*.zip"/>
 				</fileset>
@@ -131,14 +135,14 @@
 			<arg value="-y" />
 			<arg file="..\sourcepkt\Thunderbird Setup ${TBVersion}${shortlang}.exe" />
 		</exec>
-		<move file="core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi" tofile=".\lightning-enu.zip" overwrite = "true"/>
+<!-- 		<move file="core\distribution\extensions\{e2fda1a4-762b-4020-b5ad-a41df1933103}.xpi" tofile=".\lightning-enu.zip" overwrite = "true"/>
 		<exec program="C:\Program Files\7-Zip\7z.exe" failonerror="false">
 			<arg value="x" />
 			<arg value="-y" />
 			<arg value="-tzip" />				
 			<arg value="-o.\lightning" />
 			<arg file=".\lightning-enu.zip" />
-		</exec>
+		</exec> -->
 
 		<!--
 		<move todir="lightning">
@@ -184,6 +188,10 @@
 				<include name="**/*" />
 			</fileset>
 		</copy>
+		<!-- 
+		Ab V78.x müssen wird die omni.ja editieren...
+        -->
+		<copy file="..\sourcepkt\omni.ja" tofile=".\${TBdir}\omni.ja" overwrite="true"/>
         <!-- 
 			harvest the main TB files.
         -->
@@ -267,7 +275,7 @@
 		-->		
 		<property name="xpi-name" value="{e2fda1a4-762b-4020-b5ad-a41df1933103}" />
 		<property name="xpi-unpack" value="true" />
-		<move todir=".\Extensions\${xpi-name}\${xpi-name}">
+		<move todir=".\features\${xpi-name}\${xpi-name}">
 			<fileset basedir=".\lightning\">
 					<include name="**/*" />
 			</fileset>
@@ -351,6 +359,20 @@
 		<property name="CGextXPI" value="ExtCompactHeaderFiles" />
 		<property name="DownloadSRC" value="${CompactHeaderSRC}" />
 		<property name="SourceFILE" value="${CompactHeaderXPI}" />
+		<if test="${string::contains(download-component, 'yes')}" >
+			<call target="DL-File" />
+		</if>
+		<call target="install-extension-new" />
+		<call target="Ext-harv" />
+    </target>
+
+	<target name="install-LookOut">
+        <!-- 
+            Install the Compact Header Extension.
+        -->
+		<property name="CGextXPI" value="ExtLookOutFiles" />
+		<property name="DownloadSRC" value="${LookOutSRC}" />
+		<property name="SourceFILE" value="${LookOutXPI}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
@@ -453,13 +475,11 @@
             Install the Sieve Extension.
         -->
 		<property name="CGextXPI" value="ExtSieveFiles" />
+		<property name="DownloadSRC" value="${SieveSRC}" />
 		<property name="SourceFILE" value="${SieveXPI}" />
-        <!--
-		<property name="DownloadSRC" value="${LocaleSwitcherSRC}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
-		 -->
 		<call target="install-extension-new" />
 		<call target="Ext-harv" />
     </target>
@@ -556,7 +576,7 @@
 		</if>
 		<if test="${property::exists('xpi-name') and not string::contains(xpi-unpack, 'true')}">
 			<echo message="${xpi-name}"/>
-			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\features\${xpi-name}.xpi" />
 			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
 		</if>
 		<if test="${string::contains(xpi-unpack, 'true')}" >
@@ -567,7 +587,7 @@
 			<exec program="${FULL_7Z_PATH}">
 				<arg value="x" />
 				<arg value="-y" />
-				<arg value="-o.\Extensions\${xpi-name}\${xpi-name}" />
+				<arg value="-o.\features\${xpi-name}\${xpi-name}" />
 				<arg file="..\sourcepkt\${SourceFILE}" />
 			</exec>
 			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
@@ -612,7 +632,7 @@
 				copy (install) an Extension.
 			-->
 			<echo message="${xpi-name}"/>
-			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${TBdir}\features\${xpi-name}.xpi" />
 			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
 		</if>
 		<if test="${string::contains(xpi-unpack, 'true')}" >
@@ -623,7 +643,7 @@
 			<exec program="${FULL_7Z_PATH}">
 				<arg value="x" />
 				<arg value="-y" />
-				<arg value="-o.\${TBdir}\browser\Extensions\${xpi-name}\${xpi-name}" />
+				<arg value="-o.\${TBdir}\features\${xpi-name}\${xpi-name}" />
 				<arg file="..\sourcepkt\${SourceFILE}" />
 			</exec>
 			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
@@ -685,7 +705,7 @@
 		<if test="${not string::contains(xpi-unpack, 'true')}" >
 			<exec program="${wix.dir}\heat.exe">
 				<arg value="file" />
-				<arg file=".\${TBdir}\Extensions\${xpi-name}.xpi" />
+				<arg file=".\${TBdir}\features\${xpi-name}.xpi" />
 				<arg value="-gg" />
 			<arg value="-platform" />
 			<arg value="Win64" />				
@@ -707,7 +727,7 @@
 		<if test="${string::contains(xpi-unpack, 'true')}" >
 			<exec program="${wix.dir}\heat.exe">
 				<arg value="dir" />
-				<arg file=".\Extensions\${xpi-name}" />
+				<arg file=".\features\${xpi-name}" />
 				<arg value="-gg" />
 			<arg value="-platform" />
 			<arg value="Win64" />				
@@ -729,12 +749,12 @@
 				<arg value="-t" />
 				<arg file="GUID-Preserve-x64.xslt" />				
 			</exec>
-			<move todir=".\${TBdir}\Extensions\${xpi-name}">
-				<fileset basedir=".\Extensions\${xpi-name}\${xpi-name}">
+			<move todir=".\${TBdir}\features\${xpi-name}">
+				<fileset basedir=".\features\${xpi-name}\${xpi-name}">
 					<include name="**/*" />
 				</fileset>
 			</move>
-			<delete dir=".\Extensions\${xpi-name}" />
+			<delete dir=".\features\${xpi-name}" />
 		</if>
 	</target>
 
@@ -755,7 +775,7 @@
 		<property name="lightTBSourceDirVAR" value="${'-dTBSourceDir=' + quote + Current.Dir + '\' + TBdir + quote}" />
 		<echo message="${lightTBSourceDirVAR}"/>
 
-		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\extensions' + quote}" />
+		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\features' + quote}" />
 		<echo message="${lightTBExtDirVAR}"/>
 
 		<property name="lightTBSearchDirVAR" value="${'-dTBSearchDir=' + quote + Current.Dir + '\' + TBdir + '\searchplugins' + quote}" />
@@ -776,6 +796,7 @@
 			<!-- Specify additional options -->
 			<arg line="${lightTBSourceDirVAR}" />
 			<arg line="${lightTBExtDirVAR}" />
+			<arg line="-sval" />
 			<!--
 			<arg line="${lightTBSearchDirVAR}" />
 			 -->
@@ -857,7 +878,7 @@
 		<property name="lightTBSourceDirVAR" value="${'-dTBSourceDir=' + quote + Current.Dir + '\' + TBdir + quote}" />
 		<echo message="${lightTBSourceDirVAR}"/>
 
-		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\extensions' + quote}" />
+		<property name="lightTBExtDirVAR" value="${'-dTBExtDir=' + quote + Current.Dir + '\' + TBdir + '\features' + quote}" />
 		<echo message="${lightTBExtDirVAR}"/>
 
 		<property name="lightTBSearchDirVAR" value="${'-dTBSearchDir=' + quote + Current.Dir + '\' + TBdir + '\searchplugins' + quote}" />

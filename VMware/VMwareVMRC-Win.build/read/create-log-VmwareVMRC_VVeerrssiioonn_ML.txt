@@ -1,0 +1,6 @@
+
+190920	Vmware Remote Console x86
+	We need to change the language code in the MSI to 1033 (english) only.
+	Otherwise we would get mixed results, when installing the package, 
+	because the MSI has embedded language transforms with diffrent product codes.
+
