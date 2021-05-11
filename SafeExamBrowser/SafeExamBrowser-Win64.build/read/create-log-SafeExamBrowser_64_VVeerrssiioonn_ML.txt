@@ -1,0 +1,7 @@
+
+200113	Create SafeExamBrowser x64 for Windows
+	Alter the shortcut table. See recipe for details.
+	Commandline: /qn /norestart ALLUSERS=2
+
+200113	Version 1.0.0.0, by AutoPkg
+	

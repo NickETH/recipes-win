@@ -1,0 +1,3 @@
+read\create-log-SafeExamBrowser_64_VVeerrssiioonn_ML.txt
+read\readme-SafeExamBrowser_64_VVeerrssiioonn_ML.txt
+helpers\SEB_Uninst-log-Rem-Chng-Add-SC.mst

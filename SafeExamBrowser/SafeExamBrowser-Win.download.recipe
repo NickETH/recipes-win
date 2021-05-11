@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for SafeExamBrowser.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.SafeExamBrowser-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>SafeExamBrowser</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+			<string>GitHubReleasesInfoProvider</string>
+			<key>Arguments</key>
+			<dict>
+				<key>github_repo</key>
+				<string>SafeExamBrowser/seb-win-refactoring</string>
+				<key>asset_regex</key>
+				<!-- <string>SEB_3.1.1.250_SetupBundle.exe</string> -->
+				<string>SEB_[0-9\.]+_SetupBundle\.exe</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+			<string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+			    <key>filename</key>
+                <string>%NAME%.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Eidgenössische Technische Hochschule Zürich, O=Eidgenössische Technische Hochschule Zürich, L=Zürich, C=CH</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>
