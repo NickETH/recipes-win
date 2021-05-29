@@ -1,4 +1,2 @@
-AppleApplicationSupport.msi
-AppleApplicationSupport64.msi
 AppleMobileDeviceSupport64.msi
 iTunes64.msi

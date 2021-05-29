@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for the win branch of AutoPkg.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.AutoPkg-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>AutoPkg</string>
+        <key>URL</key>
+        <string>https://github.com/NickETH/autopkg/zipball/win</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Comment</key>
+            <string>Download latest autopkg zip archive</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%URL%</string>
+                <key>filename</key>
+                <string>%NAME%.zip</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Comment</key>
+            <string>Extract the autopkg zip archive</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%pathname%</string>
+                <key>extract_dir</key>
+                <string>%RECIPE_CACHE_DIR%\downloads</string>
+                <key>preserve_paths</key>
+                <string>False</string>
+                <key>archive_type</key>
+                <string>*:r</string>
+                <key>extract_file</key>
+                <string>version.plist</string>
+                <key>recursive</key>
+                <string>True</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Comment</key>
+            <string>Extract a version string from version.plist to use for the package.</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_plist_path</key>
+				<string>%RECIPE_CACHE_DIR%\downloads\version.plist</string>
+                <key>plist_version_key</key>
+                <string>Version</string>
+            </dict>
+            <key>Processor</key>
+            <string>Versioner</string>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>PathDeleter</string>
+			<key>Comment</key>
+			<string>Delete the version.plist file from the cache</string>
+            <key>Arguments</key>
+            <dict>
+                <key>path_list</key>
+				<array>
+                    <string>%RECIPE_CACHE_DIR%\downloads\version.plist</string>
+				</array>
+			</dict>
+		</dict> -->
+<!--         <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

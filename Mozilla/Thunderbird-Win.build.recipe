@@ -11,9 +11,11 @@
         <key>NAME</key>
         <string>Thunderbird</string>
         <key>SEARCH_URL</key>
-        <string><![CDATA[https://download.mozilla.org/?product=thunderbird-latest&amp;os=win&amp;lang=en-US]]></string>
+        <!-- <string><![CDATA[https://download.mozilla.org/?product=thunderbird-latest&amp;os=win&amp;lang=en-US]]></string> -->
+		<string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win32/en-US/</string>
         <key>DOWNLOAD_URL</key>
-        <string>https://download.mozilla.org/?product=thunderbird-latest&amp;os=win&amp;lang=en-US</string>
+        <!-- <string>https://download.mozilla.org/?product=thunderbird-latest&amp;os=win&amp;lang=en-US</string> -->
+		<string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win32/en-US/Thunderbird%20Setup%2068.12.1.exe</string>
         <key>PLATFORM_STR</key>
         <string>x86</string>
     </dict>

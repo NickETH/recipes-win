@@ -1,0 +1,70 @@
+<Project DefaultTargets="WIX" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="Current">
+    <PropertyGroup>
+        <BuildDirectory>$(BuildDir)</BuildDirectory>
+        <DestinationDirectory>$(AutoPkgDir)</DestinationDirectory>
+        <SourceDirectory>$(AutoPkgDir)</SourceDirectory>
+        <WixDirForNANT>$(SourceNANTDll)</WixDirForNANT>	
+		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
+		<MsiOut>..\Release\AutoPkgWin.msi</MsiOut>
+		<CandleRTF>-dReadmeRtf="..\sourcepkt\Readme-AutoPkg.rtf"</CandleRTF>
+		<MsiOut>..\Release\$(BuildName)_$(version)_ML.msi</MsiOut>
+    </PropertyGroup>
+  <!-- The list of WIX input files -->
+  <ItemGroup>
+    <WixCode Include="AutoPkgWin.wxs" />
+    <WixCode Include="APfiles.wxs" />
+    <WixCode Include="APWixUI_InstallDir.wxs" />
+    <WixCode Include="PreReqDlg.wxs" />
+    <WixCode Include="ReqDirDlg.wxs" />
+    <WixCode Include="InfoDlg.wxs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WixObject Include="AutoPkgWin.wixobj" />
+    <WixObject Include="APfiles.wixobj" />
+    <WixObject Include="APWixUI_InstallDir.wixobj" />
+    <WixObject Include="PreReqDlg.wixobj" />
+    <WixObject Include="ReqDirDlg.wixobj" />
+	<WixObject Include="InfoDlg.wixobj" />
+  </ItemGroup>
+    <Target Name="CopySource">
+<!--         <CreateItem Include="$(SourceDirectory)\**\*.*">
+            <Output TaskParameter="Include" ItemName="AutoPkgToCopy" />
+        </CreateItem>
+
+        <Copy SourceFiles="@(AutoPkgToCopy)"
+                DestinationFiles="@(AutoPkgToCopy->'$(DestinationDirectory)\%(RecursiveDir)%(Filename)%(Extension)')" /> -->
+
+        <CreateItem Include="$(WixDirForNANT)\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll">
+            <Output TaskParameter="Include" ItemName="NANTDllToCopy" />
+        </CreateItem>
+
+        <Copy SourceFiles="@(NANTDllToCopy)"
+                DestinationFolder="@(NANTDllToCopy->'$(DestinationDirectory)\..\Wix\bin')" />
+    </Target>
+     <Target Name="Harvest"
+		DependsOnTargets="CopySource">
+    <!-- Harvest all content of published result -->
+            <!-- Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr INSTALLDIR -v -srd -suid -svb6 -sfrag -cg AutoPkgFiles -var wix.APSourceDir -gg -out APfiles.wxs -t GUID-Preserve.xslt' -->
+	<Exec
+
+            Command='"$(WIX)bin\heat" dir $(DestinationDirectory) -dr INSTALLDIR -v -srd -suid -svb6 -sfrag -cg AutoPkgFiles -var wix.APSourceDir -gg -out APfiles.wxs -t FileExcld.xslt'
+            ContinueOnError="false"
+            WorkingDirectory="." />
+    </Target>
+    <Target Name="WIX"
+		DependsOnTargets="Harvest">
+        <Exec
+            Command='"$(WiX)bin\candle" -v -ext WixUIExtension -ext WixUtilExtension $(CandleRTF) -sw0204 -sw1044 @(WixCode, &apos; &apos;)'
+            ContinueOnError="true"
+            WorkingDirectory="$(BuildDirectory)" />
+        <Exec
+            Command='"$(WiX)bin\light" -v -cultures:en-US -loc AutoPkgUI_en-us.wxl -ext WixUIExtension -ext WixUtilExtension $(LightSrcDir) -sice:ICE64 -sice:ICE57 -sice:ICE43  -sw1076 -sw0204 -out $(MsiOut) @(WixObject, &apos; &apos;)'
+            ContinueOnError="false"
+            WorkingDirectory="." />
+		<Delete Files="$(MsiOut.Replace('.msi', '.wixpdb'))" />
+
+  <!-- A message at the end -->
+		<Message Text="Install package has been created." />
+	</Target>
+</Project>

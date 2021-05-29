@@ -20,6 +20,47 @@
     <array>
         <dict>
             <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Comment</key>
+            <string>Extract the MiKTeX setup zip archive</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%RECIPE_CACHE_DIR%\downloads\miktexsetup.zip</string>
+                <key>extract_dir</key>
+                <!-- <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string> -->
+				<string>%RECIPE_CACHE_DIR%\downloads</string>
+                <key>preserve_paths</key>
+                <string>False</string>
+                <key>extract_file</key>
+                <string>*</string>
+                <key>ignore_pattern</key>
+                <string></string>
+            </dict>
+        </dict>
+	    <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <!-- <string>%found_filename%</string> -->
+				<string>%RECIPE_CACHE_DIR%\downloads\miktexsetup_standalone.exe</string>
+                <key>product_version</key>
+                <string>True</string>
+            </dict>
+        </dict>
+<!-- 		<dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
 			<key>Comment</key>
             <string>Create a build enviroment to build the MSI with Wix</string>
@@ -45,21 +86,17 @@
 		</dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
-            <key>Comment</key>
-            <string>Extract the MiKTeX setup zip archive</string>
+            <string>FileMover</string>
+			<key>Comment</key>
+            <string>Move the miktexsetup_standalone.exe file to the build dir</string>
             <key>Arguments</key>
             <dict>
-                <key>exe_path</key>
-                <string>%RECIPE_CACHE_DIR%\downloads\%setup_file%</string>
-                <key>extract_dir</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
-                <key>preserve_paths</key>
-                <string>False</string>
-                <key>extract_file</key>
-                <string>*</string>
-                <key>ignore_pattern</key>
-                <string></string>
+                <key>source</key>
+                <string>%RECIPE_CACHE_DIR%\downloads\miktexsetup_standalone.exe</string>
+                <key>target</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup_standalone.exe</string>
+                <key>overwrite</key>
+                <string>true</string>
             </dict>
         </dict>
         <dict>
@@ -70,7 +107,7 @@
             <key>Arguments</key>
             <dict>
                 <key>exe_file</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup.exe</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup_standalone.exe</string>
                 <key>exe_folder</key>
                 <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
                 <key>cmdline_args</key>
@@ -97,22 +134,7 @@
                 <string>true</string>
             </dict>
         </dict>
-		
-<!--         <dict>
-            <key>Processor</key>
-            <string>FileMover</string>
-			<key>Comment</key>
-            <string>Copy the miktex-texworks.exe file to the build dir</string>
-            <key>Arguments</key>
-            <dict>
-                <key>source</key>
-                <string>C:\APPS\MiKTeX\%version%\miktex\bin\x64\miktex-texworks.exe</string>
-                <key>target</key>
-                <string>%BUILD_DIR%\%pkg_dir%\wixproject\miktex\miktex-texworks.exe</string>
-                <key>overwrite</key>
-                <string>true</string>
-            </dict>
-        </dict> -->
+
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/ExecuteFile</string>
@@ -121,7 +143,7 @@
             <key>Arguments</key>
             <dict>
                 <key>exe_file</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup.exe</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\miktexsetup_standalone.exe</string>
                 <key>exe_folder</key>
                 <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
                 <key>cmdline_args</key>

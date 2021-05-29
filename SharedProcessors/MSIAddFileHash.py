@@ -8,12 +8,14 @@
 # File2Hash takes a single value or an array, 
 # which has the key of the file in the MSI and the full path to the file.
 # 20210409 Nick Heim: Added the feature to clear the version field in the MSI File table.
+# 20210515 Nick Heim: Rewritten the calls to get the filehash to make sure the COM-object is loaded.
 
 import os
 import sys
 import subprocess
 import msilib
 import win32com.client as win32
+from win32com.client import makepy
 
 from autopkglib import Processor, ProcessorError
 
@@ -59,12 +61,16 @@ class MSIAddFileHash(Processor):
     __doc__ = description
 
     def main(self):
-
+        # Generate a static COM proxy from msi.dll with the help of makepy.py
+        # See: http://www.philbuckland.com/racing/a/Python/Lib/site-packages/win32com/HTML/GeneratedSupport.html
+        win32.gencache.EnsureModule('{000C1092-0000-0000-C000-000000000046}', 1033, 1, 0)
+        LCID = 0x409
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
         print >> sys.stdout, "msi_path %s" % msi_path
         File2Hash = self.env.get('File2Hash')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
+
         WII = win32.Dispatch('WindowsInstaller.Installer', resultCLSID='{000C1090-0000-0000-C000-000000000046}')
         dbobject = msilib.OpenDatabase(msi_path, msilib.MSIDBOPEN_TRANSACT)
 
@@ -81,8 +87,11 @@ class MSIAddFileHash(Processor):
             Full_string_list = Full_string.split('|||')
             MSI_file_key = Full_string_list[0]
             File_full_path = Full_string_list[1]
-            hashresult = WII.FileHash(File_full_path, 0)
-            print >> sys.stdout, "Hash: %s, %d, %d, %d, %d" % (MSI_file_key, hashresult.IntegerData(1), hashresult.IntegerData(2), hashresult.IntegerData(3), hashresult.IntegerData(4))
+            #hashresult = WII.FileHash(File_full_path, 0)
+            # Syntax gotten with the makepy.py module
+            hashresult = WII._oleobj_.InvokeTypes(47, LCID, 1, (9, 0), ((8, 1), (3, 1)),File_full_path, 0)
+            hashresult = win32.Dispatch(hashresult, u'FileHash', '{000C1093-0000-0000-C000-000000000046}')
+            #print >> sys.stdout, "Hash: %s, %d, %d, %d, %d" % (MSI_file_key, hashresult.IntegerData(1), hashresult.IntegerData(2), hashresult.IntegerData(3), hashresult.IntegerData(4))
             try:
                 msilib.add_data(dbobject, "MsiFileHash",
                     [(MSI_file_key, 0, hashresult.IntegerData(1),

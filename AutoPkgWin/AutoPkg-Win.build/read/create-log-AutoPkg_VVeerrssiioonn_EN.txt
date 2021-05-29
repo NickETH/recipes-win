@@ -1,0 +1,7 @@
+#
+190813	Create AutoPkg for Windows
+	Download the Zip ball
+	Extract the zip and copy the relevant files to the wixproject.
+	Build it to an MSI.
+190813	Version 1.0.0, by AutoPkg
+	

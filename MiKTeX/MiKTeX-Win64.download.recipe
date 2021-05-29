@@ -21,7 +21,7 @@
     <string>1.0.5</string>
     <key>Process</key>
     <array>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
@@ -31,7 +31,7 @@
                 <key>re_pattern</key>
                 <string>%VERSION_URL%</string>
             </dict>
-        </dict>
+        </dict> -->
         <dict>
             <key>Processor</key>
             <string>URLTextSearcher</string>
@@ -43,7 +43,7 @@
                 <string>%SEARCH_URL%</string>
             </dict>
         </dict>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
@@ -51,7 +51,20 @@
                 <key>url</key>
                 <string>%dl_link_check%</string>
                 <key>filename</key>
-                <string>%setup_file_check%</string>
+                <string>basic-miktex-x64.exe</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <true/>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%dl_link%</string>
+                <key>filename</key>
+                <string>miktexsetup.zip</string>
                 <key>CHECK_FILESIZE_ONLY</key>
                 <true/>
             </dict>
@@ -63,19 +76,6 @@
             <dict>
                 <key>predicate</key>
                 <string>download_changed == False</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>URLDownloader</string>
-            <key>Arguments</key>
-            <dict>
-                <key>url</key>
-                <string>%dl_link%</string>
-                <key>filename</key>
-                <string>%setup_file%</string>
-                <key>CHECK_FILESIZE_ONLY</key>
-                <true/>
             </dict>
         </dict>
         <dict>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest SolsticeClient installer for Windows.</string>
+    <key>Identifier</key>
+	<string>com.github.autopkg-win.download.SolsticeClient-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>SolsticeClient</string>
+        <key>USER_AGENT</key>
+        <string>Mozilla/5.0 (Windows NT 6.3; Win64, x64; Trident/7.0; rv:11.0) like Gecko</string>
+        <key>SEARCH_URL</key>
+        <string>https://www.mersive.com/download/</string>
+        <key>SEARCH_PATTERN</key>
+        <!-- https://www.mersive.com/downloads/SolsticeClient-5.3.2.msi -->
+		<string>(https:.*?www\.mersive\.com/downloads/SolsticeClient-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)\.msi)</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.3.1</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+                <key>re_pattern</key>
+                <string>%SEARCH_PATTERN%</string>
+                <key>result_output_var_name</key>
+                <string>match</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%match%</string>
+                <key>request_headers</key>
+                <dict>
+                    <key>user-agent</key>
+                    <string>%USER_AGENT%</string>
+                </dict>
+                <key>filename</key>
+				<string>%NAME%.msi</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN="Mersive Technologies, Inc.", OU="Mersive Technologies, Inc.", O="Mersive Technologies, Inc.", L=Denver, S=Colorado, C=US, SERIALNUMBER=4183763, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

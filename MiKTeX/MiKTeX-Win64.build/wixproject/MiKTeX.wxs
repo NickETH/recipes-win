@@ -102,6 +102,9 @@
 									<RegistryValue Id="regAppPath3" Value="[#mpm.exe]" Type="string" KeyPath="yes" />
 								</RegistryKey>
 							</Component>
+							<Component Id="Set_Path" Guid="{8B5AFFAD-6CB6-4F2B-B7BD-8243BCECAE85}" Win64="yes">
+								<Environment Id="PATH" Name="PATH" Value="[_x64]" Permanent="no" Part="last" Action="set" System="yes" />
+							</Component>
 						</Directory>
 					</Directory>
 				</Directory>
@@ -118,6 +121,7 @@
 		<ComponentRef Id="miktex_texworks_exe" />
 		<ComponentRef Id="miktex_console_exe" />
 		<ComponentRef Id="mpm_exe" />
+		<ComponentRef Id="Set_Path" />
         <!-- <ComponentGroupRef Id="MiKTeXFiles" /> -->
       </Feature>
 
@@ -134,6 +138,7 @@
     <Upgrade Id="$(var.Upgradecode)">
       <UpgradeVersion Minimum="0.40.0" Maximum="$(var.version)" Property="UPGRADE_1" IgnoreRemoveFailure="yes" IncludeMinimum="yes" />
     </Upgrade>
+	<CustomActionRef Id="WixBroadcastEnvironmentChange" />
     <InstallExecuteSequence>
       <ResolveSource After="CostInitialize">NOT Installed</ResolveSource>
       <AppSearch After="ResolveSource" />

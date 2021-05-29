@@ -94,7 +94,7 @@
                 <string>@%BUILD_DIR%\%pkg_dir%\helpers\iTunes64-files.txt</string>
             </dict>
         </dict>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
 			<key>Comment</key>
@@ -147,7 +147,7 @@
                 <key>overwrite</key>
                 <string>true</string>
             </dict>
-        </dict>
+        </dict> -->
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
@@ -275,8 +275,8 @@
 					<string><![CDATA[UPDATE `Registry` SET `Registry`.`Value`='%AS_ver%' WHERE `Registry`.`Registry`='RegHKLM2']]></string>
 					<string><![CDATA[UPDATE `Registry` SET `Registry`.`Value`='%matchstring%' WHERE `Registry`.`Registry`='RegHKLM7']]></string>
 					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleMobileDeviceSupport64_%AMDS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleMobileDeviceSupport']]></string>
-					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport64_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport64']]></string>
-					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport32_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport']]></string>
+<!-- 					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport64_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport64']]></string>
+					<string><![CDATA[UPDATE `caPackage` SET `caPackage`.`FileName`='AppleApplicationSupport32_%AAS_version%_ML.msi' WHERE `caPackage`.`PackageKey`='AppleApplicationSupport']]></string> -->
 				</array>
 			</dict>
 		</dict>
@@ -430,7 +430,7 @@
                 <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped</string>		
 			</dict>
 		</dict>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
 			<key>Comment</key>
@@ -506,7 +506,7 @@
                     <string>Intel;1033</string>
 				</dict>
             </dict>
-		</dict>
+		</dict> -->
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
+
+
+<WixLocalization Culture="en-US" Codepage="1252" xmlns="http://schemas.microsoft.com/wix/2006/localization">
+    <!-- _locID@Culture="en-US" _locComment="American English" -->
+    <!-- _locID@Codepage="1252" _locComment="Windows-1252" -->
+
+    <String Id="InfoDlg_Title" Overridable="yes"><!-- _locID_text="InfoDlg_Title" _locComment="InfoDlg_Title" -->[ProductName] Setup</String>
+    <String Id="InfoDlgBannerBitmap" Overridable="yes"><!-- _locID_text="InfoDlgBannerBitmap" _locComment="InfoDlgBannerBitmap" -->WixUI_Bmp_Banner</String>
+    <String Id="InfoDlgDescription" Overridable="yes"><!-- _locID_text="InfoDlgDescription" _locComment="InfoDlgDescription" -->Please read the following instructions carefully</String>
+    <String Id="InfoDlgTitle" Overridable="yes"><!-- _locID_text="InfoDlgTitle" _locComment="InfoDlgTitle" -->{\WixUI_Font_Title}Instructions to setup</String>
+
+    <String Id="PreReqDlg_Title" Overridable="yes"><!-- _locID_text="PreReqDlg_Title" _locComment="PreReqDlg_Title" -->[ProductName] Setup</String>
+    <String Id="PreReqDlgChange" Overridable="yes"><!-- _locID_text="PreReqDlgChange" _locComment="PreReqDlgChange" -->&amp;Change...</String>
+    <String Id="PreReqDlgTitle" Overridable="yes"><!-- _locID_text="PreReqDlgTitle" _locComment="PreReqDlgTitle" -->{\WixUI_Font_Title}Set paths to the helper utilities</String>
+    <String Id="PreReqDlgDescription" Overridable="yes"><!-- _locID_text="PreReqDlgDescription" _locComment="PreReqDlgDescription" -->Click Next, if all the paths are correct or click Change to choose another.</String>
+    <String Id="PreReqDlgBannerBitmap" Overridable="yes"><!-- _locID_text="PreReqDlgBannerBitmap" _locComment="PreReqDlgBannerBitmap" -->WixUI_Bmp_Banner</String>
+    <String Id="PreReqDlgFileLabel1" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel1" _locComment="PreReqDlgFileLabel1" -->Path to the GIT command line tool:</String>
+    <String Id="PreReqDlgFileLabel2" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel2" _locComment="PreReqDlgFileLabel2" -->Path to the CURL command line tool:</String>
+    <String Id="PreReqDlgFileLabel3" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel3" _locComment="PreReqDlgFileLabel3" -->Path to the 7ZIP command line tool:</String>
+    <String Id="PreReqDlgFileLabel4" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel4" _locComment="PreReqDlgFileLabel4" -->Path to the NANT command line tool:</String>
+
+    <String Id="ReqDirDlg_Title" Overridable="yes"><!-- _locID_text="ReqDirDlg_Title" _locComment="ReqDirDlg_Title" -->[ProductName] Setup</String>
+    <String Id="ReqDirDlgChange" Overridable="yes"><!-- _locID_text="ReqDirDlgChange" _locComment="ReqDirDlgChange" -->&amp;Change...</String>
+    <String Id="ReqDirDlgTitle" Overridable="yes"><!-- _locID_text="ReqDirDlgTitle" _locComment="ReqDirDlgTitle" -->{\WixUI_Font_Title}Set paths, that AutoPkg utilizes</String>
+    <String Id="ReqDirDlgDescription" Overridable="yes"><!-- _locID_text="ReqDirDlgDescription" _locComment="ReqDirDlgDescription" -->Click Next, if all the paths are correct or click Change to choose another.</String>
+    <String Id="ReqDirDlgBannerBitmap" Overridable="yes"><!-- _locID_text="ReqDirDlgBannerBitmap" _locComment="ReqDirDlgBannerBitmap" -->WixUI_Bmp_Banner</String>
+    <String Id="ReqDirDlgFolderLabel1" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel1" _locComment="ReqDirDlgFolderLabel1" -->Path to the RECIPEREPO folder:</String>
+    <String Id="ReqDirDlgFolderLabel2" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel2" _locComment="ReqDirDlgFolderLabel2" -->Path to the CACHE folder:</String>
+    <String Id="ReqDirDlgFolderLabel3" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel3" _locComment="ReqDirDlgFolderLabel3" -->Path to the RECIPEOVERRIDE folder:</String>
+    <String Id="ReqDirDlgFolderLabel4" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel4" _locComment="ReqDirDlgFolderLabel4" -->Path to the TOOLS folder:</String>
+    <String Id="ReqDirDlgFolderLabel5" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel5" _locComment="ReqDirDlgFolderLabel5" -->Path to the BUILD folder:</String>
+    <String Id="ReqDirDlgFolderLabel6" Overridable="yes"><!-- _locID_text="ReqDirDlgFolderLabel6" _locComment="ReqDirDlgFolderLabel6" -->Path to the DTF (Deployment Tools Foundation) folder:</String>
+</WixLocalization>

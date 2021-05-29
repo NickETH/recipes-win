@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <DirectoryRef Id="TARGETDIR">
+            <Component Id="cmp58A4DCC2F743663CD5AE97AC07113C61" Guid="{1EE7061A-D46C-4B9E-A29A-28682CD6E6AF}" KeyPath="yes">
+                <RegistryKey Key="SOFTWARE\AutoPkg" Root="HKCU">
+                    <RegistryValue Name="RECIPE_SEARCH_DIRS" Type="multiString">
+                        <MultiStringValue></MultiStringValue>
+                    </RegistryValue>
+                    <RegistryValue Name="GIT_PATH" Value="C:\Program Files\Git\bin\git.exe" Type="string" />
+                    <RegistryValue Name="CURL_PATH" Value="C:\Program Files\Git\mingw64\bin\curl.exe" Type="string" />
+                    <RegistryValue Name="RECIPE_REPO_DIR" Value="C:\AutoPKG\RecipeRepos" Type="string" />
+                    <RegistryValue Name="CACHE_DIR" Value="C:\AutoPkg\Cache" Type="string" />
+                    <RegistryValue Name="RECIPE_CACHE_DIR" Value="C:\AutoPkg\Cache" Type="string" />
+                    <RegistryValue Name="TOOLS_DIR" Value="C:\Tools\MSIScripts" Type="string" />
+                    <RegistryValue Name="RECIPE_OVERRIDE_DIRS" Value="C:\AutoPkg\RecipeOverrides" Type="string" />
+                    <RegistryValue Name="BUILD_DIR" Value="C:\_Projects\MSI" Type="string" />
+                    <RegistryValue Name="NANT_PATH" Value="C:\tools\nant\bin\NAnt.exe" Type="string" />
+                    <RegistryValue Name="7ZIP_PATH" Value="C:\Program Files\7-Zip\7z.exe" Type="string" />
+                </RegistryKey>
+            </Component>
+            <Component Id="cmp0A3793EB845D62EA2721965C2DBF3D91" Guid="{A1296476-D29B-4CD8-97FC-DBFF24B93EFD}" KeyPath="yes">
+                <RegistryKey ForceCreateOnInstall="yes" Key="SOFTWARE\AutoPkg\RECIPE_REPOS" Root="HKCU" />
+            </Component>
+        </DirectoryRef>
+    </Fragment>
+    <Fragment>
+        <ComponentGroup Id="AutoPkgReg">
+            <ComponentRef Id="cmp58A4DCC2F743663CD5AE97AC07113C61" />
+            <ComponentRef Id="cmp0A3793EB845D62EA2721965C2DBF3D91" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

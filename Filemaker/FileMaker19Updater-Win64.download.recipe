@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Download recipe for FileMaker 19 Updater.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.FileMaker19Updater-Win64</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>FileMaker19Updater</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.3.1</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+				<!-- https://www.claris.com/resources/downloads/updaters/product-updaters.txt -->
+                <string>https://www.claris.com/resources/downloads/updaters/product-updaters.txt</string>
+                <key>re_pattern</key>
+				<!-- "https://downloads.claris.com/UPDT/19/fmp_updater_19.2.2.234_x64.exe" -->
+				<string>https://downloads\.claris\.com/UPDT/19/fmp_updater_(?P&lt;version&gt;([0-9]+\.)*[0-9]+)_x64\.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://downloads.claris.com/UPDT/19/fmp_updater_%version%_x64.exe</string>
+                <key>filename</key>
+                <string>%NAME%.exe</string>
+            </dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

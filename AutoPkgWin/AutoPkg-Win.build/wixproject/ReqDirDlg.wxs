@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
+
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <Fragment>
+        <UI>
+            <Dialog Id="ReqDirDlg" Width="370" Height="360" Title="!(loc.ReqDirDlg_Title)">
+                <Control Id="Next" Type="PushButton" X="236" Y="333" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
+                <Control Id="Back" Type="PushButton" X="180" Y="333" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="333" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+                </Control>
+
+                <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ReqDirDlgDescription)" />
+                <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ReqDirDlgTitle)" />
+                <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.ReqDirDlgBannerBitmap)" />
+                <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="324" Width="370" Height="0" />
+
+                <Control Id="FolderLabel1" Type="Text" X="20" Y="60" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel1)" />
+                <Control Id="Folder1" Type="Edit" X="20" Y="75" Width="320" Height="18" Property="RECIPEREPODIR" Indirect="no" />
+                <Control Id="ChangeFolder1" Type="PushButton" X="270" Y="55" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+
+                <Control Id="FolderLabel2" Type="Text" X="20" Y="105" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel2)" />
+                <Control Id="Folder2" Type="Edit" X="20" Y="120" Width="320" Height="18" Property="CACHEDIR" Indirect="no" />
+                <Control Id="ChangeFolder2" Type="PushButton" X="270" Y="100" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+
+                <Control Id="FolderLabel3" Type="Text" X="20" Y="150" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel3)" />
+                <Control Id="Folder3" Type="Edit" X="20" Y="165" Width="320" Height="18" Property="RECIPEOVERRIDEDIRS" Indirect="no" />
+                <Control Id="ChangeFolder3" Type="PushButton" X="270" Y="145" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+
+                <Control Id="FolderLabel4" Type="Text" X="20" Y="195" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel4)" />
+                <Control Id="Folder4" Type="Edit" X="20" Y="210" Width="320" Height="18" Property="TOOLSDIR" Indirect="no" />
+                <Control Id="ChangeFolder4" Type="PushButton" X="270" Y="190" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+
+                <Control Id="FolderLabel5" Type="Text" X="20" Y="240" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel5)" />
+                <Control Id="Folder5" Type="Edit" X="20" Y="255" Width="320" Height="18" Property="BUILDDIR" Indirect="no" />
+                <Control Id="ChangeFolder5" Type="PushButton" X="270" Y="235" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+
+                <Control Id="FolderLabel6" Type="Text" X="20" Y="285" Width="200" Height="15" NoPrefix="yes" Text="!(loc.ReqDirDlgFolderLabel6)" />
+                <Control Id="Folder6" Type="Edit" X="20" Y="300" Width="320" Height="18" Property="DTFPATH" Indirect="no" />
+                <Control Id="ChangeFolder6" Type="PushButton" X="270" Y="280" Width="56" Height="17" Text="!(loc.ReqDirDlgChange)" />
+			</Dialog>
+        </UI>
+    </Fragment>
+</Wix>

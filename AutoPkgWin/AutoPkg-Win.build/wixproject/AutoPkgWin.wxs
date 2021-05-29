@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"> -->
+  <?include version.wxi?>
+  <Product Id="$(var.Productcode)" Language="1033" Manufacturer="ETHZ ID-CD" Name="AutoPkg $(var.version)" UpgradeCode="$(var.Upgradecode)" Version="$(var.version)">
+    <Package Comments="AutoPkg is automating packaging and software distribution on the Windows platform" Compressed="yes" Description="Automating packaging and software distribution" InstallerVersion="500" Languages="1033" Manufacturer="ID-CD, ETH Zuerich" Platform="x86" />
+	<WixVariable Id="WixUIDialogBmp" Value="..\sourcepkt\APSideImage.bmp" />
+	<WixVariable Id="WixUIBannerBmp" Value="..\sourcepkt\APTopImage.bmp" />
+	<!-- <WixVariable Id="WixUIReadmeRtf" Value="$(var.ReadmeRtf)" /> -->
+	
+    <Binary Id="Browse4File" SourceFile="..\sourcepkt\BrowseForFile.dll" />
+	<Binary Id="JSONStreamEditor" SourceFile="..\sourcepkt\jj.exe" />
+    <Icon Id="APIcons.exe" SourceFile="..\sourcepkt\AutoPkg-Icon.exe" />
+    <CustomAction Id="SetARPINSTALLLOCATION" Property="ARPINSTALLLOCATION" Value="[INSTALLDIR]" />
+    <CustomAction Id="BrowseForFile" BinaryKey="Browse4File" DllEntry="BrowseForFile"/>
+    <CustomAction Id="SetGITPATH" Property="GITPATH" Value="[PATHTOFILE]"/>
+    <CustomAction Id="SetCURLPATH" Property="CURLPATH" Value="[PATHTOFILE]"/>
+    <CustomAction Id="SetZIPPATH" Property="ZIPPATH" Value="[PATHTOFILE]"/>
+	<CustomAction Id="SetWIXBINDIR" Directory="WIXBINDIR" Value="[WIXSEARCHDIRBIN]"/>
+	
+    <CustomAction Id='InstallMslLoadlib' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install msl.loadlib' Return='check' />
+    <CustomAction Id='InstallPythonnet' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pythonnet' Return='check' />
+    <CustomAction Id='InstallComtypes' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install comtypes' Return='check' />
+    <CustomAction Id='InstallMslPywin32' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pywin32' Return='check' />
+	<CustomAction Id='InstallPyYAML' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pyyaml' Return='check' />
+	<CustomAction Id='InstallAppDirs' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install appdirs' Return='check' />
+	<!-- Not really the best approach... Quick and dirty, but shouldn't be a problem here, because this COM Server will be installed very unlikely by another application too. -->
+	<CustomAction Id="MergeModRegister"   Directory="INSTALLDIR" Execute='deferred' Impersonate='no' ExeCommand='regsvr32.exe /s "[MERGEMODPATH]"' />
+	<!-- <CustomAction Id="CreateCfgFile"   Directory="CONFIGDIR" Execute='deferred' Impersonate='no' ExeCommand='cmd.exe /c type NUL >> config.json' /> -->
+	<SetProperty Id="CreateCfgFile" Value="&quot;C:\Windows\System32\cmd.exe&quot; /c type NUL >> &quot;[CONFIGDIR]config.json&quot;" Sequence="execute" Before="InstallInitialize" />
+	<CustomAction Id="CreateCfgFile" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="no"/>
+
+	<CustomAction Id="JSONSetGITPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[GITPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; GIT_PATH" Execute="deferred" Impersonate="no" />
+	<!-- <SetProperty Id="JSONSetGITPATH" Value="-p -v &quot;[GITPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; GIT_PATH" Sequence="execute" Before="InstallInitialize" /> -->
+	<!-- <CustomAction Id="JSONSetGITPATH" BinaryKey="WixCA" DllEntry="WixQuietExec" Execute="deferred" Return="check" Impersonate="no"/> -->
+	
+	<CustomAction Id="JSONSetCURLPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[CURLPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; CURL_PATH" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetNANTPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[NANTPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; NANT_PATH" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetZIPPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[ZIPPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; 7ZIP_PATH" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetDTFPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[DTFPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; DTF_PATH" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetRECIPEREPODIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[RECIPEREPODIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; RECIPE_REPO_DIR" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetCACHEDIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[CACHEDIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; CACHE_DIR" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetRECIPECACHEDIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[CACHEDIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; RECIPE_CACHE_DIR" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetTOOLSDIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[TOOLSDIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; TOOLS_DIR" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetRECIPEOVERRIDEDIRS" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[RECIPEOVERRIDEDIRS]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; RECIPE_OVERRIDE_DIRS" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetBUILDDIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[BUILDDIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; BUILD_DIR" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetAUTOPKGDIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[AUTOPKGDIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; AUTOPKG_DIR" Execute="deferred" Impersonate="no" />
+
+	<CustomAction Id="SetAUTOPKGDIR" Script="vbscript" Return="check">
+		<![CDATA[AUTOPKGDIRt = session.property("INSTALLDIR"):AUTOPKGDIRt = left(AUTOPKGDIRt, len(AUTOPKGDIRt)-1):session.property("AUTOPKGDIR") = AUTOPKGDIRt]]>
+	</CustomAction>
+	<CustomAction Id="SetBUILDDIR" Script="vbscript" Return="check">
+		<![CDATA[BUILDDIRt = session.property("BUILDDIR"):BUILDDIRt = left(BUILDDIRt, len(BUILDDIRt)-1):session.property("BUILDDIR") = BUILDDIRt]]>
+	</CustomAction>
+	<CustomAction Id="SetCACHEDIR" Script="vbscript" Return="check">
+		<![CDATA[CACHEDIRt = session.property("CACHEDIR"):CACHEDIRt = left(CACHEDIRt, len(CACHEDIRt)-1):session.property("CACHEDIR") = CACHEDIRt]]>
+	</CustomAction>
+	<CustomAction Id="SetTOOLSDIR" Script="vbscript" Return="check">
+		<![CDATA[TOOLSDIRt = session.property("TOOLSDIR"):TOOLSDIRt = left(TOOLSDIRt, len(TOOLSDIRt)-1):session.property("TOOLSDIR") = TOOLSDIRt]]>
+	</CustomAction>
+	<CustomAction Id="SetRECIPEREPODIR" Script="vbscript" Return="check">
+		<![CDATA[RECIPEREPODIRt = session.property("RECIPEREPODIR"):RECIPEREPODIRt = left(RECIPEREPODIRt, len(RECIPEREPODIRt)-1):session.property("RECIPEREPODIR") = RECIPEREPODIRt]]>
+	</CustomAction>
+	<CustomAction Id="SetRECIPEOVERRIDEDIRS" Script="vbscript" Return="check">
+		<![CDATA[RECIPEOVERRIDEDIRSt = session.property("RECIPEOVERRIDEDIRS"):RECIPEOVERRIDEDIRSt = left(RECIPEOVERRIDEDIRSt, len(RECIPEOVERRIDEDIRSt)-1):session.property("RECIPEOVERRIDEDIRS") = RECIPEOVERRIDEDIRSt]]>
+	</CustomAction>
+	<CustomAction Id="SetDTFPATH" Script="vbscript" Return="check">
+		<![CDATA[DTFPATHt = session.property("DTFPATH"):DTFPATHt = left(DTFPATHt, len(DTFPATHt)-1):session.property("DTFPATH") = DTFPATHt]]>
+	</CustomAction>
+
+    <Media Id="1" Cabinet="Data1.cab" CompressionLevel="high" EmbedCab="yes" />
+
+    <UIRef Id="APWixUI_InstallDir" />
+
+    <EnsureTable Id="Class" />
+    <EnsureTable Id="Extension" />
+    <EnsureTable Id="MIME" />
+    <EnsureTable Id="ProgId" />
+    <EnsureTable Id="Verb" />
+    <Directory Id="TARGETDIR" Name="SourceDir">
+		<Directory Id="AppDataFolder">
+			<Directory Id="CONFIGDIR" Name="AutoPkg">
+				<Component Id="CreateCONFIGDIR" Guid="{91905C05-8232-4661-B553-F57C7A5EB970}">
+					<RegistryKey Key="SOFTWARE\AutoPkg" Root="HKCU">
+						<RegistryValue Name="AutoPkgConfigFolder" Value="yes" Type="string" KeyPath="yes"/>
+					</RegistryKey>
+					<CreateFolder/>
+					<!-- <RemoveFile Id="PurgeConfigFolder" Name="*.*" On="uninstall" /> -->
+				</Component>
+			</Directory>
+		</Directory>
+	
+        <!-- <Component Id="RegHKMU1" Guid="{1EE7061A-D46C-4B9E-A29A-28682CD6E6AF}" KeyPath="yes">
+            <RegistryKey Key="SOFTWARE\AutoPkg" Root="HKCU">
+                <RegistryValue Name="RECIPE_SEARCH_DIRS" Type="multiString">
+                    <MultiStringValue></MultiStringValue>
+                </RegistryValue>
+                <RegistryValue Name="GIT_PATH" Value="[GITPATH]" Type="string" />
+                <RegistryValue Name="CURL_PATH" Value="[CURLPATH]" Type="string" />
+                <RegistryValue Name="NANT_PATH" Value="[NANTPATH]" Type="string" />
+                <RegistryValue Name="7ZIP_PATH" Value="[ZIPPATH]" Type="string" />
+                <RegistryValue Name="DTF_PATH" Value="[DTFPATH]" Type="string" />
+                <RegistryValue Name="RECIPE_REPO_DIR" Value="[RECIPEREPODIR]" Type="string" />
+                <RegistryValue Name="CACHE_DIR" Value="[CACHEDIR]" Type="string" />
+                <RegistryValue Name="RECIPE_CACHE_DIR" Value="[CACHEDIR]" Type="string" />
+                <RegistryValue Name="TOOLS_DIR" Value="[TOOLSDIR]" Type="string" />
+                <RegistryValue Name="RECIPE_OVERRIDE_DIRS" Value="[RECIPEOVERRIDEDIRS]" Type="string" />
+                <RegistryValue Name="BUILD_DIR" Value="[BUILDDIR]" Type="string" />
+            </RegistryKey>
+        </Component>
+        <Component Id="RegHKMU2" Guid="{A1296476-D29B-4CD8-97FC-DBFF24B93EFD}" KeyPath="yes">
+            <RegistryKey ForceCreateOnInstall="yes" Key="SOFTWARE\AutoPkg\RECIPE_REPOS" Root="HKCU" />
+        </Component> -->
+      <Directory Id="AutoPKG" Name="AutoPKG">
+        <Directory Id="RECIPEREPODIR">
+		    <Component Id="CreateRECIPEREPODIR" Guid="{D4039D7C-08D2-4981-87E6-E3D13E15AFF2}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		</Directory>
+        <Directory Id="CACHEDIR">
+			<Component Id="CreateCACHEDIR" Guid="{A99CC31A-D219-4D79-87DE-57A86BB87F0E}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		</Directory>
+        <Directory Id="TOOLSDIR">
+			<Component Id="CreateTOOLSDIR" Guid="{626E4A38-6735-4AA8-96EE-927207A8B04E}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		</Directory>
+        <Directory Id="RECIPEOVERRIDEDIRS">
+			<Component Id="CreateRECIPEOVERRIDEDIRS" Guid="{81A00833-620C-4555-92F7-FE2539330F4E}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		</Directory>
+        <Directory Id="BUILDDIR">
+			<Component Id="CreateBUILDDIR" Guid="{20DD0B65-A27C-41A9-AF2B-076B3B8A036C}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		</Directory>
+        <Directory Id="DTFPATH"/>
+		
+      </Directory>
+      <Directory Id="Tools" Name="Tools">
+        <Directory Id="INSTALLDIR" Name="AutoPkg">
+		  <Directory Id="APLOGDIR" Name="log">
+		    <Component Id="CreateAPLOGDIR" Guid="{156CCB20-C595-4D5B-AE8F-00927CDB8382}" KeyPath="yes">
+			  <CreateFolder/>
+			</Component>
+		  </Directory>
+		  <Directory Id="APKGUTILS" Name="APkgUtils">
+			<Component Id="AutoPkgTaskRunnerSvc" Guid="{559B315A-E651-463E-AD6D-2D3DE801D3A6}">
+				<File Id="NSSM" Name="nssm.exe" Source="!(wix.APSourceDir)\APkgUtils\nssm.exe" />
+				<File Id="AutoPkgTaskRunner_ps1" Name="AutoPkgTaskRunner.ps1" Source="!(wix.APSourceDir)\APkgUtils\AutoPkgTaskRunner.ps1" />
+				<File Id="AutopkgTaskrunnerCMD_apkcmd" Name="AutopkgTaskrunnerCMD.apkcmd" Source="!(wix.APSourceDir)\APkgUtils\AutopkgTaskrunnerCMD.apkcmd" />
+				<ServiceInstall Id="AutoPkgTaskRunner" Name="AutoPkgTaskRunner" DisplayName="AutoPkgTaskRunner" Type="ownProcess" Start="auto" ErrorControl="normal" />
+				<RegistryKey Root="HKLM" Key="SYSTEM\CurrentControlSet\Services\AutoPkgTaskRunner\Parameters">
+					<RegistryValue Name="AppDirectory" Value="[APKGUTILS]" Type="expandable" />
+					<RegistryValue Name="Application" Value="C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" Type="expandable" />
+					<RegistryValue Name="AppParameters" Value="-ExecutionPolicy Bypass -NoProfile -File [APKGUTILS]AutoPkgTaskRunner.ps1 &quot;[INSTALLDIR]&quot;" Type="expandable" />
+					<RegistryKey Key="AppExit">
+						<RegistryValue Value="Restart" Type="string" />
+					</RegistryKey>
+				</RegistryKey>
+				<ServiceControl Id="AutoPkgTaskRunner_SvcControl" Name="AutoPkgTaskRunner" Start="install" Remove="uninstall" Stop="both" Wait="yes" />
+			</Component>
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="WIXINSTALLDIR" Name="WiX Toolset v3.14">
+		  <Directory Id="WIXBINDIR" Name="bin" >
+		    <Component Id="Microsoft_Tools_WindowsInstallerXml_NAntTasks_dll" Guid="{35EC09CE-750A-40A4-A576-BEDBAAD32BF6}">
+              <File Id="Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" KeyPath="yes" Source=".\Wix\bin\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
+            </Component>
+		  </Directory>
+		  <Directory Id="WIXSDKDIR" Name="SDK" />
+		</Directory>
+      </Directory>
+    </Directory>
+    <Feature Id="UserSettings" InstallDefault="local" Description="Delivers user settings automatically to each profile." Display="expand" Level="3" Title="User Settings">
+        <!-- <ComponentRef Id="RegHKMU1" />
+        <ComponentRef Id="RegHKMU2" /> -->
+		<ComponentRef Id="CreateCONFIGDIR" />
+      <Feature Id="AutoPkg" InstallDefault="local" Absent="disallow" AllowAdvertise="system" ConfigurableDirectory="INSTALLDIR" Description="Installs the main program." Display="expand" Level="3" Title="AutoPkg">
+        <ComponentGroupRef Id="AutoPkgFiles" />
+        <ComponentRef Id="CreateAPLOGDIR" />
+		<ComponentRef Id="CreateCACHEDIR" />
+		<ComponentRef Id="CreateTOOLSDIR" />
+		<ComponentRef Id="CreateRECIPEOVERRIDEDIRS" />
+		<ComponentRef Id="CreateRECIPEREPODIR" />
+		<ComponentRef Id="CreateBUILDDIR" />
+      </Feature>
+      <Feature Id="NANTDll" InstallDefault="local" AllowAdvertise="system" ConfigurableDirectory="WIXBINDIR" Description="Installs the NANT Wix target." Display="expand" Level="3" Title="NANT Wix target">
+        <ComponentRef Id="Microsoft_Tools_WindowsInstallerXml_NAntTasks_dll" />
+      </Feature>
+      <Feature Id="AutoPkgTaskRunnerSvc" InstallDefault="local" AllowAdvertise="system" ConfigurableDirectory="APKGUTILS" Description="Installs the AutoPkgTaskRunner Service." Display="expand" Level="3" Title="AutoPkgTaskRunnerService">
+        <ComponentRef Id="AutoPkgTaskRunnerSvc" />
+      </Feature>
+
+    </Feature>
+    <Property Id="ETHZBUILD" Value="$(var.version)#$(var.ETHZBuildNr)" />
+    <Property Id="INSTALLLEVEL" Value="3" />
+    <Property Id="ALLUSERS" Value="2" />
+    <Property Id="MSIINSTALLPERUSER" Value="1" />
+    <Property Id="ARPPRODUCTICON" Value="APIcons.exe" />
+    <Property Id="INSTALLDIR" Secure="yes" />
+    <Property Id="RECIPEREPODIR" Value="C:\AutoPKG\RecipeRepos\" />
+    <Property Id="CACHEDIR" Value="C:\AutoPkg\Cache\" />
+    <Property Id="TOOLSDIR" Value="C:\Tools\MSITools\" />
+    <Property Id="RECIPEOVERRIDEDIRS" Value="C:\AutoPkg\RecipeOverrides\" />
+    <Property Id="BUILDDIR" Value="C:\AutoPkg\Build\" />
+
+    <Property Id="GITPATH" Secure="yes">
+      <DirectorySearch Id="GitDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="git.exe" />
+      </DirectorySearch>
+    </Property>
+    <Property Id="CURLPATH" Secure="yes">
+    <!-- <Property Id="CURLPATHFOLDER"> -->
+      <DirectorySearch Id="CurlDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="curl.exe" />
+        <!-- <FileSearch Id="curl_exe" Name="curl.exe" /> -->
+      </DirectorySearch>
+    </Property>
+    <Property Id="ZIPPATH" Secure="yes">
+    <!-- <Property Id="ZIPPATHFOLDER"> -->
+      <DirectorySearch Id="ZipDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="7z.exe" />
+		<!-- <FileSearch Id="SevenZ_exe" Name="7z.exe" /> -->
+      </DirectorySearch>
+    </Property>
+    <Property Id="NANTPATH" Secure="yes">
+      <DirectorySearch Id="NantDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="NAnt.exe" />
+      </DirectorySearch>
+    </Property>
+    <Property Id="DTFPATH" Secure="yes">
+      <DirectorySearch Id="DTFDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="yes" >
+        <FileSearch Id="MDW_xml" Name="Microsoft.Deployment.WindowsInstaller.xml" />
+      </DirectorySearch>
+    </Property>
+    <Property Id="WIXSEARCHDIRBIN" Secure="yes" >
+      <DirectorySearch Id="WixBinDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="yes" >
+          <FileSearch Id="WFE_dll" Name="WixFirewallExtension.dll" />
+      </DirectorySearch>
+    </Property>
+    <Property Id="PIPPATH" Secure="yes" >
+      <DirectorySearch Id="PipDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="pip.exe" />
+      </DirectorySearch>
+    </Property>
+    <Property Id="MERGEMODPATH" Secure="yes" >
+      <DirectorySearch Id="MergeModDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="no" >
+        <FileSearch Name="MergeMod.Dll" MinSize='160100' />
+      </DirectorySearch>
+    </Property>
+
+    <Property Id="UPGRADE_1" Secure="yes" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+    <Upgrade Id="{578A1790-55BF-4F2E-8BC9-AB701E692251}">
+      <UpgradeVersion Minimum="0.40.0" Maximum="$(var.version)" Property="UPGRADE_1" IgnoreRemoveFailure="yes" IncludeMinimum="yes" />
+    </Upgrade>
+    <InstallExecuteSequence>
+      <Custom Action="SetARPINSTALLLOCATION" Sequence="1300" />
+      <RemoveExistingProducts Sequence="1450" />
+      <Custom Action='SetWIXBINDIR' After='CostFinalize'>
+	      NOT Installed AND WIXSEARCHDIRBIN
+	  </Custom>
+      <Custom Action='SetAUTOPKGDIR' After='InstallValidate'>
+	      NOT Installed AND INSTALLDIR
+	  </Custom>
+	  <Custom Action='SetBUILDDIR' After='InstallValidate'>
+	      NOT Installed AND BUILDDIR
+	  </Custom>
+	  <Custom Action='SetCACHEDIR' After='InstallValidate'>
+	      NOT Installed AND CACHEDIR
+	  </Custom>
+	  <Custom Action='SetTOOLSDIR' After='InstallValidate'>
+	      NOT Installed AND TOOLSDIR
+	  </Custom>
+	  <Custom Action='SetRECIPEREPODIR' After='InstallValidate'>
+	      NOT Installed AND RECIPEREPODIR
+	  </Custom>
+	  <Custom Action='SetRECIPEOVERRIDEDIRS' After='InstallValidate'>
+	      NOT Installed AND RECIPEOVERRIDEDIRS
+	  </Custom>
+	  <Custom Action='SetDTFPATH' After='InstallValidate'>
+	      NOT Installed AND DTFPATH
+	  </Custom>
+      <Custom Action='InstallMslLoadlib' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='InstallPythonnet' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='InstallComtypes' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='InstallMslPywin32' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='InstallPyYAML' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='InstallAppDirs' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
+      <Custom Action='MergeModRegister' Before='InstallFinalize'>
+	      NOT Installed AND MERGEMODPATH AND NOT NOMMDLLREG
+	  </Custom>
+	  <Custom Action="CreateCfgFile" After="InstallFiles">
+		  NOT Installed
+	  </Custom>
+	  <Custom Action="JSONSetGITPATH" After="InstallFiles">
+		  NOT Installed AND GITPATH
+	  </Custom>
+	  <Custom Action="JSONSetCURLPATH" After="InstallFiles">
+		  NOT Installed AND CURLPATH
+	  </Custom>
+	  <Custom Action="JSONSetNANTPATH" After="InstallFiles">
+		  NOT Installed AND NANTPATH
+	  </Custom>
+	  <Custom Action="JSONSetZIPPATH" After="InstallFiles">
+		  NOT Installed AND ZIPPATH
+	  </Custom>
+	  <Custom Action="JSONSetDTFPATH" After="InstallFiles">
+		  NOT Installed AND DTFPATH
+	  </Custom>
+	  <Custom Action="JSONSetRECIPEREPODIR" After="InstallFiles">
+		  NOT Installed AND RECIPEREPODIR
+	  </Custom>
+	  <Custom Action="JSONSetCACHEDIR" After="InstallFiles">
+		  NOT Installed AND CACHEDIR
+	  </Custom>
+	  <Custom Action="JSONSetRECIPECACHEDIR" After="InstallFiles">
+		  NOT Installed AND RECIPECACHEDIR
+	  </Custom>
+	  <Custom Action="JSONSetTOOLSDIR" After="InstallFiles">
+		  NOT Installed AND TOOLSDIR
+	  </Custom>
+	  <Custom Action="JSONSetRECIPEOVERRIDEDIRS" After="InstallFiles">
+		  NOT Installed AND RECIPEOVERRIDEDIRS
+	  </Custom>
+	  <Custom Action="JSONSetBUILDDIR" After="InstallFiles">
+		  NOT Installed AND BUILDDIR
+	  </Custom>
+	  <Custom Action="JSONSetAUTOPKGDIR" After="InstallFiles">
+		  NOT Installed AND AUTOPKGDIR
+	  </Custom>
+    </InstallExecuteSequence>
+    <InstallUISequence>
+      <Custom Action='SetWIXBINDIR' After='CostFinalize'>
+	      NOT Installed AND WIXSEARCHDIRBIN
+	  </Custom>
+    </InstallUISequence>
+  </Product>
+</Wix>

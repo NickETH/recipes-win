@@ -1,0 +1,12 @@
+
+200113	Create SolsticeClient x64 for Windows
+	We configure the firewall with the insertion of the WIX-firewall CA.
+	The settings are merged from SolClnt_DTSC_FW2_Conf.mst
+	See the MST for details.
+	The autorun at login is disabled.
+	Desktop shortcut will not be available.
+
+	Commandline: /qn /norestart ALLUSERS=1
+
+200113	Version 1.0.0.0, by AutoPkg
+	

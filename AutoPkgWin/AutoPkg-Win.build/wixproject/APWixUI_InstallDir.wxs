@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the Microsoft Reciprocal License. See LICENSE.TXT file in the project root for full license information. -->
+<!--
+First-time install dialog sequence:
+ - WixUI_WelcomeDlg
+ - InfoDlg
+ - PreReqDlg
+ - ReqDirDlg
+ - WixUI_InstallDirDlg
+ - WixUI_VerifyReadyDlg
+ - WixUI_DiskCostDlg
+
+Maintenance dialog sequence:
+ - WixUI_MaintenanceWelcomeDlg
+ - WixUI_MaintenanceTypeDlg
+ Todo - PreReqDlg
+ Todo - ReqDirDlg
+ - WixUI_InstallDirDlg
+ - WixUI_VerifyReadyDlg
+
+Patch dialog sequence:
+ - WixUI_WelcomeDlg
+ - WixUI_VerifyReadyDlg
+
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <UI Id="APWixUI_InstallDir">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <Property Id="WixUI_Mode" Value="InstallDir" />
+      <DialogRef Id="BrowseDlg" />
+      <DialogRef Id="DiskCostDlg" />
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+      <Publish Dialog="BrowseDlg" Control="OK" Event="DoAction" Value="WixUIValidatePath" Order="3">1</Publish>
+      <Publish Dialog="BrowseDlg" Control="OK" Event="SpawnDialog" Value="InvalidDirDlg" Order="4"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="InfoDlg">NOT Installed</Publish>
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+      <Publish Dialog="InfoDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="InfoDlg" Control="Next" Event="NewDialog" Value="PreReqDlg">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="Back" Event="NewDialog" Value="InfoDlg">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+      <Publish Dialog="PreReqDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="PreReqDlg" Control="Next" Event="NewDialog" Value="ReqDirDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile1" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile1" Property="PATHTOFILE" Value="[GITPATH]" Order="0">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile1" Property="GITPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile2" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile2" Property="PATHTOFILE" Value="[CURLPATH]" Order="0">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile2" Property="CURLPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile3" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile3" Property="PATHTOFILE" Value="[ZIPPATH]" Order="0">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile3" Property="ZIPPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile4" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile4" Property="PATHTOFILE" Value="[NANTPATH]" Order="0">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile4" Property="NANTPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
+
+      <Publish Dialog="ReqDirDlg" Control="Back" Event="NewDialog" Value="PreReqDlg">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+      <Publish Dialog="ReqDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="ReqDirDlg" Control="Next" Event="NewDialog" Value="InstallDirDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder1" Property="RECIPEREPODIR" Value="[RECIPEREPODIR]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder1" Property="_BrowseProperty" Value="RECIPEREPODIR" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder1" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder2" Property="CACHEDIR" Value="[CACHEDIR]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder2" Property="_BrowseProperty" Value="CACHEDIR" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder2" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder3" Property="RECIPEOVERRIDEDIRS" Value="[RECIPEOVERRIDEDIRS]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder3" Property="_BrowseProperty" Value="RECIPEOVERRIDEDIRS" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder3" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder4" Property="TOOLSDIR" Value="[TOOLSDIR]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder4" Property="_BrowseProperty" Value="TOOLSDIR" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder4" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder5" Property="BUILDDIR" Value="[BUILDDIR]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder5" Property="_BrowseProperty" Value="BUILDDIR" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder5" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder6" Property="DTFPATH" Value="[DTFPATH]" Order="1">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder6" Property="_BrowseProperty" Value="DTFPATH" Order="0">1</Publish>
+      <Publish Dialog="ReqDirDlg" Control="ChangeFolder6" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+
+      <Publish Dialog="InstallDirDlg" Control="Back" Event="NewDialog" Value="ReqDirDlg">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="DoAction" Value="WixUIValidatePath" Order="2">NOT WIXUI_DONTVALIDATEPATH</Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="SpawnDialog" Value="InvalidDirDlg" Order="3"><![CDATA[NOT WIXUI_DONTVALIDATEPATH AND WIXUI_INSTALLDIR_VALID<>"1"]]></Publish>
+      <Publish Dialog="InstallDirDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="4">WIXUI_DONTVALIDATEPATH OR WIXUI_INSTALLDIR_VALID="1"</Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Property="_BrowseProperty" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>
+      <Publish Dialog="InstallDirDlg" Control="ChangeFolder" Event="SpawnDialog" Value="BrowseDlg" Order="2">1</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="InstallDirDlg" Order="1">NOT Installed</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="2">Installed AND NOT PATCH</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">Installed AND PATCH</Publish>
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+      <Property Id="ARPNOMODIFY" Value="1" />
+    </UI>
+    <UIRef Id="WixUI_Common" />
+  </Fragment>
+</Wix>
