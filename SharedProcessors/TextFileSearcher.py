@@ -19,11 +19,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# 20210527 Nick Heim: Python v3 changes
+
 """See docstring for TextFileSearcher class"""
 
 import re
 import os.path
 from autopkglib import Processor, ProcessorError
+
+MATCH_MESSAGE = "Found matching text"
+NO_MATCH_MESSAGE = "No match found on URL"
 
 __all__ = ["TextFileSearcher"]
 
@@ -32,16 +38,25 @@ class TextFileSearcher(Processor):
     """Loads a file and performs a regular expression match
     on the text.
 
-    Requires version 0.2.9."""
+    Requires version 1.4."""
 
     input_variables = {
         "file_to_open": {
             "required": True,
             "description": "The text file that needs to be opened for reading.",
         },
-        "pattern": {
+        "re_pattern": {
+            "description": "Regular expression (Python) to match against file.",
             "required": True,
-            "description": "The regex pattern to look for and return.",
+        },
+        "result_output_var_name": {
+            "description": (
+                "The name of the output variable that is returned "
+                "by the match. If not specified then a default of "
+                '"match" will be used.'
+            ),
+            "required": False,
+            "default": "match",
         },
         "re_flags": {
             "description": (
@@ -70,11 +85,12 @@ class TextFileSearcher(Processor):
         for flag in self.env.get("re_flags", {}):
             if flag in re.__dict__:
                 flag_accumulator += re.__dict__[flag]
-        re_pattern = re.compile(self.env["pattern"], flags=flag_accumulator)
+        re_pattern = re.compile(self.env["re_pattern"], flags=flag_accumulator)
         match = re_pattern.search(content)
 
         if not match:
-            raise ProcessorError("No match found in file: {}".format(self.env["file_to_open"]))
+            # raise ProcessorError("No match found in file: {}".format(self.env["file_to_open"]))
+            raise ProcessorError(f"{NO_MATCH_MESSAGE}: {self.env['url']}")
 
         # return the last matched group with the dict of named groups
         return (match.group(match.lastindex or 0), match.groupdict())
@@ -83,7 +99,7 @@ class TextFileSearcher(Processor):
         # Define variables
         output_var_name = self.env["result_output_var_name"]
         file_to_open = self.env.get('file_to_open')
-        pattern = self.env.get('pattern')
+        re_pattern = self.env.get('re_pattern')
 
         try:            
             # Open, read, and close file
@@ -104,7 +120,8 @@ class TextFileSearcher(Processor):
         self.output_variables = {}
         for key in groupdict.keys():
             self.env[key] = groupdict[key]
-            self.output("Found matching text ({}): {}".format(key, self.env[key]))
+            # self.output("Found matching text ({}): {}".format(key, self.env[key]))
+            self.output(f"{MATCH_MESSAGE} ({key}): {self.env[key]}")
             self.output_variables[key] = {
                 "description": "Matched regular expression group"
             }

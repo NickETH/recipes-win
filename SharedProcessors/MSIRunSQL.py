@@ -6,6 +6,7 @@
 #
 # Run an SQL-Command against an MSI-file, using pythons msilib.
 # Needs some work around error handling.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -42,7 +43,8 @@ class MSIRunSQL(Processor):
     def main(self):
 
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
-        print >> sys.stdout, "msi_path %s" % msi_path
+        #print >> sys.stdout, "msi_path %s" % msi_path
+        self.output("msi_path %s" % msi_path)
         SQL_command = self.env.get('SQL_command')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
@@ -51,7 +53,8 @@ class MSIRunSQL(Processor):
 
         # if recipe writer gave us a single string instead of a list of strings,
         # convert it to a list of strings
-        if isinstance(self.env["SQL_command"], basestring):
+        #if isinstance(self.env["SQL_command"], basestring):
+        if isinstance(self.env["SQL_command"], str):
             self.env["SQL_command"] = [self.env["SQL_command"]]
 
         for SQL_string in self.env["SQL_command"]:
@@ -60,7 +63,7 @@ class MSIRunSQL(Processor):
                 view = dbobject.OpenView(SQL_string)
                 rec = view.Execute(None)
                 self.output("Applying %s" % SQL_string)
-            except OSError, err:
+            except OSError as err:
                 raise ProcessorError(
                     "Could not apply %s: %s" % (SQL_string, err))
 

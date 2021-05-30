@@ -12,6 +12,7 @@
 # Patch subprocess to take unicode, https://bugs.python.org/issue1759845, https://pypi.org/project/subprocessww/, 20200626, Hm
 # Extended with UseBBT-option and explicit options for uninstall, hardened boolean recipe reading from recipe 20210207, Hm
 # Todo: Generic read function for optional parameter processing with for statement and value types
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -171,7 +172,8 @@ class BMSImporter(Processor):
         # bms_app_installcmd = self.env.get('bms_app_installcmd')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 5)
-        print >> sys.stdout, "bms_app_name %s" % bms_app_name
+        #print >> sys.stdout, "bms_app_name %s" % bms_app_name
+        #self.output("bms_app_name: %s" % bms_app_name)
 
         self.output("Creating: %s" % bms_app_name)
         sharedproc_dir = os.path.dirname(os.path.realpath(__file__))
@@ -263,7 +265,8 @@ class BMSImporter(Processor):
             bms_app_dependencies = self.env.get('bms_app_dependencies')
             # if recipe writer gave us a single string instead of a list of strings,
             # convert it to a list of strings
-            if isinstance(self.env["bms_app_dependencies"], basestring):
+            #if isinstance(self.env["bms_app_dependencies"], basestring):
+            if isinstance(self.env["bms_app_dependencies"], str):
                 self.env["bms_app_dependencies"] = [self.env["bms_app_dependencies"]]
 
             cmd_string = ""
@@ -295,13 +298,14 @@ class BMSImporter(Processor):
         except:
             if ignore_errors != 'True':
                 raise
-        print >> sys.stdout, "cmdline Output %s" % Output
+        #print >> sys.stdout, "cmdline Output %s" % Output
+        self.output("cmdline Output: %s" % Output)
         #self.env['pkg_dir'] = Output
 		
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:
-                print line
+                print(line)
             if "Buildversion:" in line:
                 archiveVersion = line.split()[-1]
                 continue

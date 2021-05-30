@@ -9,6 +9,7 @@
 # which has the key of the file in the MSI and the full path to the file.
 # 20210409 Nick Heim: Added the feature to clear the version field in the MSI File table.
 # 20210515 Nick Heim: Rewritten the calls to get the filehash to make sure the COM-object is loaded.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -66,7 +67,8 @@ class MSIAddFileHash(Processor):
         win32.gencache.EnsureModule('{000C1092-0000-0000-C000-000000000046}', 1033, 1, 0)
         LCID = 0x409
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
-        print >> sys.stdout, "msi_path %s" % msi_path
+        #print >> sys.stdout, "msi_path %s" % msi_path
+        self.output( "msi_path %s" % msi_path)
         File2Hash = self.env.get('File2Hash')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
@@ -79,7 +81,8 @@ class MSIAddFileHash(Processor):
 
         # if recipe writer gave us a single string instead of a list of strings,
         # convert it to a list of strings
-        if isinstance(self.env["File2Hash"], basestring):
+        #if isinstance(self.env["File2Hash"], basestring):
+        if isinstance(self.env["File2Hash"], str):
             self.env["File2Hash"] = [self.env["File2Hash"]]
 
         for Full_string in self.env["File2Hash"]:
@@ -97,7 +100,7 @@ class MSIAddFileHash(Processor):
                     [(MSI_file_key, 0, hashresult.IntegerData(1),
                      hashresult.IntegerData(2), hashresult.IntegerData(3),
                      hashresult.IntegerData(4))])
-            except OSError, err:
+            except OSError as err:
                 raise ProcessorError(
                     "Could not apply %s: %s" % (Full_string, err))
             # if remove_version_field == 'True':
@@ -107,7 +110,7 @@ class MSIAddFileHash(Processor):
                     view = dbobject.OpenView(SQL_string)
                     rec = view.Execute(None)
                     self.output("Applying %s" % SQL_string)
-                except OSError, err:
+                except OSError as err:
                     raise ProcessorError(
                         "Could not apply %s: %s" % (SQL_string, err))
 

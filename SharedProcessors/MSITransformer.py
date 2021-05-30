@@ -6,6 +6,7 @@
 #
 # Apply (a) or generate (g) transform(s) to/from an MSI-file(s), using msitran.exe.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -50,7 +51,7 @@ class MSITransformer(Processor):
 
         mode = self.env.get('mode', '-a')
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
-        #msi_path_new = self.env.get('msi_path_new')
+
         mst_paths = self.env.get('mst_paths')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
@@ -62,7 +63,8 @@ class MSITransformer(Processor):
         if mode.lower().startswith('-a'):
             # if recipe writer gave us a single string instead of a list of strings,
             # convert it to a list of strings
-            if isinstance(self.env["mst_paths"], basestring):
+            #if isinstance(self.env["mst_paths"], basestring):
+            if isinstance(self.env["mst_paths"], str):
                 self.env["mst_paths"] = [self.env["mst_paths"]]
 
             for mst_cmnd in self.env["mst_paths"]:

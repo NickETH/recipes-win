@@ -8,15 +8,15 @@
 # With the "elevated" flag, it is possible to run commands that would otherwise raise an elevation popup.
 # This function needs the AutoPkg Taskrunner utility, which is only available from v2.x
 # 20210328: Changed the command exchange with the service to the file AutopkgTaskrunnerCMD.apkcmd
+# 20210517 Nick Heim: Python v3 changes
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import sys
 import time
 import subprocess
 # import ctypes
-import _winreg
+#import _winreg as winreg
+import winreg
 
 from autopkglib import Processor, ProcessorError
 
@@ -35,16 +35,6 @@ def checkbool(v):
     else:
         raise argparse.ArgumentTypeError('Boolean value expected.')
     # end of checkbool()
-
-def reg_read(path, root=_winreg.HKEY_CURRENT_USER):
-    path, name = os.path.split(path)
-    with _winreg.OpenKey(root, path) as key:
-        return _winreg.QueryValueEx(key, name)[0]
-
-def reg_write(path, value, root=_winreg.HKEY_CURRENT_USER):
-    path, name = os.path.split(path)
-    with _winreg.OpenKey(root, path, 0, _winreg.KEY_WRITE) as key:
-        _winreg.SetValueEx(key, name, 0, _winreg.REG_SZ, value)
 
 class ExecuteFile(Processor):
     description = "Run an executable file (with arguments) (in a given directory)."
@@ -82,7 +72,8 @@ class ExecuteFile(Processor):
         verbosity = self.env.get('verbose', 1)
         exe_file = self.env.get('exe_file')
         print("exe_file: %s" % exe_file)
-        cmd = [exe_file.encode('utf-8')]
+        #cmd = [exe_file.encode('utf-8')]
+        cmd = [exe_file]
 
         if "exe_folder" in self.env:
             exe_folder = self.env.get('exe_folder')
@@ -94,13 +85,16 @@ class ExecuteFile(Processor):
         if "cmdline_args" in self.env:
             # if recipe writer gave us a single string instead of a list of strings,
             # convert it to a list of strings
-            if isinstance(self.env["cmdline_args"], basestring):
+            #if isinstance(self.env["cmdline_args"], basestring):
+            if isinstance(self.env["cmdline_args"], str):
                 self.env["cmdline_args"] = [self.env["cmdline_args"]]
 
-            cmd_args = [''.encode('utf-8')]
+            #cmd_args = [''.encode('utf-8')]
+            cmd_args = ['']
             for arg_cmnd in self.env["cmdline_args"]:
-                cmd_args.extend([arg_cmnd.encode('utf-8')])
-                print("cmd_args: %s" % cmd_args)
+                #cmd_args.extend([arg_cmnd.encode('utf-8')])
+                cmd_args.extend([arg_cmnd])
+                self.output( "cmd_args: %s" % cmd_args)
 
         if "run_elevated" in self.env:
             run_elevated = self.env.get('run_elevated')
@@ -128,7 +122,8 @@ class ExecuteFile(Processor):
                     time.sleep(5)
 
             else:
-                print("cmdline %s" % (' '.join(cmd + cmd_args)), file=sys.stdout)
+                #print("cmdline %s" % (' '.join(cmd + cmd_args)), file=sys.stdout)
+                #self.output("cmdline: %s" % (' '.join(cmd + cmd_args))
                 try:
                     if verbosity > 1:
                         Output = subprocess.check_output(' '.join(cmd + cmd_args))
@@ -138,7 +133,7 @@ class ExecuteFile(Processor):
                 except:
                     if ignore_errors != 'True':
                         raise
-                        print("Execution result %s" % Output, file=sys.stdout)
+                        self.output( "Execution result: %s" % Output)
 
 if __name__ == '__main__':
     processor = ExecuteFile()

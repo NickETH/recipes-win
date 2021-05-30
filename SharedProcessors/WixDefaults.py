@@ -9,9 +9,8 @@
 # Create folders, copy needed files from repository and/or previous build.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 # 20190401 Nick Heim: PrevVerFiles is untested!
+# 20210517 Nick Heim: Python v3 changes
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import sys
 import subprocess
@@ -79,9 +78,11 @@ class WixDefaults(Processor):
 			# print >> sys.stdout, "cmdline %s" % cmd
         try:
             if verbosity > 1:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
             else:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
         except:
             if ignore_errors != 'True':
                 raise

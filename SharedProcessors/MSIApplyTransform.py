@@ -7,6 +7,7 @@
 #
 # Apply (a) transform(s) to an MSI-file, using msitran.exe.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -52,7 +53,8 @@ class MSIApplyTransform(Processor):
 
         # if recipe writer gave us a single string instead of a list of strings,
         # convert it to a list of strings
-        if isinstance(self.env["mst_paths"], basestring):
+        #if isinstance(self.env["mst_paths"], basestring):
+        if isinstance(self.env["mst_paths"], str):
             self.env["mst_paths"] = [self.env["mst_paths"]]
 
         for mst_cmnd in self.env["mst_paths"]:

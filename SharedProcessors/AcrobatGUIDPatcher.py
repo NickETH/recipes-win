@@ -4,7 +4,8 @@
 #
 # Created by Nick Heim (heim)@ethz.ch) on 2019-04-06.
 #
-# Calls AcrobatGUIDPatcher.ps1 to generate an new GUID, based on the version string. 
+# Calls AcrobatGUIDPatcher.ps1 to generate a new GUID, based on the version string. 
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -63,12 +64,16 @@ class AcrobatGUIDPatcher(Processor):
             new_ver,
             old_hex_ver,]
 
-        print >> sys.stdout, "cmdline %s" % cmd
+        #print >> sys.stdout, "cmdline %s" % cmd
+        self.output( "cmdline: %s" % cmd)
+        
         try:
             if verbosity > 1:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
             else:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
         except:
             if ignore_errors != 'True':
                 raise
@@ -78,12 +83,12 @@ class AcrobatGUIDPatcher(Processor):
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:
-                print line
+                print(line)
             if "New GUID:" in line:
                 archiveVersion = line.split()[-1]
                 continue
         
-        self.env['newGUID'] = archiveVersion.encode('ascii', 'ignore')
+        self.env['newGUID'] = archiveVersion
         self.output("New GUID: %s" % (self.env['newGUID']))
 
 if __name__ == '__main__':

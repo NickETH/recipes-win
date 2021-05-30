@@ -7,7 +7,7 @@
 # Import a merge module into an MSI-file.
 # Prerequisites: Libraries: pythonnet, msl-loadlib, comtypes; DTF_PATH; regsvr32 <Path to>\mergemod64.dll (from Windows SDK x64, mergemod.dll)
 # Work to do: This works currently only with MSMs that have files with them. Implement handling for optional file import.
-
+# 210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -73,10 +73,13 @@ class MSIimportMergeModule(Processor):
 
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 5)
-        print >> sys.stdout, "pkg_dir_abs %s" % pkg_dir_abs
+        #print >> sys.stdout, "pkg_dir_abs %s" % pkg_dir_abs
+        self.output("pkg_dir_abs %s" % pkg_dir_abs)
 
         self.output("Importing: %s" % msm_file)
 
+        # Set single threaded appartement model
+        sys.coinit_flags = 2
         MSM = LoadLibrary('MSM.Merge2.1', 'com')
         if "log_file_abs" in self.env:
             log_file_abs = self.env.get('log_file_abs')
@@ -87,7 +90,9 @@ class MSIimportMergeModule(Processor):
         MSM.lib.CloseModule()
         MSM.lib.CloseDatabase("Commit=True")
         MSM.lib.CloseLog()
-        print >> sys.stdout, "end of merge %s" % msi_file
+        #print >> sys.stdout, "end of merge %s" % msi_file
+        self.output("end of merge %s" % msi_file)
+
         #assembly_path = r"C:\Program Files (x86)\WiX Toolset v3.14\SDK"
         #sys.path.append(assembly_path)
         sys.path.append(self.env['DTF_PATH'])
@@ -105,7 +110,8 @@ class MSIimportMergeModule(Processor):
         cabRec.Dispose()
         WIview.Dispose()
         WIdb.Dispose()
-        print >> sys.stdout, "end of read cab"		
+        #print >> sys.stdout, "end of read cab"
+        self.output("end of read cab")
         # Insert a new line into the media table to reflect the new CAB-file.
         tmode = DatabaseOpenMode.Direct
         WIdb = Database(msi_file, tmode)
@@ -120,10 +126,11 @@ class MSIimportMergeModule(Processor):
         #print >> sys.stdout, "end of set media row"	
         #Insert the CAB-file from the merge module into the MSI-file.
         cabRec = Record(1)
-        print >> sys.stdout, "after cabRec"	
+        #print >> sys.stdout, "after cabRec"	
         cabRec.SetStream(1, os.path.join(temp_path, "MergeModule.cab"))
-        print >> sys.stdout, "after cabRec.Setstream"	
-        #cabRec.SetStream(1, "C:\Temp\Javatest\MergeModule_T1.CAB")
+        #print >> sys.stdout, "after cabRec.Setstream"
+        #self.output("after cabRec.Setstream")
+        
         query = "INSERT INTO `_Streams` (`Name`, `Data`) VALUES ('" + mediaCabinet + "', ?)"
         #print >> sys.stdout, "after query2"	
         WIdb.Execute(query, cabRec)

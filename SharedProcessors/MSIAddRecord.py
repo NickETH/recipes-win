@@ -11,7 +11,8 @@
 import os
 import sys
 import subprocess
-import HTMLParser
+#import HTMLParser
+import html.parser
 import msilib
 
 from autopkglib import Processor, ProcessorError

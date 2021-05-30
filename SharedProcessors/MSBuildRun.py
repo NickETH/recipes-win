@@ -7,18 +7,15 @@
 # Run MSBuild to build project file.
 # MSBuild.exe [Optionen] [Projektdatei]
 # MSBuild MyApp.csproj -t:Clean -p:Configuration=Debug;TargetFrameworkVersion=v3.5
+# 20210517 Nick Heim: Python v3 changes
 
-from __future__ import absolute_import
-from __future__ import print_function
 import os
 import sys
 import subprocess
 
 from autopkglib import Processor, ProcessorError
 
-
 __all__ = ["MSBuildRun"]
-
 
 class MSBuildRun(Processor):
     description = "Run MSBuild to build a project."
@@ -57,11 +54,13 @@ class MSBuildRun(Processor):
         verbosity = self.env.get('verbose', 1)
 
         # msbuild_cmd = self.env.get('TOOLS_PATH')
-        msbuild_cmd = 'msbuild.exe'
+        #msbuild_cmd = 'msbuild.exe'
+        msbuild_cmd = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe"
 
         self.output("Building in: %s" % build_folder)
         os.chdir(build_folder)
-        cmd = [msbuild_cmd, build_file.encode('utf-8')]
+        #cmd = [msbuild_cmd, build_file.encode('utf-8')]
+        cmd = [msbuild_cmd, build_file]
 
         if "build_target" in self.env:
             build_target = self.env.get('build_target')
@@ -69,7 +68,8 @@ class MSBuildRun(Processor):
         if "build_property" in self.env:
             build_property = self.env.get('build_property')
             # cmd.extend([('-p:%s' % build_property)])
-            cmd.extend([('-p:' + build_property.encode('utf-8'))])
+            #cmd.extend([('-p:' + build_property.encode('utf-8'))])
+            cmd.extend([('-p:' + build_property)])
         if verbosity > 1:
             cmd.extend(['-fl'])
 

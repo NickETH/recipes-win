@@ -21,6 +21,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# 20210527 Nick Heim: Python v3 changes
 
 from autopkglib import Processor, ProcessorError
 
@@ -47,7 +49,8 @@ class CharToNum(Processor):
      
     def main(self):
         inputchar = self.env["input_var"]
-        # print("inputchar: %s" % inputchar)
+
+        self.output( "inputchar: %s" % inputchar)
         outputnum = 0
         for c in inputchar:
             outputnum = outputnum + (ord(c.upper()) - 64)

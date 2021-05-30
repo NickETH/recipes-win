@@ -9,6 +9,7 @@
 # Create folders, copy needed files from repository and/or previous build.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 # 20190401 Nick Heim: PrevVerFiles is untested!
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -102,7 +103,8 @@ class CreateNextBuild(Processor):
         folder_list = self.env.get('folder_list')
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 5)
-        print >> sys.stdout, "org_ver %s" % org_ver
+        #print >> sys.stdout, "org_ver %s" % org_ver
+        self.output("org_ver %s" % org_ver)
 
         self.output("Creating: %s" % pkg_dir)
         sharedproc_dir = os.path.dirname(os.path.realpath(__file__))
@@ -123,10 +125,12 @@ class CreateNextBuild(Processor):
 
         if "create_AS_ver" in self.env:
             create_AS_ver = self.env.get('create_AS_ver')
-            print >> sys.stdout, "create_AS_ver %s" % create_AS_ver
+            #print >> sys.stdout, "create_AS_ver %s" % create_AS_ver
+            self.output("create_AS_ver %s" % create_AS_ver)
             if checkbool(create_AS_ver):
                 cmd.extend(['-AS_ver', create_AS_ver])
-                print >> sys.stdout, "cmdline %s" % cmd
+                #print >> sys.stdout, "cmdline %s" % cmd
+                self.output("cmdline %s" % cmd)
 
         if "recipe_path" in self.env:
             recipe_path = os.path.splitext(self.env.get('recipe_path'))[0]
@@ -146,32 +150,35 @@ class CreateNextBuild(Processor):
         # print >> sys.stdout, "cmdline %s" % cmd
         try:
             if verbosity > 1:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
             else:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
         except:
             if ignore_errors != 'True':
                 raise
-        print >> sys.stdout, "cmdline Output %s" % Output
+        #print >> sys.stdout, "cmdline Output %s" % Output
+        self.output("cmdline Output %s" % Output)
         #self.env['pkg_dir'] = Output
 		
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:
-                print line
+                print(line)
             if "Buildversion:" in line:
                 if "ASversion:" in line:
                    lineobj = line.split("|",-1)
                    archiveVersion = lineobj[0].split()[-1]
                    ActiveSetupVersion = lineobj[1].split()[-1]
-                   self.env['AS_ver'] = ActiveSetupVersion.encode('ascii', 'ignore')
+                   self.env['AS_ver'] = ActiveSetupVersion
                 else:
                    archiveVersion = line.split()[-1]
                 continue
         
-        self.env['build_ver'] = archiveVersion.encode('ascii', 'ignore')
-        self.env['build_new'] = archiveVersion.encode('ascii', 'ignore')
-        self.env['build_ver_short'] = string.replace(archiveVersion.encode('ascii', 'ignore'),'.','')
+        self.env['build_ver'] = archiveVersion
+        self.env['build_new'] = archiveVersion
+        self.env['build_ver_short'] = str.replace(archiveVersion,'.','')
         self.output("New build_ver: %s" % (self.env['build_ver']))
 
 if __name__ == '__main__':

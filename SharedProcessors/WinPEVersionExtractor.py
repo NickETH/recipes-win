@@ -7,6 +7,7 @@
 # Extracts version info from Windows PE-executable (.exe/.dll) file.
 # 20210121 Nick Heim: Added the checkbool function to handle flag/bool checking more loosely.
 #                     Added the option to get the product version.
+# 20210519 Nick Heim: Python v3 changes
 
 # pywin32 is required. Install: pip install pywin32
 
@@ -79,21 +80,23 @@ class WinPEVersionExtractor(Processor):
             product_version = self.env.get('product_version')
             if checkbool(product_version):
                 try:
-					lang, codepage = GetFileVersionInfo(exe_path, '\\VarFileInfo\\Translation')[0]
-					strInfoPath = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, 'ProductVersion')
-					self.env['version'] = GetFileVersionInfo(exe_path, strInfoPath).encode('ascii', 'ignore')
+                    lang, codepage = GetFileVersionInfo(exe_path, '\\VarFileInfo\\Translation')[0]
+                    #strInfoPath = u'\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, 'ProductVersion')
+                    strInfoPath = '\\StringFileInfo\\%04X%04X\\%s' % (lang, codepage, 'ProductVersion')
+                    #self.env['version'] = GetFileVersionInfo(exe_path, strInfoPath).encode('ascii', 'ignore')
+                    self.env['version'] = GetFileVersionInfo(exe_path, strInfoPath)
                 except:
                     if ignore_errors != 'True':
                         raise
             else:						
                 try:
-                    self.env['version'] = ".".join ([str (i) for i in get_version_number (exe_path)])
+                    self.env['version'] = str(".".join ([str (i) for i in get_version_number (exe_path)]))
                 except:
                     if ignore_errors != 'True':
                         raise
         else:						
             try:
-                self.env['version'] = ".".join ([str (i) for i in get_version_number (exe_path)])
+                self.env['version'] = str(".".join ([str (i) for i in get_version_number (exe_path)]))
             except:
                 if ignore_errors != 'True':
                     raise

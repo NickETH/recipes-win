@@ -8,6 +8,7 @@
 # Extracts version info from .exe file using the 7z utility.
 # 20190329 Nick Heim: 7z path altered.
 # 20190506 Nick Heim: path should be got from the 7ZIP_PATH variable.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -62,7 +63,7 @@ class ExeVersionExtractor(Processor):
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:
-                print line
+                print(line)
             if "ProductVersion:" in line:
                 archiveVersion = line.split()[-1]
                 continue

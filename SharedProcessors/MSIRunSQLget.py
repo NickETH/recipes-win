@@ -7,6 +7,7 @@
 #
 # Run an SQL-Command against an MSI-file, using pythons msilib.
 # Basic processor to read an arbitrary value from an MSI-file.
+# 20210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -56,7 +57,8 @@ class MSIRunSQLget(Processor):
         view.Execute(None)
         rec = view.Fetch()
         msi_value = rec.GetString(1)
-        print >> sys.stdout, "Property Value %s" % msi_value
+        #print >> sys.stdout, "Property Value %s" % msi_value
+        self.output("Property Value: %s" % msi_value)
 
         # dbobject.Commit()
         self.env['msi_value'] = msi_value

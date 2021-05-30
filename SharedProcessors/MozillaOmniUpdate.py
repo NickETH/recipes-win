@@ -15,8 +15,9 @@
 # the License. You may obtain a copy of the License at
 # http://www.mozilla.org/MPL/
 
-#from __future__ import absolute_import
-#from __future__ import print_function
+# 20210522 Nick Heim: Python v3 changes. Partly taken from: https://github.com/Stebalien/firefox-tweak
+    
+
 import os
 import shutil
 import sys
@@ -24,7 +25,6 @@ import subprocess
 import json
 
 from autopkglib import Processor, ProcessorError
-import six
 import struct
 
 __all__ = ["MozillaOmniUpdate"]
@@ -109,7 +109,7 @@ class MyStruct:
             return self.__dict__["struct_members"][item]
         except:
             pass
-        print("no %s" %item)
+        print("no %s" % item)
         print(self.__dict__["struct_members"])
         raise AttributeError
 
@@ -120,14 +120,17 @@ class MyStruct:
             raise AttributeError
 
     def pack(self):
-        extra_data = ""
+        extra_data = b""
         values = []
         string_fields = self.__dict__["string_fields"]
         struct_members = self.__dict__["struct_members"]
         format = self.__dict__["format"]
         for (name,_) in format:
             if name in string_fields:
-                extra_data = extra_data + struct_members[name]
+                value = struct_members[name]
+                if isinstance(value, str):
+                    value = value.encode("utf-8")
+                extra_data = extra_data + value
             else:
                 values.append(struct_members[name]);
         return struct.pack(format_struct(format)[0], *values) + extra_data
@@ -193,10 +196,15 @@ def optimizejar(jar, outjar, inlog = None):
         readahead = struct.unpack("<I", jarblob.readAt(0, 4))[0]
         print("%s: startup data ends at byte %d" % (outjar, readahead));
 
+    total_stripped = 0;
     jarblob.offset = cdir_offset
     central_directory = []
-    for i  in range(0, dirend.cdir_entries):
+    for i in range(0, dirend.cdir_entries):
         entry = jarblob.read_struct(cdir_entry)
+        if entry.filename[-1:] == "/":
+            total_stripped += len(entry.pack())
+        else:
+            total_stripped += entry.extrafield_size
         central_directory.append(entry)
         
     reordered_count = 0
@@ -209,7 +217,7 @@ def optimizejar(jar, outjar, inlog = None):
                 dup_guard.add(ordered_name)
             found = False
             for i in range(reordered_count, len(central_directory)):
-                if central_directory[i].filename == ordered_name:
+                if central_directory[i].filename.decode() == ordered_name:
                     # swap the cdir entries
                     tmp = central_directory[i]
                     central_directory[i] = central_directory[reordered_count]
@@ -227,16 +235,33 @@ def optimizejar(jar, outjar, inlog = None):
         # This also lets us specify how many entries should be preread
         dirend.cdir_offset = 4
         # make room for central dir + end of dir + 4 extra bytes at front
-        out_offset = dirend.cdir_offset + dirend.cdir_size + size_of(cdir_end) 
+        out_offset = dirend.cdir_offset + dirend.cdir_size + size_of(cdir_end) - total_stripped
         outfd.seek(out_offset)
 
-    cdir_data = ""
+    cdir_data = b""
     written_count = 0
+    crc_mapping = {}
+    dups_found = 0
+    dupe_bytes = 0
     # store number of bytes suggested for readahead
     for entry in central_directory:
         # read in the header twice..first for comparison, second time for convenience when writing out
         jarfile = jarblob.read_struct(local_file_header, entry.offset)
         assert_true(jarfile.filename == entry.filename, "Directory/Localheader mismatch")
+
+        # drop directory entries
+        if entry.filename[-1:] == "/":
+            total_stripped += len(jarfile.pack())
+            dirend.cdir_entries -= 1
+            continue
+        # drop extra field data
+        else:
+            total_stripped += jarfile.extra_field_size;
+        entry.extrafield = jarfile.extra_field = ""
+        entry.extrafield_size = jarfile.extra_field_size = 0
+        # January 1st, 2010
+        entry.lastmod_date = jarfile.lastmod_date = ((2010 - 1980) << 9) | (1 << 5) | 1
+        entry.lastmod_time = jarfile.lastmod_time = 0
         data = jarfile.pack()
         outfd.write(data)
         old_entry_offset = entry.offset
@@ -248,6 +273,13 @@ def optimizejar(jar, outjar, inlog = None):
         assert_true(len(entry_data) != expected_len,
                     "%s entry size - expected:%d got:%d" % (entry.filename, len(entry_data), expected_len))
         written_count += 1
+
+        if entry.crc32 in crc_mapping:
+            dups_found += 1
+            dupe_bytes += entry.compressed_size + len(data) + len(entry_data)
+            print("%s\n\tis a duplicate of\n%s\n---"%(entry.filename, crc_mapping[entry.crc32]))
+        else:
+            crc_mapping[entry.crc32] = entry.filename;
         if inlog is not None:
             if written_count == reordered_count:
                 readahead = out_offset
@@ -262,6 +294,11 @@ def optimizejar(jar, outjar, inlog = None):
     if inlog is None:
         dirend.cdir_offset = out_offset
 
+    if dups_found > 0:
+        print("WARNING: Found %d duplicate files taking %d bytes"%(dups_found, dupe_bytes))
+
+    dirend.cdir_size = len(cdir_data)
+    dirend.disk_entries = dirend.cdir_entries
     dirend_data = dirend.pack()
     assert_true(size_of(cdir_end) == len(dirend_data), "Failed to serialize directory end correctly. Serialized size;%d, expected:%d"%(len(dirend_data), size_of(cdir_end)));
 
@@ -278,8 +315,10 @@ def optimizejar(jar, outjar, inlog = None):
         outfd.seek(out_offset)
         outfd.write(dirend_data)
 
-    print "%s %d/%d in %s" % (("Ordered" if inlog is not None else "Deoptimized"),
-                              reordered_count, len(central_directory), outjar)
+    print("Stripped %d bytes" % total_stripped)
+                                                                               
+    print("%s %d/%d in %s" % (("Ordered" if inlog is not None else "Deoptimized"),
+                              reordered_count, len(central_directory), outjar))
     outfd.close()
     return outlog
         
@@ -299,7 +338,8 @@ def optimize(JAR_LOG_DIR, IN_JAR_DIR, OUT_JAR_DIR):
         injarfile = os.path.join(IN_JAR_DIR, logfile[:-4])
         outjarfile = os.path.join(OUT_JAR_DIR, logfile[:-4]) 
         if not os.path.exists(injarfile):
-            print "Warning: Skipping %s, %s doesn't exist" % (logfile, injarfile)
+            #print "Warning: Skipping %s, %s doesn't exist" % (logfile, injarfile)
+            self.output("Warning: Skipping %s, %s doesn't exist" % (logfile, injarfile))
             continue
         logfile = os.path.join(JAR_LOG_DIR, logfile)
         optimizejar(injarfile, outjarfile, logfile)
@@ -316,7 +356,7 @@ def deoptimize(JAR_LOG_DIR, IN_JAR_DIR, OUT_JAR_DIR):
         outjarfile = os.path.join(OUT_JAR_DIR, jarfile) 
         logfile = os.path.join(JAR_LOG_DIR, jarfile + ".log")
         log = optimizejar(injarfile, outjarfile, None)
-        open(logfile, "wb").write("\n".join(log))
+        open(logfile, "wb").write(b"\n".join(log))
 
 class MozillaOmniUpdate(Processor):
     description = "Update the omni.ja in Mozilla products."
@@ -410,13 +450,14 @@ class MozillaOmniUpdate(Processor):
         json_data_sys = json_data["system"]
         # if recipe writer gave us a single name instead of a list of names,
         # convert it to a list of names
-        if isinstance(self.env["new_features"], six.string_types):
+        if isinstance(self.env["new_features"], str):
             self.env["new_features"] = [self.env["new_features"]]
 
         for feature_name in self.env["new_features"]:
             # print >> sys.stdout, "SQL_string %s" % new_features
             try:
-                json_data_sys.append(unicode(feature_name))
+                #json_data_sys.append(unicode(feature_name))
+                json_data_sys.append(str(feature_name))
             except OSError as err:
                 raise ProcessorError(
                     "Could not append %s: %s" % (feature_name, err))

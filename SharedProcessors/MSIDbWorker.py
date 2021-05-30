@@ -7,6 +7,7 @@
 # Adjust an MSI-file, using msidb.exe.
 # Output needs work. Goal would be to return the exitcode/errorlevel.
 # 210417 Nick Heim: Corrected the -e/-i mode case. Needed to insert the workfile parameter to set the table(s) to work with.
+# 210517 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -64,7 +65,8 @@ class MSIDbWorker(Processor):
                 os.chdir(workfolder)
             # if recipe writer gave us a single string instead of a list of strings,
             # convert it to a list of strings
-            if isinstance(self.env["workfile"], basestring):
+            #if isinstance(self.env["workfile"], basestring):
+            if isinstance(self.env["workfile"], str):
                 self.env["workfile"] = [self.env["workfile"]]
 
             for wf_cmnd in self.env["workfile"]:

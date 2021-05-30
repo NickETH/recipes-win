@@ -7,6 +7,7 @@
 # if the NANT tasks for wix are used.
 #
 # Run NANT to build or to call a specific command.
+# 20210519 Nick Heim: Python v3 changes
 
 import os
 import sys
@@ -50,6 +51,9 @@ class NANTrun(Processor):
         us_date = time.strftime("%Y%m%d%H%M",ts)
         extract_flag = 'l'
         nant_cmd = self.env.get('NANT_PATH')
+        sevenzipcmd = self.env.get('7ZIP_PATH')
+        toolsdir = self.env.get('TOOLS_DIR')
+        autopkglogfile = os.path.join(self.env['AUTOPKG_DIR'], 'log', ('NANT' + us_date + '.log'))
 
         self.output("Applying: %s" % run_folder)
         os.chdir(run_folder)
@@ -59,8 +63,12 @@ class NANTrun(Processor):
             build_target = os.path.splitext(self.env.get('build_target'))[0]
             cmd.extend([build_target])
 
-        cmd.extend(['-l:C:\Tools\AutoPKG\log\NANT' + us_date + '.log'])
-        print >> sys.stdout, "cmdline %s" % cmd
+        cmd.extend(['-D:arg.7ZipCmd=' + sevenzipcmd])
+        cmd.extend(['-D:arg.ToolsDir=' + toolsdir])
+        cmd.extend(['-l:' + autopkglogfile])
+        
+        #print >> sys.stdout, "cmdline %s" % cmd
+        self.output("cmdline: %s" % cmd)
         # print >> sys.stdout, "run_folder %s" % os.getcwd()
         try:
             if verbosity > 1:
@@ -71,7 +79,8 @@ class NANTrun(Processor):
         except:
             if ignore_errors != 'True':
                 raise
-                print >> sys.stdout, "Nant run %s" % Output
+                #print >> sys.stdout, "Nant run %s" % Output
+                self.output("Nant run: %s" % Output)
 
 if __name__ == '__main__':
     processor = NANTrun()

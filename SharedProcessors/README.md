@@ -33,21 +33,49 @@ bms_app_version, (required: True), Description: "Application version in BMS."
 bms_app_valid4os, (required: True), Description: "Valid OS for the application in BMS."
 bms_app_seccont, (required: True), Description: "Application's security context in BMS."
 bms_app_installcmd, (required: True), Description: "Application install command line in BMS."
+bms_app_installbds, (required: False), Description: "BDS installscript path line in BMS."
 bms_app_installparm, (required: False), Description: "Application install parameters in BMS."
 bms_app_iopt_rebootbhv, (required: False), Description: "Application install option <reboot behaviour> in BMS."
+bms_app_iopt_usebbt, (required: False), Description: "Application install option <support bbt> in BMS."
 bms_app_iopt_copylocal, (required: False), Description: "Application install option <copy locally> in BMS."
 bms_app_iopt_reinstall, (required: False), Description: "Application install option <Reinstallation allowed> in BMS."
 bms_app_iopt_target, (required: False), Description: "Application install option <target> in BMS."
 bms_app_comment, (required: False), Description: "Application comment in BMS."
 bms_app_conschecks, (required: False), Description: "Application consistency check in BMS."
 bms_app_uninstcmd, (required: False), Description: "Application uninstall command line in BMS."
+bms_app_uninstbds, (required: False), Description: "BDS uninstall script path line in BMS."
 bms_app_uninstparm, (required: False), Description: "Application uninstall parameters in BMS."
+bms_app_uopt_rebootbhv, (required: False), Description: "Application uninstall option <reboot behaviour> in BMS."
+bms_app_uopt_usebbt, (required: False), Description: "Application uninstall option <support bbt> in BMS."
 bms_app_localfilecopy, (required: False), Description: "File to copy locally."
 bms_app_dependencies, (required: False), Description: "(Array of) 'Name~~~Version' of a dependency. Use exactly 3 ~(tilde) as delimiter!"
 inst_file_src_dest, (required: False), Description: "Application install file(s) to copy to the DIP-Share, use wildcards for multiple objects."
 read_file_src_dest, (required: False), Description: "Application readme and/or create-log file(s) to copy to the DIP-Share, use wildcards for multiple objects."
 bms_imp_logfile, (required: False), Description: "Path to a logfile for exensive logging of the importer."
 ignore_errors, (required: False), Description: "Ignore any errors during the run."
+```
+
+CharToNum
+--------------
+Calculate a number from a given string (a/A=1...z/Z=26) and return the number.
+```
+Input variables:
+input_var, (required: True), Description: "string."
+output_var, (required: True), Description: "string."
+Output variables:
+value of "output_var"
+```
+
+ChromiumSettings
+--------------
+Create a preference string for Chromium based browsers.
+```
+Input variables:
+product_GUID, (required: False), Description: "The product GUID, if needed in the preferences."
+new_settings, (required: True), Description: "Dict of setting(s) to add, required."
+ignore_errors, (required: False), Description: "Ignore any errors during the process."
+Output variables:
+chrm_settings_url, Description: "Url-encoded string of settings."
 ```
 
 CreateNextBuild
@@ -86,6 +114,18 @@ day, Description: "Actual day."
 time, Description: "Actual time."
 ```
 
+ExecuteFile
+-----------
+Run an executable file (with arguments) (in a given directory).
+```
+Input variables:
+exe_file, (required: True), Description: "Full path to the file to execute."
+exe_folder, (required: False), Description: "Path to the dir, where the file should be executed."
+cmdline_args, (required: False), Description: "(Array of) argument(s) to the command line."
+run_elevated, (default: False, required: False), Description: "Run the EXE with elevated priviliges."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+```
+			
 ExeVersionExtractor
 -------------------
 Extracts version info from .exe file using the 7z utility.
@@ -104,8 +144,63 @@ Load a text file and search for date and version patterns and actualize them.
 ```
 Input variables:
 file_path, (required: True), Description: "Path to a file to update."
-new_ver, (required": False), Description: "New version string to write."
+new_ver, (required: False), Description: "New version string to write."
 re_pattern, (required: True), Description: "Regular expression of version string to replace."
+```
+
+FileMoverFromList
+-----------------
+Moves files from a source dir to a destination dir.
+Filenames must bei provided by a listfile, line by line.
+```
+Input variables:
+source_dir, (required: True), Description: "Path to the Source dir, relative to pkg_dir."
+target_dir, (required: True), Description: "Path to the Target dir, relative to pkg_dir."
+file_list, (required: True), Description: "Textfile containing the files to copy, line by line."
+Output variables:
+value of "file_list"
+```
+
+MozillaAddonIntegrator
+----------------------
+Install Extension(s) per computer and alter settings in the omni.ja in Mozilla products.
+```
+Input variables:
+application_name, (required: True), Description: "Name of the the mozilla app (e.g. Firefox/Thunderbird."
+install_exe, (required: True), Description: "Path to the exe of the mozilla app."
+new_extensions, (required: True), Description: "(Array of) extension(s) to add, with name, full url to download and Wix-component-group separated by '|||'."
+MakeFeatures, (default: False, required: False), Description: "Install the extension(s) as features."
+omni_path, (default: "browser\\omni.ja", required: True), Description: "Internal Path to omni.ja in the exe file, relative."
+config_file_path, (default: "chrome\\browser\\content\\browser\\built_in_addons.json", required: False), Description: "Internal Path to the config file to change in the omni.ja file, absolute."
+temp_path, (required: False), Description: "Path to the folder where temporary files are stored, absolute."
+omni_output_path, (required: False), Description: "Path to the folder where the altered omni file is stored, absolute."
+ext_install_path, (required: True), Description: "Path to the folder where the extensions are stored, absolute."
+app_build_path, (required: True), Description: "Path to the folder where the application build takes place, absolute."
+ext_install_xslt, (required: False), Description: "Path to an XSLT file to transform Wix heat output, absolute."
+ignore_errors, (required: False), Description: "Ignore any errors during the process."
+```
+
+MSBuildRun
+----------
+Run MSBuild to build a project.
+```
+Input variables:
+build_file, (required: True), Description: "Buildfile to run in MSBuild."
+build_folder, (required: True), Description: "Path to the build dir, required."
+build_target, (required: False), Description: "Target to call in Buildfile."
+build_property, {required: False), Description: "Property to set in Buildfile."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
+```
+
+MSIAddFileHash
+--------------
+Get the hash of (a) file(s) and insert it into an MSI.
+```
+Input variables:
+msi_path, (required: True), Description: "Path to the msi."
+File2Hash, (required: True), Description: "(Array of) File(s) with key and full path to hash, separated by '|||'."
+remove_version_field, (default: False, required: False), Description: "Clear the version field of the file in the MSI file table."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
 MSIApplySumInfo
@@ -183,7 +278,7 @@ cab_file, (required: True), Description: "Name of the CAB-file to generate."
 cab_dir, (required: False), Description: "Folder where the CAB-file should be generated, relative to pkg_dir."
 embed_cab, (default: False, required: False), Description: "Embed the cabinet file in the MSI-file".
 new_packcode, (default: False, required: False), Description: "Set a new packagecode in the MSI-file."
-ignore_errors, (required": False), Description: "Ignore any errors during the run."
+ignore_errors, (required: False), Description: "Ignore any errors during the run."
 ```
 
 MSIRunSQL
@@ -248,6 +343,7 @@ ignore_errors, (required: False), Description: "Ignore any errors during the ext
 TextFileSearch
 --------------
 Reads a text file and looks for a regex pattern and returns the string that matched the pattern.
+Deprecated! Use TextFileSearcher instead.
 ```
 Input variables:
 file_to_open, (required: True), Description: "The text file that needs to be opened for reading."
@@ -256,12 +352,26 @@ Output variables:
 matchstring, Description: "Returns the string that matched the pattern."
 ```
 
+TextFileSearcher
+----------------
+Loads a file and performs a regular expression match on the text.
+```
+Input variables:
+file_to_open, (required: True), Description: "The text file that needs to be opened for reading."
+re_pattern, (required: True), Description: "Regular expression (Python) to match against file."
+result_output_var_name, (required: False, default: match), Description: "The name of the output variable that is returned by the match. If not specified then a default of 'match' will be used."
+re_flags, (required: False), Description: "Optional array of strings of Python regular expression flags. E.g. IGNORECASE."
+Output variables:
+result_output_var_name, Description: "First matched sub-pattern from input found on the fetched file. Note the actual name of variable depends on the input variable 'result_output_var_name' or is assigned a default of 'match'."
+```
+
 WinPEVersionExtractor
 ---------------------
 Extracts version info from Windows PE-executable (.exe/.dll) file.
 ```
 Input variables:
 exe_path, (required: False), Description: "Path to exe or msi, defaults to %pathname%."
+product_version, (required: False), Description: "Set this flag to get the product version instead of the file version."
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 Output variables:
 version, Description: "Version of exe found."
@@ -272,7 +382,7 @@ WixDefaults
 Create version and default property files (version.wxi, global.prop) for the next NANT-(WIX-)build."
 ```
 Input variables:
-build_dir, (required: True), Description: "Path to the build_dir, required",
+build_dir, (required: True), Description: "Path to the build_dir."
 build_ver, (required: True), Description: "Version string, that we are using to build the package."
 org_ver, (required: False), Description: "Original version string."
 ignore_errors, (required: False), Description: "Ignore any errors during the run."

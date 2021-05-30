@@ -74,7 +74,7 @@ class FileDateVersionSubst(Processor):
             # print >> sys.stdout, "recipe_path %s" % recipe_path
             with open(self.env['file_path'], "w") as fileref:
                 fileref.write(content_new)
-        except BaseException, err:
+        except BaseException as err:
             raise ProcessorError("Can't change file at %s: %s"
                                  % (self.env['file_path'], err))
 

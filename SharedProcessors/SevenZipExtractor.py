@@ -11,10 +11,9 @@
 # Changed the extract dir to an absolute path.
 # Added possibility to specifiy recursive (20191121,Hm).
 # Added possibility to specifiy archive type (20200118,Hm).
-# Added the checkbool function to handle flag/bool checking more loosely ()20200207,Hm).
+# Added the checkbool function to handle flag/bool checking more loosely (20200207,Hm).
+# 20210517 Nick Heim: Python v3 changes
 
-
-from __future__ import absolute_import
 import os
 import sys
 import subprocess

@@ -6,19 +6,17 @@
 #
 # Alter the preference string in Chromium (MSI) installers (tested with Google Chrome and MS Edge MSI installers).
 #
+# 20210527 Nick Heim: Python v3 changes
 
-#from __future__ import absolute_import
-#from __future__ import print_function
-from __future__ import unicode_literals
 import os
 import shutil
 import sys
 import subprocess
 import json
-from urllib import unquote, urlencode, quote, quote_plus
+#from urllib import unquote, urlencode, quote, quote_plus
+from urllib.parse import unquote, urlencode, quote, quote_plus
 
 from autopkglib import Processor, ProcessorError
-import six
 import struct
 
 __all__ = ["ChromiumSettings"]
@@ -55,8 +53,10 @@ class ChromiumSettings(Processor):
 
         if "product_GUID" in self.env:
             product_GUID = self.env.get('product_GUID')
-            product_GUID_nobrace = product_GUID.strip(u'{}')
-            print("product_GUID_nobrace %s" % product_GUID_nobrace)
+            #product_GUID_nobrace = product_GUID.strip(u'{}')
+            product_GUID_nobrace = product_GUID.strip('{}')
+            #print("product_GUID_nobrace %s" % product_GUID_nobrace)
+            self.output( "product_GUID_nobrace: %s" % product_GUID_nobrace)
             msi_prod_id = {"msi_product_id": product_GUID_nobrace}
             new_settings['distribution'].update(msi_prod_id)
 
