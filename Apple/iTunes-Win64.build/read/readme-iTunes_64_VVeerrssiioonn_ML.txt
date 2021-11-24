@@ -1,14 +1,13 @@
 Apple iTunes 12.10.0.7 Multilanguage 64bit
-Multimedia-Manager für diverse Inhalte und Geräte.
+Multimedia-Manager for a variety of feeds, contents and devices.
 
-Wenn externe Geräte (iPod, iPhone) angeschlossen werden, muss auch Apple Mobile Device Support installiert werden.
+To connect devices (iPod, iPhone), Apple Mobile Device Support has to be installed as well.
 
-Die ganze Funktionalität des originalen Setups ist erhalten.
-Dazu wurde zusätzlich folgende Funktionen eingebaut:
-- Die (Vor-) Einstellungen für die einzelnen User werden beim 1. login nach der Installation ebenfalls installiert.
+The following differences to the original setup are configured:
+- The (pre-) settings for users are installed with their first login after the installation of the program.
 - Desktop icon disabled.
-- Autoupdate disabled.
-
+- Autoupdate not installed and disabled.
+- Bonjour service diabled by default.
 - iTunes-Helper application is disabled by default.
 	Can be enabled by setting the "DONTHKLMRUN={}" property.
 - The caching of the install files is disabled by default.

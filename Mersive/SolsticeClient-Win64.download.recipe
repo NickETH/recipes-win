@@ -13,10 +13,15 @@
         <key>USER_AGENT</key>
         <string>Mozilla/5.0 (Windows NT 6.3; Win64, x64; Trident/7.0; rv:11.0) like Gecko</string>
         <key>SEARCH_URL</key>
-        <string>https://www.mersive.com/download/</string>
+        <!-- <string>https://www.mersive.com/download/</string> -->
+		<string>https://www.mersive.com/download-admin/</string>
         <key>SEARCH_PATTERN</key>
         <!-- https://www.mersive.com/downloads/SolsticeClient-5.3.2.msi -->
-		<string>(https:.*?www\.mersive\.com/downloads/SolsticeClient-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)\.msi)</string>
+		<!-- Centrally Deploy the Solstice App <a href="https://www.mersive.com/files/41701/" class="btn btn-primary ntm-download-btn">Windows MSI</a> -->
+		<!-- <string>(https:.*?www\.mersive\.com/downloads/SolsticeClient-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)\.msi)</string> -->
+		<!-- <string>Solstice admins can use the MSI.* href="(https://www\.mersive\.com/.*)".*Windows MSI</string> -->
+		<!-- <string>href="(?P&lt;MSIDlLink&gt;https://www\.mersive\.com/.*?)".*Windows MSI</string> -->
+		<string>href="(https://www\.mersive\.com/.*?)".*Windows MSI</string>
     </dict>
     <key>MinimumVersion</key>
     <string>1.3.1</string>
@@ -41,7 +46,8 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>%match%</string>
+                <!-- <string>%MSIDlLink%</string> -->
+				<string>%match%</string>
                 <key>request_headers</key>
                 <dict>
                     <key>user-agent</key>

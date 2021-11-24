@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Adoptium OpenJDK MSI-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.AdoptiumOpenJDKMSI-Win</string>
+    <key>Input</key>
+    <dict>
+<!-- 	    <key>DOWNLOAD_FILE</key>
+        <string>OpenJDK8U-JRE</string>
+        <key>PLATFORM</key>
+        <string>x86</string>
+        <key>ZULUPLATFORM</key>
+        <string>i686</string>
+        <key>PRODUCT</key>
+        <string>jre</string> -->
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%SEARCH_URL%</string>
+				<!-- <string>https://api.adoptium.net/v3/installer/latest/8/ga/windows/x86/jre/hotspot/normal/adoptium</string> -->
+                <key>re_pattern</key>
+				<!-- Location: https://github.com/adoptium/temurin8-binaries/releases/download/jdk8u312-b07/OpenJDK8U-jre_x86-32_windows_hotspot_8u312b07.msi -->
+				<string>Location: (?P&lt;msi_dl_link&gt;https.+?msi)</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+					   <string>-I</string>
+                    </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%SEARCH_URL%</string> -->
+				<string>https://api.adoptium.net/v3/assets/latest/%FEATUREVER%/hotspot?vendor=adoptium</string>
+				<!-- <string><![CDATA[https://api.adoptopenjdk.net/v2/latestAssets/releases/openjdk8?os=windows&arch=x64&heap_size=normal&openjdk_impl=hotspot&type=jre]]></string>  -->
+                <key>re_pattern</key>
+				<string>&quot;semver&quot;: &quot;(?P&lt;orgversion&gt;(?P&lt;ver_major&gt;[0-9]+)\.(?P&lt;ver_majorminor&gt;[0-9]+)\.(?P&lt;ver_minor&gt;[0-9]+)\+(?P&lt;ver_build&gt;\d+)(?!.*\d))</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+				<string>%ver_major%.%ver_majorminor%.%ver_minor%.%ver_build%</string>
+                <key>rename_var</key>
+                <string>version</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+				<string>%ver_major%%ver_majorminor%%ver_minor%%ver_build%</string>
+                <key>rename_var</key>
+                <string>version_string</string>
+            </dict>
+		</dict>
+		<!--
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%SEARCH_URL%</string> -->
+				<string>https://cdn.azul.com/zulu/bin</string>
+                <key>re_pattern</key>
+				<string>&quot;(?P&lt;zuludlfile&gt;(?P&lt;zuludldir&gt;zulu.+-ca-fx-%PRODUCT%%ver_major%.%ver_majorminor%.%ver_minor%-win_%ZULUPLATFORM%).zip)&quot;</string>
+				<!-- zulu8.40.0.25-ca-jre8.0.222-win_x64.zip -->
+				<!-- <key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array> -->
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>https://cdn.azul.com/zulu/bin/%match%</string>
+                <key>rename_var</key>
+                <string>zululink</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%ver_major%,%ver_majorminor%,%ver_minor%</string>
+                <key>rename_var</key>
+                <string>ASver</string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%msi_dl_link%</string>
+                <key>filename</key>
+                <string>%DOWNLOAD_FILE%_hotspot_%PLATFORM%.msi</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>E=webmaster@eclipse.org, CN="Eclipse.org Foundation, Inc.", OU=IT, O="Eclipse.org Foundation, Inc.", L=Ottawa, S=Ontario, C=CA</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%pathname%</string>
+                <key>rename_var</key>
+                <string>path_msi</string>
+            </dict>
+		</dict>
+<!--        
+-->
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <!-- <string>%zululink%</string> -->
+				<string>https://cdn.azul.com/zulu/bin/%zuludlfile%</string>
+                <key>filename</key>
+                <!-- <string>%zuludlfile%</string> -->
+				<string>%DOWNLOAD_FILE%_zulu_%PLATFORM%.zip</string>
+                <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>FileCreator</string>
+            <key>Arguments</key>
+            <dict>
+                <key>file_content</key>
+                <string>%version%</string>
+                <key>file_path</key>
+                <string>%RECIPE_CACHE_DIR%\version.txt</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

@@ -1,0 +1,4 @@
+190813	Adoptium IcedTea-Web x64
+	Java OpenWebstart for x64 Windows.
+	We distribute the package unaltered.
+

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<project name="Java_FX_64_MergeModule">
+  <property name="download-component" value="no" />
+  <!-- Hier brauchen wir die originale Versions-Nr wie 20.0 oder 20.0.1 -->
+  <property name="RealVersion" value="66.0.2" />
+  <property name="PackageVersion" value="66.0.2" />
+  <property name="ShortVersion" value="6602" />
+  <property name="xpi-maxversion" value="66.*" />
+</project>

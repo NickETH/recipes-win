@@ -14,7 +14,8 @@
 		<string>(?P&lt;SessionID&gt;ASPSESSIONID[A-Z]+)\t(?P&lt;CookieStr&gt;[A-Z]+)</string>
         <key>SOFTWARE_GUID</key>
 		<!-- Filedownload&SoftwareGUID=5345fcd8-3f02-4199-90ad-22269d958ef8', function(data) -->
-		<string>SoftwareGUID=[\w]*-[\w]*-[\w]*-[\w]*-[\w]*</string>
+		<!-- <string>[\w]*-[\w]*-[\w]*-[\w]*-[\w]*</string> -->
+		<string>"updateSetupPackage":{"id":[\w]*,"softwareID":"(?P&lt;SW_GUID&gt;[\w]*-[\w]*-[\w]*-[\w]*-[\w]*)"}</string>
 		<key>USER_AGENT</key>
         <string>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0</string>
     </dict>
@@ -22,15 +23,32 @@
     <string>1.0.5</string>
     <key>Process</key>
     <array>
+<!-- <string>https://support.ts.fujitsu.com/Deskupdate/index.asp?lng=de"</string> -->
+<!--         <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+				<string>https://community.chocolatey.org/packages/deskupdate#files</string>
+                <key>re_pattern</key>
+                <string>%SOFTWARE_GUID%</string>
+            </dict>
+        </dict> -->
         <dict>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-				<string>https://support.ts.fujitsu.com/Deskupdate/index.asp?lng=de"</string>
+				<string>https://webdownloads2.ts.fujitsu.com/deskupdate_5_1/data/api/v1/update/5.01.0064.0</string>
                 <key>re_pattern</key>
                 <string>%SOFTWARE_GUID%</string>
+				<key>curl_opts</key>
+				<array>
+					<string>--request</string>
+					<string>GET</string>
+				</array>
             </dict>
         </dict>
         <dict>
@@ -49,7 +67,7 @@
 				<array>
 					<string>--data-raw</string>
 					<!-- <string>SoftwareGUID=5345FCD8-3F02-4199-90AD-22269D958EF8</string> -->
-					<string>%match%</string>
+					<string>SoftwareGUID=%SW_GUID%</string>
 					<string>-c</string>
 					<string>%RECIPE_CACHE_DIR%\cookie.txt</string>
 				</array>

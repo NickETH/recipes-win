@@ -3,6 +3,7 @@
 # PowerShell -NoProfile -ExecutionPolicy Bypass -Command "& '%cd%\BMSImporter.ps1'"
 # Todo: Logfile based on the presence of a bms_imp_logfile parameter, better parameter read function(s).
 # Extended with UseBBT-option and explicit options for uninstall, 20210207, Hm
+# Extended localfilecopy to all options, 20211028, Hm
 
 param(
     [Parameter(mandatory=$true)][string]$bms_serverurl,
@@ -107,8 +108,8 @@ foreach ($Application in $All_Apps_in_BMS) {
 # Create the options hash table for install
 if ($bms_app_iopt_rebootbhv -or $bms_app_iopt_copylocal -or $bms_app_iopt_usebbt -or $bms_app_iopt_reinstall -or $bms_app_target) {
     $InstallOptArgs = @{ }
-    echo "InstallOptions inside If" | Out-File $logfile -Append
-    echo ("bms_app_iopt_copylocal in If: " + $bms_app_iopt_copylocal) | Out-File $logfile -Append
+    # echo "InstallOptions inside If" | Out-File $logfile -Append
+    # echo ("bms_app_iopt_copylocal in If: " + $bms_app_iopt_copylocal) | Out-File $logfile -Append
 
     # echo @InstallOptArgs | Out-File $logfile -Append
     if ($bms_app_iopt_rebootbhv) { $InstallOptArgs['RebootBehaviour'] = $bms_app_iopt_rebootbhv}
@@ -118,8 +119,8 @@ if ($bms_app_iopt_rebootbhv -or $bms_app_iopt_copylocal -or $bms_app_iopt_usebbt
     if ($bms_app_iopt_target) { $InstallOptArgs['Target'] = $bms_app_iopt_target }
     # echo @InstallOptArgs | Out-File $logfile -Append
     $InstallOptions = New-bConnectApplicationInstallOptions @InstallOptArgs
-    echo @InstallOptArgs | Out-File $logfile -Append
-    echo "1" | Out-File $logfile -Append
+    # echo @InstallOptArgs | Out-File $logfile -Append
+    # echo "1" | Out-File $logfile -Append
 }
 # Create the options hash table for uninstall
 # Special case for reboot behaviour: If it is set on install, we use it also for uninstall as default. But if it set for uninstall explicitley, we take this one.
@@ -151,8 +152,8 @@ elseif ($bms_app_installbds) {
 if ($bms_app_installparm) { $installDataArgs['Parameter'] = $bms_app_installparm }
 if ($InstallOptions) { $installDataArgs['Options'] = $InstallOptions }
 $InstallationData = New-bConnectApplicationInstallationData @installDataArgs
-echo @InstallationData | Out-File $logfile -Append
-echo "2" | Out-File $logfile -Append
+# echo @InstallationData | Out-File $logfile -Append
+# echo "2" | Out-File $logfile -Append
 
 if ($bms_app_uninstcmd -or $bms_app_uninstbds -or $bms_app_uninstparm) {
 	if ($bms_app_uninstcmd -and $bms_app_uninstbds) {
@@ -174,16 +175,16 @@ if ($bms_app_uninstcmd -or $bms_app_uninstbds -or $bms_app_uninstparm) {
     if ($bms_app_uninstparm) { $UnInstallDataArgs['Parameter'] = $bms_app_uninstparm }
 	if ($UnInstallOptions) { $UnInstallDataArgs['Options'] = $UnInstallOptions }
     $UninstallationData = New-bConnectApplicationInstallationData @UnInstallDataArgs
-    echo @UninstallationData | Out-File $logfile -Append
-    echo "3" | Out-File $logfile -Append
+    # echo @UninstallationData | Out-File $logfile -Append
+    # echo "3" | Out-File $logfile -Append
 }
 
 
 #Create an array for the "ValidForOS" object.
 $Val4OSary = $bms_app_valid4os.Split(",") | where-object {$_ -ne " "}
 
-echo ("Valid4OS-before: " + $bms_app_valid4os) | Out-File $logfile -Append
-echo ("Valid4OS-after: " + $Val4OSary) | Out-File $logfile -Append
+# echo ("Valid4OS-before: " + $bms_app_valid4os) | Out-File $logfile -Append
+# echo ("Valid4OS-after: " + $Val4OSary) | Out-File $logfile -Append
 
 $AppInstallArgs = @{
     Name             = $bms_app_name;
@@ -201,16 +202,21 @@ if ($bms_app_comment) { $AppInstallArgs['Comment'] = $bms_app_comment }
 if ($UninstallationData) { $AppInstallArgs['UninstallationData'] = $UninstallationData }
 if ($bms_app_conschecks) { $AppInstallArgs['ConsistencyChecks'] = $bms_app_conschecks }
 
-#If we have a file to copy locally
+#If we have to config files to copy locally
 if ($bms_app_localfilecopy) {
-	#For now, only a single file is implemented
-	#To extend it to an array, use dependencies as example.
-    $File_obj_local = New-bConnectApplicationFile -Source $bms_app_localfilecopy -Type "File"
-	$App_localFile_Arj = @()
-	$App_localFile_Arj += @( [PSCustomObject]$File_obj_local)
+    $fldr_seprtr = "|||"
+    $split_optn = [System.StringSplitOptions]::RemoveEmptyEntries
+    $local_file_ary = $bms_app_localfilecopy.Split($fldr_seprtr,$split_optn)
+    $App_LocalFile_Arj = @()
+    $fldr_seprtr = "~~~"
+    foreach ($local_file in $local_file_ary) {
+        $local_file_opt = $local_file.Split($fldr_seprtr,$split_optn)
+		$File_obj_local = New-bConnectApplicationFile -Source $local_file_opt[0] -Type $local_file_opt[1]
+		$App_localFile_Arj += @( [PSCustomObject]$File_obj_local)
+    }
 	if ($File_obj_local) { $AppInstallArgs['Files'] = $App_localFile_Arj }
 	
-	echo ("Local File: " + $bms_app_localfilecopy) | Out-File $logfile -Append
+	# echo ("Local File: " + $bms_app_localfilecopy) | Out-File $logfile -Append
 }
 
 #If we have dependencies
@@ -235,16 +241,16 @@ if ($bms_app_dependencies) {
                 $App_Depend_Arj += @( [PSCustomObject]$Depend_Data)
             }
         }
-        echo ("Dependency " + $Application.Name) | Out-File $logfile -Append
+        # echo ("Dependency " + $Application.Name) | Out-File $logfile -Append
     }
     $AppInstallArgs['SoftwareDependencies'] = $App_Depend_Arj
 }
 
-echo @AppInstallArgs | Out-File $logfile -Append
-echo "Just before New-App" | Out-File $logfile -Append
+# echo @AppInstallArgs | Out-File $logfile -Append
+# echo "Just before New-App" | Out-File $logfile -Append
 <#
 #>
-echo @AppInstallArgs | Out-File $logfile -Append
+# echo @AppInstallArgs | Out-File $logfile -Append
 
 New-bConnectApplication @AppInstallArgs
 
@@ -256,7 +262,7 @@ if ($inst_file_src_dest) {
     if( -Not (Test-Path -Path $inst_file_ary[1])){
         New-Item -Type dir $inst_file_ary[1]
     }
-    echo ("inst_file_src_dest: " + ($inst_file_ary[0] + "  " + $inst_file_ary[1]))
+    # echo ("inst_file_src_dest: " + ($inst_file_ary[0] + "  " + $inst_file_ary[1]))
     if ($inst_file_ary[0] -match '\*') {
         Copy-Item -Force -Recurse $inst_file_ary[0] $inst_file_ary[1]
     }
@@ -273,7 +279,7 @@ if ($read_file_src_dest) {
     if( -Not (Test-Path -Path $read_file_ary[1])){
         New-Item -Type dir $read_file_ary[1]
     }
-    echo ("read_file_src_dest: " + ($read_file_ary[0] + "  " + $read_file_ary[1]))
+    # echo ("read_file_src_dest: " + ($read_file_ary[0] + "  " + $read_file_ary[1]))
     if ($read_file_ary[0] -match '\*') {
         Copy-Item -Force -Recurse $read_file_ary[0] $read_file_ary[1]
     }

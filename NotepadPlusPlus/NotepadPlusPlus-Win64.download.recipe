@@ -51,7 +51,19 @@
                 <string>%NAME%.zip</string>
             </dict>
         </dict>
-<!--         <dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>%match%Installer.x64.exe</string>
+				<!-- <string>%url%portable.x64.zip</string> -->
+                <key>filename</key>
+                <string>%NAME%.exe</string>
+            </dict>
+        </dict>
+        <dict>
             <key>Processor</key>
             <string>WindowsSignatureVerifier</string>
             <key>Arguments</key>
@@ -61,7 +73,7 @@
                 <key>expected_subject</key>
                 <string>CN="Notepad++", O="Notepad++", L=Saint Cloud, S=Ile-de-France, C=FR</string>
             </dict>
-        </dict> -->
+        </dict>
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

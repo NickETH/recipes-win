@@ -54,7 +54,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=Sinew Software Systems Private Limited, O=Sinew Software Systems Private Limited, STREET="1115, Tower B4, Spaze iTech Park", STREET=Sector 49, L=Gurugram, S=Haryana, PostalCode=122018, C=IN</string>
+                <string>CN="Enpass Technologies, Inc.", O="Enpass Technologies, Inc.", S=Delaware, C=US</string>
             </dict>
         </dict>
         <dict>

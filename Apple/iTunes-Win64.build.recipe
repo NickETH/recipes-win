@@ -148,6 +148,45 @@
                 <string>true</string>
             </dict>
         </dict> -->
+         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the version from Bonjour64.msi into msi_value</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\Bonjour64.msi</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion']]></string>
+            </dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%msi_value%</string>
+                <key>rename_var</key>
+                <string>BJ_version</string>
+            </dict>
+		</dict>
+         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+			<string>Copy the Bonjour64.msi to the release folder</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\Bonjour64.msi</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\Bonjour64_%BJ_version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
@@ -507,6 +546,42 @@
 				</dict>
             </dict>
 		</dict> -->
+         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
+			<key>Comment</key>
+			<string>Change a few settings in the Bonjour64 MSI-file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\Bonjour64_%BJ_version%_ML.msi</string>
+                <key>SQL_command</key>
+				<array>
+					<string><![CDATA[UPDATE `ServiceInstall` SET `ServiceInstall`.`StartType`=4 WHERE `ServiceInstall`.`ServiceInstall`='Bonjour_Service']]></string>
+					<string><![CDATA[UPDATE `ServiceControl` SET `ServiceControl`.`Event`=162 WHERE `ServiceControl`.`ServiceControl`='Bonjour_Service']]></string>
+				</array>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIApplySumInfo</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\Bonjour64_%BJ_version%_ML.msi</string>
+				<key>cmnds_sinfo</key>			
+				<dict>
+				    <key>/o</key>
+                    <string>Version %BJ_version% for ETHZ ID. %us_date% by AutoPkg</string>
+				    <key>/j</key>
+                    <string>Bonjour x64 %BJ_version% ML</string>
+				    <key>/t</key>
+                    <string>Bonjour x64 %BJ_version% ML</string>
+				    <key>/p</key>
+                    <string>x64;1033</string>
+				</dict>
+            </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/MSIRunSQL</string>
@@ -534,11 +609,11 @@
 				<key>cmnds_sinfo</key>			
 				<dict>
 				    <key>/o</key>
-                    <string>Version %version% for ETHZ ID. %us_date% by AutoPkg</string>
+                    <string>Version %AMDS_version% for ETHZ ID. %us_date% by AutoPkg</string>
 				    <key>/j</key>
-                    <string>Apple Mobile Device Support x64 %version% ML</string>
+                    <string>Apple Mobile Device Support x64 %AMDS_version% ML</string>
 				    <key>/t</key>
-                    <string>Apple Mobile Device Support x64 %version% ML</string>
+                    <string>Apple Mobile Device Support x64 %AMDS_version% ML</string>
 				    <key>/p</key>
                     <string>x64;1033</string>
 				</dict>

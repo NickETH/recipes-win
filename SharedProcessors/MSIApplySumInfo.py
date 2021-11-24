@@ -9,6 +9,7 @@
 # Output needs work. Goal would be to return the string, if string_sinfo is not supplied
 # Alternative could be the msilib SummaryInformation.GetProperty(field) functions.
 # 20210517 Nick Heim: Python v3 changes
+# 211029 Nick Heim: Clean up, set debug output to verbose > 1.
 
 import os
 import sys
@@ -45,21 +46,19 @@ class MSIApplySumInfo(Processor):
 
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
         cmnds_sinfo = self.env.get('cmnds_sinfo', '')
-        #print >> sys.stdout, "cmnds_sinfo %s" % cmnds_sinfo
-        self.output( "cmnds_sinfo: %s" % cmnds_sinfo)
+        if verbosity > 1:
+            self.output( "cmnds_sinfo: %s" % cmnds_sinfo)
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
         extract_flag = 'l'
         msiinfo_exe = os.path.join(self.env['TOOLS_DIR'], "msiinfo.exe")		
 
-        #for key, value in cmnds_sinfo.items():
         for key, value in list(cmnds_sinfo.items()):
-            self.output("Applying: %s" % msi_path)
             cmd = [msiinfo_exe, msi_path, key, value]
-            #print >> sys.stdout, "cmd %s %s" % (key, value)
-            self.output( "cmd %s %s" % (key, value))
             try:
                 if verbosity > 1:
+                    self.output("Applying: %s" % msi_path)
+                    self.output( "cmd %s %s" % (key, value))
                     Output = subprocess.check_output(cmd)
                 else:
                     Output = subprocess.check_output(cmd)

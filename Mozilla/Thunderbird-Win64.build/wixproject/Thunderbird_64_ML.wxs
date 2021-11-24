@@ -41,7 +41,7 @@
             <Directory Id="ProgramFiles64Folder" SourceName="Program Files">
 				<Directory Id="APPLICATIONFOLDER" Name="Mozilla Thunderbird" ShortName="THNDBIRD">
 					<Directory Id="INSTALLDIR" Name="." >
-						<Directory Id="EXTENSIONS" Name="features" />
+						<Directory Id="EXTENSIONS" Name="extensions" />
 					</Directory>
 				</Directory>
             </Directory>			

@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<project name="Java_FX_64_MergeModule" default="build-all">
+	<!--
+	Setup the environment.
+	Lot of variables (property).
+	-->
+	<include buildfile="global.prop"/>
+	
+	<property name="download-component" value="no" />
+	<property name="JFXVersion" value="${RealVersion}" />
+	<property name="JFXSRC" value="Input the Zulu JFX zip here" />
+	<property name="JFXmsm" value="JavaFX_64_${JFXVersion}.msm" />
+	<property name="JFXdir1" value=".\JFX" />
+	<!-- <property name="FTdir2" value=".\Fonts2" /> -->
+
+	<!-- Set up the working environment -->
+	<property name="current.dir" value="${directory::get-current-directory()}" />
+	<property name="project.dir" value="${directory::get-parent-directory(current.dir)}" />
+	<!-- WiX 3 folder -->
+	<property name="wix.dir" value="${path::combine(environment::get-variable('WIX'), 'bin')}" readonly="true" />
+	<!-- Load the WiX3 tasks -->
+	<loadtasks assembly="${wix.dir}\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
+
+	<!-- Tools folder -->
+	<property name="TOOLS_DIR" value="${arg.ToolsDir}" />
+	<echo message="Tools Dir: ${TOOLS_DIR}" />
+	
+	<!-- 7zip path -->
+	<property name="FULL_7Z_PATH" value="${arg.7ZipCmd}" />
+	<echo message="7zip path: ${FULL_7Z_PATH}" />
+
+    <target name="build-all">
+		<!-- <call target="instFTmain" /> -->
+		<call target="JFX-harv"/>
+		<!--
+		<call target="FT-harv-Complete" />
+		-->
+		<call target="JFX-candle" />
+		<call target="JFX-light" />
+	</target>
+	
+    <target name="clean">
+        <delete>
+            <fileset>
+                <include name="${JFXmsm}"/>
+                <include name="*.wixobj"/>
+				<include name="JFX*.wxs"/>
+            </fileset>
+		</delete>
+		<!-- <delete dir="${JFXdir1}" /> -->
+	</target>
+	
+	<target name="instFTmain">
+        <!-- 
+            unzip, install the Fonts_ASVZ-Geogrotesque Package file.
+
+        <exec program="C:\Program Files\7-Zip\7z.exe">
+			<arg value="x" />
+			<arg value="-y" />
+			<arg file="..\sourcepkt\${FTSRC}" />
+		</exec>
+        -->
+		<copy todir="${JFXdir1}">
+			<fileset basedir=".\..\sourceunzipped">
+				<include name="*.ttf" />
+			</fileset>
+		</copy>
+        <!-- 
+		<copy todir="${FTdir2}">
+			<fileset basedir=".\..\sourceunzipped">
+				<include name="*.OTF" />
+				<exclude name="Geo-Bd.otf" />
+			</fileset>
+		</copy>
+        -->
+    </target>
+	
+	<target name="JFX-harv">
+		<!-- 
+            harvest the project files.
+        -->
+		<exec program="${wix.dir}\heat.exe" failonerror="false">
+		<!-- <exec program="heat.exe"> -->
+			<arg value="dir" />
+			<arg dir=".\${JFXdir1}" />
+			<arg value="-gg" />
+			<arg value="-platform" />
+			<arg value="Win64" />
+			<arg value="-sfrag" />
+			<arg value="-srd" />
+			<arg value="-suid" />
+			<arg value="-dr" />
+			<arg value="JFXFolder" />
+			<arg value="-cg" />
+			<arg value="JFXFiles1" />
+			<arg value="-sw5150" />
+			<arg value="-var" />
+			<arg value="wix.FTSourceDir1" />
+			<arg value="-t" />
+			<arg file="Comp-x64.xslt" />
+			<arg value="-out" />
+			<arg file="JFXfiles1.wxs" />
+		</exec>
+    </target>
+
+
+	<target name="JFX-light">
+        <!--
+            Builds (link) the Fonts_HeimAG Project
+		-->
+		<property name="quote" value='"' />
+		<property name="Current.Dir" value="${directory::get-current-directory()}" />
+
+		<property name="lightFTSourceDirVAR1" value="${'-dFTSourceDir1=' + quote + Current.Dir + '\' + JFXdir1 + quote}" />
+		<!--
+		<property name="lightFTSourceDirVAR2" value="${'-dFTSourceDir2=' + quote + Current.Dir + '\' + FTdir2 + quote}" />
+		-->
+		<echo message="${lightFTSourceDirVAR1}"/>
+
+		<light
+			exedir="${wix.dir}"
+			out="${JFXmsm}"
+			warningsaserrors="false"
+			suppressices="ICE03;ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
+			cultures="de-de"
+			extensions="WixUIExtension"
+			rebuild="true"
+			suppresspdb="true">
+			<!-- Specify additional options -->
+			<arg line="${lightFTSourceDirVAR1}" />
+			<!--
+			<arg line="${lightFTSourceDirVAR2}" />
+
+			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
+			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
+			-->
+			<sources basedir=".\.">
+				<include name="J*.wixobj" />
+			</sources>
+		</light>
+    </target>
+	<target name="JFX-candle">
+        <!-- 
+            Compiles the Fonts_HeimAG Project files
+        -->
+		<candle
+			exedir="${wix.dir}"
+			out=".\"
+			rebuild="true"
+			warningsaserrors="false">
+			<arg line="-sw0044" />
+			<arg line="-arch" />
+			<arg line="x64" />
+			<sources basedir=".">
+				<include name="J*.wxs" />
+			</sources>
+		</candle>
+    </target>
+</project>

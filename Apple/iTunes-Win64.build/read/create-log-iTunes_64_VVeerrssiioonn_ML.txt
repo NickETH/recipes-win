@@ -1,4 +1,4 @@
-.
+
 190924	Direct-Download Links: https://discussions.apple.com/docs/DOC-6562#more
 
 	Analyzing the package, we need to alter this issues:
@@ -20,4 +20,5 @@
 		7z.exe" e .\iTunes.cab -o.\. "filetable key"
 	7. Disable the per default Caching.
 	8. We need to rewrite the german (1031) language transform.
+	9. From v12.12 Bonjour seems to be mandatory! We install it but disable the service by default
 

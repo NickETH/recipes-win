@@ -13,6 +13,7 @@
 # Extended with UseBBT-option and explicit options for uninstall, hardened boolean recipe reading from recipe 20210207, Hm
 # Todo: Generic read function for optional parameter processing with for statement and value types
 # 20210517 Nick Heim: Python v3 changes
+# 20211028 Nick Heim: Extended localfilecopy to all options
 
 import os
 import sys
@@ -169,10 +170,9 @@ class BMSImporter(Processor):
         bms_app_version = self.env.get('bms_app_version')
         bms_app_valid4os = self.env.get('bms_app_valid4os')
         bms_app_seccont = self.env.get('bms_app_seccont')
-        # bms_app_installcmd = self.env.get('bms_app_installcmd')
+
         ignore_errors = self.env.get('ignore_errors', True)
-        verbosity = self.env.get('verbose', 5)
-        #print >> sys.stdout, "bms_app_name %s" % bms_app_name
+        verbosity = self.env.get('verbose', 1)
         #self.output("bms_app_name: %s" % bms_app_name)
 
         self.output("Creating: %s" % bms_app_name)
@@ -259,13 +259,21 @@ class BMSImporter(Processor):
 
         if "bms_app_localfilecopy" in self.env:
             bms_app_localfilecopy = self.env.get('bms_app_localfilecopy')
-            cmd.extend(['-bms_app_localfilecopy', bms_app_localfilecopy])
+            # if recipe writer gave us a single string instead of a list of strings,
+            # convert it to a list of strings
+            if isinstance(self.env["bms_app_localfilecopy"], str):
+                self.env["bms_app_localfilecopy"] = [self.env["bms_app_localfilecopy"]]
+
+            cmd_string = ""
+            for app_ver_entry in self.env["bms_app_localfilecopy"]:
+                cmd_string += app_ver_entry + '|||'
+			
+            cmd.extend(['-bms_app_localfilecopy', cmd_string])
 
         if "bms_app_dependencies" in self.env:
             bms_app_dependencies = self.env.get('bms_app_dependencies')
             # if recipe writer gave us a single string instead of a list of strings,
             # convert it to a list of strings
-            #if isinstance(self.env["bms_app_dependencies"], basestring):
             if isinstance(self.env["bms_app_dependencies"], str):
                 self.env["bms_app_dependencies"] = [self.env["bms_app_dependencies"]]
 
@@ -298,8 +306,7 @@ class BMSImporter(Processor):
         except:
             if ignore_errors != 'True':
                 raise
-        #print >> sys.stdout, "cmdline Output %s" % Output
-        self.output("cmdline Output: %s" % Output)
+        #self.output("cmdline Output: %s" % Output)
         #self.env['pkg_dir'] = Output
 		
         archiveVersion = ""

@@ -129,7 +129,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=London Jamocha Community CIC, O=London Jamocha Community CIC, L=London, C=GB</string>
+                <string>CN=London Jamocha Community CIC, O=London Jamocha Community CIC, L=Camberley, C=GB</string>
             </dict>
         </dict>
         <dict>

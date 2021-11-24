@@ -46,7 +46,7 @@
                 <key>org_ver</key>
                 <string>%version%</string>
                 <key>ver_fields</key>
-                <string>3</string>
+                <string>4</string>
                 <key>pkg_dir</key>
 				<string>%NAME%%PF_STRING%_::VVeerrssiioonn::_ML</string>
                 <key>folder_list</key>
@@ -70,7 +70,7 @@
             <key>Processor</key>
             <string>Copier</string>
 			<key>Comment</key>
-            <string>Copy the Notepad++ installer file to the build dir</string>
+            <string>Copy the Notepad++ installer exe file to the build dir</string>
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
@@ -83,13 +83,28 @@
         </dict>
         <dict>
             <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the Notepad++ installer zip file to the build dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%RECIPE_CACHE_DIR%\downloads\%NAME%.zip</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%.zip</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
             <key>Comment</key>
             <string>Extract the Notepad++ installer</string>
             <key>Arguments</key>
             <dict>
                 <key>exe_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%filename%</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%.zip</string>
                 <key>extract_dir</key>
                 <string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%</string>
                 <key>preserve_paths</key>
@@ -102,6 +117,25 @@
         </dict>
         <dict>
             <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/SevenZipExtractor</string>
+            <key>Comment</key>
+            <string>Extract the Notepad++ installer</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%.exe</string>
+                <key>extract_dir</key>
+                <string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%</string>
+                <key>preserve_paths</key>
+                <string>True</string>
+                <key>extract_file</key>
+                <string>NppShell_06.dll</string>
+                <key>ignore_pattern</key>
+                <string></string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
             <string>GitHubReleasesInfoProvider</string>
             <key>Arguments</key>
             <dict>
@@ -109,9 +143,22 @@
                 <string>notepad-plus-plus/nppPluginList</string>
 				<key>include_prereleases</key>
 				<string>true</string>
+				<key>asset_regex</key>
+				<string>zipball/v1.3.9</string>
+			</dict>
+		</dict> -->
+	    <dict>
+            <key>Processor</key>
+            <string>URLTextSearcher</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://api.github.com/repos/notepad-plus-plus/nppPluginList/releases</string>
+                <key>re_pattern</key>
+                <string>"zipball_url": "(?P&lt;pluginlist_url&gt;https://api.github.com/repos/notepad-plus-plus/nppPluginList/zipball/v(?P&lt;zipversion&gt;([0-9]+\.)*[0-9]+))</string>
             </dict>
         </dict>
-        <dict>
+<!--         <dict>
             <key>Processor</key>
             <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
             <key>Arguments</key>
@@ -121,7 +168,7 @@
                 <key>rename_var</key>
                 <string>pluginlist_url</string>
             </dict>
-		</dict>
+		</dict> -->
         <dict>
             <key>Processor</key>
             <string>URLDownloader</string>
