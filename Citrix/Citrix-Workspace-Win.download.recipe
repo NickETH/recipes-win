@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest version of Citrix Workspace for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.Citrix-Workspace-Win</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>CitrixWorkspace</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.3.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https://www.citrix.com/downloads/workspace-app/windows/workspace-app-for-windows-latest.html#ctx-dl-eula</string>
+				<key>re_pattern</key>
+				<string>(?P&lt;DYNAMIC_URL&gt;//downloads.citrix.com/[\d]+/CitrixWorkspaceApp\.exe\?__gda__\=[\w]+\=[\w]+\~[\w]+\=/\*\~[\w]+\=[\w]+)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>https:%DYNAMIC_URL%</string>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+			<key>Comment</key>
+			<string>Check the signature on the downloaded file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+				<string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN="Citrix Systems, Inc.", OU=XenApp(Server SHA256) 2021, O="Citrix Systems, Inc.", L=Fort Lauderdale, S=Florida, C=US</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

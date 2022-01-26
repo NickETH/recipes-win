@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Package the current Citrix Workspace release.</string>
+    <key>Identifier</key>
+	<string>com.github.autopkg-win.build.Citrix-Workspace-Win</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>CitrixWorkspace</string>
+        <key>PLATFORM</key>
+        <string>x86</string>
+        <key>PF_STRING</key>
+        <string></string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+	<key>ParentRecipe</key>
+	<string>com.github.autopkg-win.download.Citrix-Workspace-Win</string>
+
+    <key>Process</key>
+    <array>
+	    <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
+            <key>Arguments</key>
+            <dict>
+                <key>exe_path</key>
+				<string>%pathname%</string>
+                <key>product_version</key>
+                <string>False</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+			<string>com.github.sebtomasi.SharedProcessors/TextSubstituer</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_string</key>
+                <string>%version%</string>
+                <key>pattern_replace</key>
+				<array>
+                    <dict>
+                        <key>pattern</key>
+                        <string><![CDATA[ ]]></string>
+                        <key>repl</key>
+                        <string><![CDATA[]]></string>
+                    </dict>
+                </array>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
+			<key>Comment</key>
+            <string>Create a build enviroment to store the package</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>ver_fields</key>
+                <string>4</string>
+                <key>pkg_dir</key>
+                <string>%NAME%%PF_STRING%_%version%_ML</string>
+                <key>folder_list</key>
+                <string>release:read</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the Git install exe file to the release dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%%PF_STRING%_%build_ver%_ML.exe</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%%PF_STRING%_%build_ver%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%%PF_STRING%_%build_ver%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%build_ver%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+	</array>
+</dict>
+</plist>

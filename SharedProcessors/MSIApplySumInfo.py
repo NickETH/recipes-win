@@ -46,10 +46,10 @@ class MSIApplySumInfo(Processor):
 
         msi_path = self.env.get('msi_path', self.env.get('pathname'))
         cmnds_sinfo = self.env.get('cmnds_sinfo', '')
+        verbosity = self.env.get('verbose', 1)
         if verbosity > 1:
             self.output( "cmnds_sinfo: %s" % cmnds_sinfo)
         ignore_errors = self.env.get('ignore_errors', True)
-        verbosity = self.env.get('verbose', 1)
         extract_flag = 'l'
         msiinfo_exe = os.path.join(self.env['TOOLS_DIR'], "msiinfo.exe")		
 

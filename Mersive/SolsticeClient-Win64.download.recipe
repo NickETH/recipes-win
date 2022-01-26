@@ -65,7 +65,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN="Mersive Technologies, Inc.", OU="Mersive Technologies, Inc.", O="Mersive Technologies, Inc.", L=Denver, S=Colorado, C=US, SERIALNUMBER=4183763, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US</string>
+				<string>CN="Mersive Technologies, Inc.", O="Mersive Technologies, Inc.", L=Denver, S=Colorado, C=US, SERIALNUMBER=4183763, OID.1.3.6.1.4.1.311.60.2.1.2=Delaware, OID.1.3.6.1.4.1.311.60.2.1.3=US, OID.2.5.4.15=Private Organization</string>
             </dict>
         </dict>
         <dict>

@@ -1,0 +1,7 @@
+
+200113	Packaging UTN Manager for Windows
+	We download and distribute the package as is.
+	For the download links, see the recipe.
+
+
+200113	Version 1.0.0, by AutoPkg

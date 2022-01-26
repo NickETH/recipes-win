@@ -276,6 +276,7 @@ adm_msi_path, (required: True), Description: "Path to the MSI-file to be patched
 new_msi_path, (required: True), Description: "Path to the new MSI-file, relative to pkg_dir."
 cab_file, (required: True), Description: "Name of the CAB-file to generate."
 cab_dir, (required: False), Description: "Folder where the CAB-file should be generated, relative to pkg_dir."
+max_files_per_cab, (required: False), Description: "Optionally specify the maximum files per CAB."
 embed_cab, (default: False, required: False), Description: "Embed the cabinet file in the MSI-file".
 new_packcode, (default: False, required: False), Description: "Set a new packagecode in the MSI-file."
 ignore_errors, (required: False), Description: "Ignore any errors during the run."
@@ -375,6 +376,17 @@ product_version, (required: False), Description: "Set this flag to get the produ
 ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 Output variables:
 version, Description: "Version of exe found."
+```
+
+WixDarkExtractor
+----------------
+Extracts a resource from a Wix based exe using Dark.
+```
+Input variables:
+exe_path, (required: False), Description: "Path to the (setup.)exe, defaults to %pathname%"
+extract_dir, (required: True), Description: "Output path (absolute) for the extracted archive."
+xtract_file, (required: False), Description: "Output filename of the resource to be extracted."
+ignore_errors, (required: False), Description: "Ignore any errors during the extraction."
 ```
 
 WixDefaults

@@ -1,0 +1,7 @@
+
+200113	Create Jabref for Windows
+	We alter the shortcuts:
+	The desktop shortcut is disabled by default by a condition in the components table:
+	cshortcuted19f475eb9a3edfaffe9fd0a73bd4ff	{ED19F475-EB9A-3EDF-AFFE-9FD0A73BD4FF}	DesktopFolder	260	DESKTOPSC=1	reg36C0E0F08D7DE50B3D773FCE4EB4063C
+
+200113	Version 1.0.0.0, by AutoPkg
