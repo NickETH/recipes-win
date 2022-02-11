@@ -4,6 +4,7 @@
 # Todo: Logfile based on the presence of a bms_imp_logfile parameter, better parameter read function(s).
 # Extended with UseBBT-option and explicit options for uninstall, 20210207, Hm
 # Extended localfilecopy to all options, 20211028, Hm
+# Changed the Credential Manager lookup code. TLS narrowed to Tls11,Tls12, 220131, Hm
 
 param(
     [Parameter(mandatory=$true)][string]$bms_serverurl,
@@ -64,11 +65,13 @@ $vault = New-Object Windows.Security.Credentials.PasswordVault
 
 #Allow the usage of different encryption methods.
 #https://stackoverflow.com/questions/11696944/powershell-v3-invoke-webrequest-https-error
-$AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
+$AllProtocols = [System.Net.SecurityProtocolType]'Tls11, Tls12'
 [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
 
 #$bms_CM_entry = "AutoPKG-BMSImporter"
-if (-Not ($storedCredential = $vault.Retrieve($bms_CM_entry, $bms_username))){
+$creds = $vault.RetrieveAll()
+$StoredCredential = $creds.where({$_.Resource -eq $bms_CM_entry})
+if (-Not ($storedCredential)){
     $objCred = Get-Credential -UserName $bms_username -Message "Authentifizierung am Baramundi-Server:"
     # Convert credential to appropriate type and store in vault
     $credObject = New-Object Windows.Security.Credentials.PasswordCredential -ArgumentList ($bms_CM_entry, $objCred.UserName,$objCred.GetNetworkCredential().Password)

@@ -22,6 +22,15 @@
 
     <key>Process</key>
     <array>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
 	    <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/WinPEVersionExtractor</string>
