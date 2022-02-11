@@ -4,7 +4,8 @@
 #
 # Created by Nick Heim (heim)@ethz.ch) on 2019-04-12.
 #
-# Needs 'WiMkCab2.vbs' from the Installer SDK to be in the TOOLS_DIR.
+# Needs 'MultiMakeCab.vbs' to be in the TOOLS_DIR.
+# Take from here: https://gist.github.com/NickETH/acf4e01124a20cef0d45e0922e058fcb
 # Depends on the 'WiX Toolset SDK' in DTF_PATH.
 # Apply a patch file to an MSI offline or compact (rebuild) an MSI-file.
 # Compress an uncompressed MSI installation into a CAB-file and embed it into the MSI-file, if necessary.
@@ -17,6 +18,7 @@
 # 20190702 Nick Heim: Added the compress only function (no patching). Bugfix on 'checkbool'
 # 20190815 Nick Heim: Added the compact function.
 # 20190823 Nick Heim: Fixed the patching function.
+# 20210517 Nick Heim: Python v3 changes
 # 20220125 Nick Heim: Added the maxFilesPerCab Option with 'MultiMakeCab.vbs'
 
 import os
@@ -143,13 +145,13 @@ class MSIofflinePatcher(Processor):
 
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 5)
-        print >> sys.stdout, "pkg_dir_abs %s" % pkg_dir_abs
+        #print >> sys.stdout, "pkg_dir_abs %s" % pkg_dir_abs
+        self.output("pkg_dir_abs %s" % pkg_dir_abs)
 
         self.output("Creating: %s" % new_msi_path)
         sharedproc_dir = os.path.dirname(os.path.realpath(__file__))
         target_dir = "TARGETDIR=" + (os.path.join(pkg_dir_abs, 'adm'))
         msiexec = "msiexec.exe"
-        # tool_vbs = os.path.join(self.env['TOOLS_DIR'], "WiMkCab2.vbs")
         tool_vbs = os.path.join(self.env['TOOLS_DIR'], "MultiMakeCab.vbs")
         cscript_exe ="cscript.exe"
 
@@ -179,8 +181,8 @@ class MSIofflinePatcher(Processor):
                    WIdb.Dispose()
                 except:
                    pass
-                print >> sys.stdout, "end of export"
-                print >> sys.stdout, "end of export"		
+                #print >> sys.stdout, "end of export"
+                self.output("end of export")
                 # Create a new MSI-file.
                 tmode = DatabaseOpenMode.CreateDirect
                 WIdbnew = Database(new_msi_path, tmode)
@@ -211,10 +213,12 @@ class MSIofflinePatcher(Processor):
             self.output("cmdline: %s" % cmd_cabin)
             if "embed_cab" in self.env:
                 embed_cab = self.env.get('embed_cab')
-                print >> sys.stdout, "embed_cab %s" % embed_cab
+                #print >> sys.stdout, "embed_cab %s" % embed_cab
+                self.output("embed_cab %s" % embed_cab)
                 if checkbool(embed_cab):
                     cmd_cabin.extend(['/E'])
-                    print >> sys.stdout, "cmdline %s" % cmd_cabin
+                    #print >> sys.stdout, "cmdline %s" % cmd_cabin
+                    self.output("cmdline: %s" % cmd_cabin)
             try:
                 Output = subprocess.check_output(cmd_cabin)
             except:
@@ -230,10 +234,11 @@ class MSIofflinePatcher(Processor):
                     wcount = set_bit(wcount, 1)
                 if get_bit(wcount, 2):
                     wcount = clear_bit(wcount, 2)
-                print >> sys.stdout, "wcount %s" % wcount
+                #print >> sys.stdout, "wcount %s" % wcount
+                self.output("wcount %s" % wcount)
                 try:
                     msi_suminfo_set(new_msi_path, msilib.PID_WORDCOUNT, wcount)
-                except OSError, err:
+                except OSError as err:
                     raise ProcessorError("Can't create %s:" % (err))
 
         # Set new package GUID
@@ -241,10 +246,11 @@ class MSIofflinePatcher(Processor):
             new_packcode = self.env.get('new_packcode')
             if checkbool(new_packcode):
                 new_package_GUID = "{" + msilib.UuidCreate().upper() + "}"
-                print >> sys.stdout, "new_package_GUID %s" % new_package_GUID
+                #print >> sys.stdout, "new_package_GUID %s" % new_package_GUID
+                self.output("new_package_GUID %s" % new_package_GUID)
                 try:
                     msi_suminfo_set(new_msi_path, msilib.PID_REVNUMBER, new_package_GUID)
-                except OSError, err:
+                except OSError as err:
                     raise ProcessorError("Can't create %s:" % (err))
 
         # Remove the adminProperties stream, if there
@@ -259,17 +265,7 @@ class MSIofflinePatcher(Processor):
         except:
             pass
         dbobj.Commit()
-			
-        '''print >> sys.stdout, "cmdline Output %s" % Output
-        #self.env['pkg_dir_abs'] = Output
-		
-        archiveVersion = ""
-        for line in Output.split("\n"):
-            if verbosity > 2:
-                print line
-            if "Buildversion:" in line:
-                archiveVersion = line.split()[-1]
-                continue'''
+
 
 if __name__ == '__main__':
     processor = MSIofflinePatcher()

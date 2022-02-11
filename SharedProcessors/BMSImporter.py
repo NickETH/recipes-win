@@ -17,7 +17,7 @@
 
 import os
 import sys
-import subprocessww
+#import subprocessww
 import subprocess
 
 from autopkglib import Processor, ProcessorError
@@ -298,10 +298,12 @@ class BMSImporter(Processor):
         #print("cmdline %s" % cmd)
         try:
             if verbosity > 1:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
 
             else:
-                Output = subprocess.check_output(cmd)
+                #Output = subprocess.check_output(cmd)
+                Output = subprocess.getoutput(cmd)
 
         except:
             if ignore_errors != 'True':
