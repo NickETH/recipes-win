@@ -171,7 +171,6 @@
 			<string>Integrate Addons into the install. Enable Sideloading in omni.ja</string>
             <key>Arguments</key>
             <dict>
-			application_name
 				<key>application_name</key>
                 <string>Mozilla Thunderbird</string>
                 <key>install_exe</key>
