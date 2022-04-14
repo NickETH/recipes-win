@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest Jabref MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>ch.ethz.gitlab.id-cd-win.build.Jabref-Win</string>
+    <string>com.github.autopkg-win.build.Jabref-Win</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>

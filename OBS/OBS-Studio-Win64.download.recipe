@@ -55,6 +55,10 @@
         </dict>
         <dict>
             <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
             <string>StopProcessingIf</string>
             <key>Arguments</key>
             <dict>
