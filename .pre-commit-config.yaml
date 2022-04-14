@@ -29,8 +29,7 @@ repos:
       #   # exclude plists:
       #   exclude: "*.recipe"
       - id: requirements-txt-fixer
-      - id: trailing-whitespace
-      #  args: [--markdown-linebreak-ext=md]
+      # - id: trailing-whitespace
       - id: detect-private-key
       # - id: no-commit-to-branch
       #   args: [--branch, main]
