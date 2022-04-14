@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest NXLog CE x64 Install-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.NXLog-CE-Win64</string>
+    <key>Input</key>
+    <dict>
+		<key>VENDOR</key>
+		<string>NXLog Ltd.</string>
+		<key>DOWNLOAD_URL</key>
+		<string>https://nxlog.co/products/nxlog-community-edition/download</string>
+		<key>NAME</key>
+		<string>NXLog-CE</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_STRING</key>
+        <string>_64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				<!-- https://nxlog.co/system/files/products/files/348/nxlog-ce-3.0.2272.msi -->
+				<string>(?P&lt;match&gt;https://nxlog.co/system/files/products/files/[\d]+/nxlog-ce-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)\.msi)</string>
+				<key>url</key>
+				<string>%DOWNLOAD_URL%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict>
+		<!--
+		
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+				<key>url</key>
+				<string>%match%</string>
+                <key>filename</key>
+                <string>%NAME%_%PLATFORM%.msi</string>
+                <!-- <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string> -->
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

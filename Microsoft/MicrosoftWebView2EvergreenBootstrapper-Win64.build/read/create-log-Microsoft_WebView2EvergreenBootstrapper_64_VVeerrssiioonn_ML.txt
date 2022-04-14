@@ -1,0 +1,5 @@
+
+190207	Download MicrosoftWebView2MicrosoftWebView2EvergreenBootstrapper64.exe
+	from: https://go.microsoft.com/fwlink/?linkid=2124703
+
+190207	Release V72.0.3626.96

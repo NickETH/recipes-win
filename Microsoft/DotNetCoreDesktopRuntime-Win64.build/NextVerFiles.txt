@@ -1,0 +1,2 @@
+read\create-log-Microsoft_DotNetCoreDesktopRuntime_64_VVeerrssiioonn_ML.txt
+read\readme-Microsoft_DotNetCoreDesktopRuntime_64_VVeerrssiioonn_ML.txt

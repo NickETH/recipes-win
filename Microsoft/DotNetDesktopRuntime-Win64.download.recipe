@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Description</key>
+        <string>Downloads the latest version of Microsoft's NET Desktop Runtime.</string>
+        <key>Identifier</key>
+		<string>com.github.autopkg-win.download.DotNetDesktopRuntime-Win64</string>
+        <key>Input</key>
+        <dict>
+            <key>NAME</key>
+            <string>DotNetDesktopRuntime</string>
+            <key>RELEASE</key>
+            <string>LTS</string>
+            <key>LANGUAGE_CODE</key>
+            <string>en-us</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>0.3.1</string>
+        <key>Process</key>
+        <array>
+            <dict>
+                <key>Processor</key>
+                <string>DotNetURLProvider</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>release</key>
+                    <string>%RELEASE%</string>
+                    <key>language_code</key>
+                    <string>%LANGUAGE_CODE%</string>
+                    <key>dotnet_core</key>
+                    <string>false</string>
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>URLTextSearcher</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>url</key>
+                    <string>%release_url%</string>
+                    <key>re_pattern</key>
+                    <string>href="(?P&lt;intermediate_url&gt;/%LANGUAGE_CODE%/download/dotnet/thank-you/runtime-desktop-[0-9\.]+-(?:[a-z0-9\.]+-)?windows-x64-installer)"</string>
+					<!-- https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-3.1.23-windows-x64-installer -->
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>URLTextSearcher</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>url</key>
+                    <string>https://dotnet.microsoft.com%intermediate_url%</string>
+                    <key>re_pattern</key>
+                    <string>href="(?P&lt;url&gt;https://download.visualstudio.microsoft.com/download/pr/[0-9A-Fa-f\-/]+/windowsdesktop-runtime-(?P&lt;version&gt;[0-9\.]+)-(?:[a-z0-9\.]+-)?win-x64\.exe)"</string>
+					<!-- windowsdesktop-runtime-3.1.0-win-x64.exe -->
+                </dict>
+            </dict>
+            <dict>
+                <key>Arguments</key>
+                <dict>
+                    <key>filename</key>
+                    <string>%NAME%.exe</string>
+                </dict>
+                <key>Processor</key>
+                <string>URLDownloader</string>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>EndOfCheckPhase</string>
+            </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=.NET, O=Microsoft Corporation, L=Redmond, S=Washington, C=US</string>
+            </dict>
+        </dict>
+        </array>
+    </dict>
+</plist>

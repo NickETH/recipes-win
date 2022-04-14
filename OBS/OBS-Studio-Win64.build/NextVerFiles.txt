@@ -1,0 +1,2 @@
+read\create-log-OBS-Studio_64_VVeerrssiioonn_ML.txt
+read\readme-OBS-Studio_64_VVeerrssiioonn_ML.txt

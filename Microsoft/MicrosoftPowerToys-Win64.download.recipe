@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads latest Microsoft PowerToys Install-file for Windows.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg-win.download.MicrosoftPowerToys-Win64</string>
+    <key>Input</key>
+    <dict>
+		<key>GITHUB_REPO</key>
+		<string>microsoft/PowerToys</string>
+		<key>NAME</key>
+		<string>PowerToys</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>Process</key>
+    <array>
+		<dict>
+			<key>Processor</key>
+			<string>GitHubReleasesInfoProvider</string>
+			<key>Arguments</key>
+			<dict>
+				<key>github_repo</key>
+				<string>%GITHUB_REPO%</string>
+				<key>asset_regex</key>
+				<string>PowerToysSetup-(?P&lt;versionextra&gt;([0-9]+\.)*[0-9]+)-x64\.exe</string>
+				
+			</dict>
+		</dict>
+		<!--
+		-->
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>filename</key>
+                <string>%NAME%_%PLATFORM%.exe</string>
+                <!-- <key>CHECK_FILESIZE_ONLY</key>
+                <string>False</string> -->
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US</string>
+            </dict>
+        </dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/MSIRunSQLget</string>
+			<key>Comment</key>
+			<string>Get the version from the MSI file</string>
+            <key>Arguments</key>
+            <dict>
+                <key>msi_path</key>
+                <string>%pathname%</string>
+                <key>SQL_command</key>
+                <string><![CDATA[SELECT `Value` FROM `Property` WHERE `Property`='ProductVersion']]></string>
+				%msi_value%
+            </dict>
+		</dict> -->
+<!--         <dict>
+            <key>Processor</key>
+			<string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%msi_value%</string>
+                <key>rename_var</key>
+                <string>version</string>
+            </dict>
+		</dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

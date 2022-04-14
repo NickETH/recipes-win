@@ -11,14 +11,16 @@
 # Extended with port/CM-entry, ApplicationFile and Dependencies, 20200523, Hm
 # Patch subprocess to take unicode, https://bugs.python.org/issue1759845, https://pypi.org/project/subprocessww/, 20200626, Hm
 # Extended with UseBBT-option and explicit options for uninstall, hardened boolean recipe reading from recipe 20210207, Hm
+# Python v3 changes, 20210517, Hm
+# Extended localfilecopy to all options, 20211028, Hm
+# Extended with writer for JSON app integration file, 20220310, Hm
 # Todo: Generic read function for optional parameter processing with for statement and value types
-# 20210517 Nick Heim: Python v3 changes
-# 20211028 Nick Heim: Extended localfilecopy to all options
 
 import os
 import sys
-#import subprocessww
+import subprocessww
 import subprocess
+import json
 
 from autopkglib import Processor, ProcessorError
 
@@ -149,6 +151,14 @@ class BMSImporter(Processor):
             "required": False,
             "description": "Path to a logfile for exensive logging of the importer.",
         },
+        "bms_app_integration": {
+            "required": False,
+            "description": "Dict of command(s) to add to the bms_app_integration JSON file.",
+        },
+        "json_file_dest": {
+            "required": False,
+            "description": "JSON file absolute path to write to.",
+        },
         "ignore_errors": {
             "required": False,
             "description": "Ignore any errors during the run.",
@@ -170,7 +180,6 @@ class BMSImporter(Processor):
         bms_app_version = self.env.get('bms_app_version')
         bms_app_valid4os = self.env.get('bms_app_valid4os')
         bms_app_seccont = self.env.get('bms_app_seccont')
-
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
         #self.output("bms_app_name: %s" % bms_app_name)
@@ -295,22 +304,61 @@ class BMSImporter(Processor):
             bms_imp_logfile = self.env.get('bms_imp_logfile')
             cmd.extend(['-bms_imp_logfile', bms_imp_logfile])
 
-        #print("cmdline %s" % cmd)
+        # print("cmdline %s" % cmd)
         try:
             if verbosity > 1:
-                #Output = subprocess.check_output(cmd)
-                Output = subprocess.getoutput(cmd)
-
+                #Output = subprocess.run(cmd, capture_output=True)
+                Output = subprocess.run(cmd)
+                self.output("cmdline Output: %s" % Output)
             else:
-                #Output = subprocess.check_output(cmd)
-                Output = subprocess.getoutput(cmd)
+                #Output = subprocess.run(cmd, capture_output=True)
+                Output = subprocess.run(cmd)
 
         except:
             if ignore_errors != 'True':
                 raise
-        #self.output("cmdline Output: %s" % Output)
-        #self.env['pkg_dir'] = Output
-		
+
+        # Write out JSON app integration file
+        if "bms_app_integration" in self.env:
+            bms_app_integration = {}
+            bms_app_integration['bms_app_integration'] = self.env.get('bms_app_integration')
+            if "json_file_dest" in self.env:
+                json_file_dest = self.env.get('json_file_dest')
+                if verbosity > 1:
+                    self.output("Existing array: %s" % bms_app_integration['bms_app_integration'])
+                    self.output("Existing type: %s" % type(bms_app_integration['bms_app_integration'][0]))
+                if os.path.isfile(json_file_dest):
+                    with open(json_file_dest, "r+") as outfile:
+                        self.output("Appending to existing JSON file: %s" % json_file_dest)
+                        JSONData = json.load(outfile)
+                        # Check for an existing object with same name and version
+                        bms_app_int_element_exists = False
+                        for bms_app_int_element in JSONData['bms_app_integration']:
+                            # Check for an existing subspec value
+                            if "subspec" in bms_app_int_element:
+                                if "".__eq__(bms_app_int_element['subspec'] ):
+                                    bms_app_int_version = bms_app_int_element['version']
+                                else:
+                                    bms_app_int_version = bms_app_int_element['version'] + " " + bms_app_int_element['subspec']
+                            else:
+                                bms_app_int_version = bms_app_int_element['version']
+
+                            if bms_app_int_element['appname'] == bms_app_name and bms_app_int_version == bms_app_version:
+                                bms_app_int_element_exists = True
+                                self.output("Existing object: %s" % bms_app_int_element['appname'])
+                                self.output("Existing version: %s" % bms_app_int_version)
+                                break
+                        if bms_app_int_element_exists != True:
+                            for arrobj in bms_app_integration['bms_app_integration']:
+                                JSONData['bms_app_integration'].append(arrobj)
+                            outfile.seek(0)
+                            json.dump(JSONData, outfile, indent=4, sort_keys=True)
+                else:
+                    with open(json_file_dest, "w") as outfile:
+                        json.dump(bms_app_integration, outfile, indent=4, sort_keys=True)
+            else:
+                self.output("JSON file destination not in recipe!")
+				
         archiveVersion = ""
         for line in Output.split("\n"):
             if verbosity > 2:

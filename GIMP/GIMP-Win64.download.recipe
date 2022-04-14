@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Downloads the latest GIMP x64 installer package for Windows.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.GIMP-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>GIMP</string>
+		<key>URL</key>
+        <string>https://www.gimp.org/gimp_versions.json</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_STRING</key>
+        <string>_64</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.3.1</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<string>%URL%</string>
+				<key>re_pattern</key>
+				<!-- gimp-2.10.30-setup.exe -->
+				<string>(?P&lt;filetosearch&gt;gimp-(?P&lt;version&gt;(?P&lt;versionminor&gt;[0-9]+\.[0-9]+)\.[0-9]+)-setup\.exe)</string>
+			</dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>URLDownloader</string>
+			<key>Arguments</key>
+			<dict>
+				<key>url</key>
+				<!-- https://download.gimp.org/mirror/pub/gimp/v#minorversion/windows/#filename 
+				https://download.gimp.org/pub/gimp/v2.10/windows/gimp-2.10.30-setup.exe -->
+				<!-- <string>https://download.gimp.org/mirror/pub/gimp/v%versionminor%/windows/%filetosearch%</string> -->
+				<string>https://download.gimp.org/pub/gimp/v%versionminor%/windows/%filetosearch%</string>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Jernej Simoncic, O=Jernej Simoncic, STREET=Herbersteinova 29, L=Ljubljana, C=SI</string>
+            </dict>
+        </dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
+	</array>
+</dict>
+</plist>

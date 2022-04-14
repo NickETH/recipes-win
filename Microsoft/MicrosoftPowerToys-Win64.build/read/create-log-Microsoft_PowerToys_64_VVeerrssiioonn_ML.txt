@@ -1,0 +1,6 @@
+200113	Packaging Microsoft PowerToys x64
+	We download and extract the MSI from the setup.exe.
+	Desktop shortcut will not be installed.
+	For the download links, see the recipe.
+
+200113	Version 1.0.0, by AutoPkg

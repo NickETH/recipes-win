@@ -18,7 +18,7 @@
 #
 # 20210522 Nick Heim: Python v3 changes. Partly taken from: https://github.com/Stebalien/firefox-tweak
 # 20210530 Nick Heim: Extended to MozillaAddonIntegrator for functions see the code.
-    
+# 20220310 Nick Heim: Sanitizing the code.
 
 import os
 import shutil
@@ -476,21 +476,21 @@ class MozillaAddonIntegrator(Processor):
             os.path.join((os.environ['WIX']), 'bin\\heat.exe'),
             "file",
         ]
-        self.output("new_ext_list: %s" % new_ext_list)
+        # self.output("new_ext_list: %s" % new_ext_list)
         for Full_string in new_ext_list:
-            self.output("Full_string: %s" % Full_string)
+            # self.output("Full_string: %s" % Full_string)
             Full_string_list = Full_string.split('|||')
-            self.output("Full_string_list: %s" % Full_string_list)
+            # self.output("Full_string_list: %s" % Full_string_list)
             extension_work_name = Full_string_list[0]
             extension_full_url = Full_string_list[1]
             extension_comp_group = Full_string_list[2]
             extension_work_file = os.path.join(extract_dir, extension_work_name)
             curl_cmd = curl_cmd_basic[:]
-            self.output("curl_cmd_basic: %s" % curl_cmd_basic)
-            self.output("curl_cmd: %s" % curl_cmd)
+            # self.output("curl_cmd_basic: %s" % curl_cmd_basic)
+            # self.output("curl_cmd: %s" % curl_cmd)
             curl_cmd.extend([extension_full_url])
             curl_cmd.extend(["--output", extension_work_file])
-            self.output("curl_cmd: %s" % curl_cmd)
+            # self.output("curl_cmd: %s" % curl_cmd)
             text=True
             errors = "ignore" if text else None
             try:
@@ -517,7 +517,7 @@ class MozillaAddonIntegrator(Processor):
                 extension_install_name = json_data['browser_specific_settings']['gecko']['id'] + ".xpi"
             else:
                 print("Extension name not found in manifest")
-            self.output("extension_install_name: %s" % extension_install_name)
+            # self.output("extension_install_name: %s" % extension_install_name)
             os.remove(json_file_name)
             if not os.path.isdir(install_path):
                 os.makedirs(install_path)
@@ -543,7 +543,7 @@ class MozillaAddonIntegrator(Processor):
             heat_cmd.extend(["-out", os.path.join(build_dir, "MozExt_" + extension_work_name + ".wxs")])
             if xslt_file != "none":
                 heat_cmd.extend(["-t", os.path.join(build_dir, xslt_file)])
-            self.output("heat_cmd: %s" % heat_cmd)
+            # self.output("heat_cmd: %s" % heat_cmd)
             os.chdir(build_dir)
             try:
                 result = subprocess.run(
@@ -564,7 +564,7 @@ class MozillaAddonIntegrator(Processor):
     def core_extract(self, ce_sz_cmd, verbosity, app_name, core_exe, extract_dir, build_path):
         self.output("Extracting: %s" % core_exe)
         ce_cmd = [ce_sz_cmd, 'x', '-y', '-o%s' % extract_dir , core_exe]
-        print("ce_cmd: %s" % ce_cmd)
+        # print("ce_cmd: %s" % ce_cmd)
         try:
             if verbosity > 1:
                 subprocess.check_call(ce_cmd)
@@ -642,68 +642,7 @@ class MozillaAddonIntegrator(Processor):
         self.extension_install(curl_path, sevenzipcmd, verbosity, new_extensions_list, app_build_path, extract_directory, ext_install_path, MakeFeatures, ext_install_xslt)
         self.enable_side_load(sevenzipcmd, verbosity, application_name, extract_directory, app_build_path, omni_path, config_file_path)
 
-        self.output("Extracting: %s" % install_exe)
-        #cmd = [sevenzipcmd, 'e', '-y', '-o%s' % extract_directory , install_exe, omni_path]
-        #cmd = [sevenzipcmd, 'e', '-y', '-o%s' % extract_directory , install_exe, 'omni.ja']
-        # print("cmd: %s" % cmd)
-        # try:
-            # if verbosity > 1:
-                # subprocess.check_call(cmd)
-            # else:
-                # subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # except:
-            # if ignore_errors != 'True':
-                # raise
-
-        # self.output("Extracted Archive Path: %s" % extract_directory)
-        # shutil.move(os.path.join(extract_directory, 'omni.ja'), os.path.join(extract_directory, 'omni.jar'))
-        # deoptimize(extract_directory, extract_directory, extract_directory)
-        # cmd = [sevenzipcmd, 'x', '-y', '-o%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), built_in_addons_path]
-
-        # try:
-            # if verbosity > 1:
-                # subprocess.check_call(cmd)
-            # else:
-                # subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # except:
-            # if ignore_errors != 'True':
-                # raise
-        # json_file_name = os.path.join(extract_directory, built_in_addons_path)
-        # with open(json_file_name, "r") as read_file:
-            # json_data = json.load(read_file)
-        # json_data_sys = json_data["system"]
-        # if recipe writer gave us a single name instead of a list of names,
-        # convert it to a list of names
-        # if isinstance(self.env["new_features"], str):
-            # self.env["new_features"] = [self.env["new_features"]]
-
-        # for feature_name in self.env["new_features"]:
-            # # print >> sys.stdout, "SQL_string %s" % new_features
-            # try:
-                # #json_data_sys.append(unicode(feature_name))
-                # json_data_sys.append(str(feature_name))
-            # except OSError as err:
-                # raise ProcessorError(
-                    # "Could not append %s: %s" % (feature_name, err))
-
-        # with open(json_file_name, 'w') as write_file:
-            # json.dump(json_data, write_file)
-        # os.chdir(extract_directory)
-        # cmd = [sevenzipcmd, 'u', '-y', '-w%s' % extract_directory, os.path.join(extract_directory, 'omni.jar'), built_in_addons_path, '-mm=Copy', '-mx0', '-mtc=off']
-        # print("cmd: %s" % cmd)
-        # try:
-            # if verbosity > 1:
-                # subprocess.check_call(cmd)
-            # else:
-                # subprocess.check_call(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        # except:
-            # if ignore_errors != 'True':
-                # raise
-        # optimize(extract_directory, extract_directory, extract_directory)
-        # #optimize(JAR_LOG_DIR, IN_JAR_DIR, OUT_JAR_DIR)
-        # dest_file_name = os.path.join(output_path, 'omni.ja')
-
-        # shutil.move(os.path.join(extract_directory, 'omni.jar'), dest_file_name)
+        #self.output("Extracting: %s" % install_exe)
 		
 if __name__ == '__main__':
     processor = MozillaAddonIntegrator()

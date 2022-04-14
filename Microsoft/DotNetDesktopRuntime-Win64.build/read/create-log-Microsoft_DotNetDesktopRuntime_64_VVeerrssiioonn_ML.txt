@@ -1,0 +1,5 @@
+.
+190207	Download DotNetDesktopRuntime64.exe
+	from: https://dotnet.microsoft.com/en-us/download/dotnet
+
+190207	Release V72.0.3626.96

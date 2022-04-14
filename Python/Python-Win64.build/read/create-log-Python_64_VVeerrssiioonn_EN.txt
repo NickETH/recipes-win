@@ -1,0 +1,8 @@
+
+200113	Packaging Python x64 for Windows
+	We download and use the setup.exe unaltered.
+	Desktop shortcut will not be installed.
+	For the download links, see the recipe.
+	Python_64_1.1.1_EN.exe /quiet InstallAllUsers=1 PrependPath=1
+
+200113	Version 1.0.0, by AutoPkg

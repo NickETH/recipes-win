@@ -1,0 +1,2 @@
+read\create-log-Python_64_VVeerrssiioonn_EN.txt
+read\readme-Python_64_VVeerrssiioonn_EN.txt

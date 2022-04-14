@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>Description</key>
+        <string>Download recipe for Tenable Nessus Agent x64.</string>
+        <key>Identifier</key>
+		<string>com.github.autopkg-win.download.NessusAgent-Win64</string>
+        <key>Input</key>
+        <dict>
+            <key>NAME</key>
+            <string>NessusAgent</string>
+		    <key>URL</key>
+            <string>https://www.tenable.com/downloads/nessus-agents?loginAttempted=true</string>
+            <key>PLATFORM</key>
+            <string>x64</string>
+            <key>PF_STRING</key>
+            <string>_64</string>
+        </dict>
+        <key>MinimumVersion</key>
+        <string>1.3.1</string>
+        <key>Process</key>
+        <array>
+           <dict>
+              <key>Processor</key>
+              <string>URLTextSearcher</string>
+              <key>Arguments</key>
+              <dict>
+                  <key>url</key>
+                  <string>%URL%</string>
+                  <key>result_output_var_name</key>
+                  <string>download_id</string>
+                  <key>re_pattern</key>
+				  <!-- "id":16175,"file":"NessusAgent-10.1.3-x64.msi" -->
+                  <string>"id":([\d]*)(?=,"file":"NessusAgent-[\d\.]*\-x64.msi)</string>
+              </dict>
+            </dict>
+           <dict>
+              <key>Processor</key>
+              <string>URLTextSearcher</string>
+              <key>Arguments</key>
+              <dict>
+                  <key>url</key>
+                  <string>%URL%</string>
+                  <key>result_output_var_name</key>
+                  <string>version</string>
+                  <key>re_pattern</key>
+                  <string>NessusAgent-([\d\.]*)\-x64.msi</string>
+              </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>URLDownloader</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>url</key>
+                    <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents/downloads/%download_id%/download?i_agree_to_tenable_license_agreement=true</string>
+                    <key>CHECK_FILESIZE_ONLY</key>
+                    <false />
+                    <key>filename</key>
+                    <string>%NAME%-x64.msi</string>
+                </dict>
+            </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>CN=Tenable Inc., O=Tenable Inc., L=Columbia, S=Maryland, C=US</string>
+            </dict>
+        </dict>
+            <dict>
+                <key>Processor</key>
+                <string>EndOfCheckPhase</string>
+            </dict>
+        </array>
+    </dict>
+</plist>

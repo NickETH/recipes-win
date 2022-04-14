@@ -1,0 +1,8 @@
+
+200113	Zoom Client x64 for Windows
+	See Options: https://support.zoom.us/hc/en-us/articles/201362163-Mass-Installation-and-Configuration-for-Windows
+	msiexec /i ZoomClient_64_1.1.1_ML.msi ZNoDesktopShortCut="true"
+
+
+200113	Version 1.0.0, by AutoPkg
+	

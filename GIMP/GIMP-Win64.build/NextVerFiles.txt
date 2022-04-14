@@ -1,0 +1,2 @@
+read\create-log-GIMP_64_VVeerrssiioonn_ML.txt
+read\readme-GIMP_64_VVeerrssiioonn_ML.txt

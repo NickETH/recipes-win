@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Description</key>
+	<string>Download recipe for WinMerge.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg-win.download.WinMerge-Win64</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>WinMerge</string>
+		<key>URL</key>
+        <string>https://winmerge.org/downloads/?lang=en</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_STRING</key>
+        <string>_64</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>1.3.1</string>
+	<key>Process</key>
+	<array>
+		<!-- <dict>
+			<key>Arguments</key>
+			<dict>
+				<key>re_pattern</key>
+				https://github.com/WinMerge/winmerge/releases/download/v2.16.18/WinMerge-2.16.18-x64-Setup.exe
+				<string>(?P&lt;filetosearch&gt;WinSCP-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-Setup\.exe?)</string>
+				<key>url</key>
+				<string>%URL%</string>
+			</dict>
+			<key>Processor</key>
+			<string>URLTextSearcher</string>
+		</dict> -->
+		<dict>
+			<key>Processor</key>
+			<string>GitHubReleasesInfoProvider</string>
+			<key>Arguments</key>
+			<dict>
+				<key>github_repo</key>
+				<string>WinMerge/winmerge</string>
+				<key>asset_regex</key>
+				<!-- WinMerge-2.16.18-x64-Setup.exe -->
+				<string>WinMerge-([0-9]+\.)*[0-9]+-x64-Setup\.exe</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+			<string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+			    <key>filename</key>
+                <string>%NAME%-x64.exe</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>WindowsSignatureVerifier</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_path</key>
+                <string>%pathname%</string>
+                <key>expected_subject</key>
+                <string>E=winmergejp@gmail.com, CN=Takashi Sawanaka, O=Takashi Sawanaka, S=Chiba, C=JP</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>StopProcessingIf</string>
+            <key>Arguments</key>
+            <dict>
+                <key>predicate</key>
+                <string>download_changed == False</string>
+            </dict>
+        </dict>
+	</array>
+</dict>
+</plist>

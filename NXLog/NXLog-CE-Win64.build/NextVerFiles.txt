@@ -1,0 +1,2 @@
+read\readme-NXLog-CE_VVeerrssiioonn_ML.txt
+read\create-log-NXLog-CE_VVeerrssiioonn_ML.txt
