@@ -10,7 +10,7 @@ repos:
       - id: check-autopkg-recipe-list
       - id: check-autopkg-recipes
         # this should technically be com.github.NickETH in the future
-        args: ["--recipe-prefix=com.github.autopkg-win.", "--strict", "--"]
+        args: ["--recipe-prefix=com.github.autopkg-win.", "--"]
       - id: forbid-autopkg-overrides
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
