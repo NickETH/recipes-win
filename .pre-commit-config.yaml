@@ -24,11 +24,10 @@ repos:
       - id: check-case-conflict
       - id: check-merge-conflict
       # - id: check-xml
-      - id: end-of-file-fixer
-        exclude: "\\.templates/\\.partials/.*"
-      # https://www.aleksandrhovhannisyan.com/blog/crlf-vs-lf-normalizing-line-endings-in-git/
-      # - id: mixed-line-ending
-      #   args: ['--fix=no']
+      # - id: end-of-file-fixer
+      #   # exclude: "\\.templates/\\.partials/.*"
+      #   # exclude plists:
+      #   exclude: "*.recipe"
       - id: requirements-txt-fixer
       - id: trailing-whitespace
       #  args: [--markdown-linebreak-ext=md]
@@ -40,14 +39,16 @@ repos:
     hooks:
       - id: yamllint
         args: [-c=.yamllint.yaml]
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.9.3
-    hooks:
-      - id: isort
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.2
-    hooks:
-      - id: flake8
+
+  # - repo: https://github.com/pre-commit/mirrors-isort
+  #   rev: v5.9.3
+  #   hooks:
+  #     - id: isort
+  # - repo: https://gitlab.com/pycqa/flake8
+  #   rev: 3.9.2
+  #   hooks:
+  #     - id: flake8
+
   # this works with json with comments, but gave me an error
   # - repo: https://gitlab.com/bmares/check-json5
   #   rev: v1.0.0
