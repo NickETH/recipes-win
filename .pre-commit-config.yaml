@@ -5,7 +5,7 @@
 # https://github.com/pre-commit/pre-commit-hooks
 repos:
   - repo: https://github.com/homebysix/pre-commit-macadmin
-    rev: v1.10.1
+    rev: v1.12.3
     hooks:
       - id: check-autopkg-recipe-list
       - id: check-autopkg-recipes
