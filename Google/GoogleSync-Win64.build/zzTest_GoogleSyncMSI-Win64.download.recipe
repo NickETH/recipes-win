@@ -9,7 +9,7 @@ LibreOffice Still is the stable version that has undergone more testing (over a 
 LibreOffice Fresh is the stable version with the most recent features. Users interested in taking advantage of our most innovative features should download and use our fresh version.</string>
 	<key>Identifier</key>
 	<!-- <string>io.github.hjuutilainen.download.LibreOffice</string> -->
-	<string>com.github.autopkg-win.download.LibreOffice-Win</string>
+	<string>com.github.autopkg-win.download.GoogleSyncMSI-Win64</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>

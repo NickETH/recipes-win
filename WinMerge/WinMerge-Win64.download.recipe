@@ -65,6 +65,10 @@
                 <string>E=winmergejp@gmail.com, CN=Takashi Sawanaka, O=Takashi Sawanaka, S=Chiba, C=JP</string>
             </dict>
         </dict>
+		<dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
         <dict>
             <key>Processor</key>
             <string>StopProcessingIf</string>

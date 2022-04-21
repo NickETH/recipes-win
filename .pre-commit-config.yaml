@@ -1,0 +1,55 @@
+---
+# run on only items staged in git:  pre-commit
+# automatically run on commit:      pre-commit install
+# check all files in repo:          pre-commit run --all-files
+# https://github.com/pre-commit/pre-commit-hooks
+repos:
+  - repo: https://github.com/homebysix/pre-commit-macadmin
+    rev: v1.12.3
+    hooks:
+      - id: check-autopkg-recipe-list
+      - id: check-autopkg-recipes
+        # this should technically be com.github.NickETH in the future
+        args: ["--recipe-prefix=com.github.autopkg-win."]
+      - id: forbid-autopkg-overrides
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-yaml
+      # check-json doesn't work with json with comments
+      # - id: check-json
+      - id: check-added-large-files
+        args: ["--maxkb=500"]
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      # - id: check-xml
+      # - id: end-of-file-fixer
+      #   # exclude: "\\.templates/\\.partials/.*"
+      #   # exclude plists:
+      #   exclude: "*.recipe"
+      - id: requirements-txt-fixer
+      # - id: trailing-whitespace
+      - id: detect-private-key
+      # - id: no-commit-to-branch
+      #   args: [--branch, main]
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.26.3
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint.yaml]
+
+  # - repo: https://github.com/pre-commit/mirrors-isort
+  #   rev: v5.9.3
+  #   hooks:
+  #     - id: isort
+  # - repo: https://gitlab.com/pycqa/flake8
+  #   rev: 3.9.2
+  #   hooks:
+  #     - id: flake8
+
+  # this works with json with comments, but gave me an error
+  # - repo: https://gitlab.com/bmares/check-json5
+  #   rev: v1.0.0
+  #   hooks:
+  #     - id: check-json5

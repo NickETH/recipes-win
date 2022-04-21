@@ -426,6 +426,10 @@
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
         </dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
 	</array>
 </dict>
 </plist>

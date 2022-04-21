@@ -5,7 +5,7 @@
     <key>Description</key>
     <string>Alters latest LibreOffice MSI-file for Windows.</string>
     <key>Identifier</key>
-    <string>ch.ethz.gitlab.id-cd-win.build.LibreOffice-Win64</string>
+    <string>com.github.autopkg-win.build.LibreOffice-Win64</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
