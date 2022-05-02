@@ -5,10 +5,10 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <UI>
-            <Dialog Id="PreReqDlg" Width="370" Height="270" Title="!(loc.PreReqDlg_Title)">
-                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
-                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
-                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+            <Dialog Id="PreReqDlg" Width="370" Height="315" Title="!(loc.PreReqDlg_Title)">
+                <Control Id="Next" Type="PushButton" X="236" Y="288" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
+                <Control Id="Back" Type="PushButton" X="180" Y="288" Width="56" Height="17" Text="!(loc.WixUIBack)" />
+                <Control Id="Cancel" Type="PushButton" X="304" Y="288" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
                     <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
                 </Control>
 
@@ -16,7 +16,7 @@
                 <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.PreReqDlgTitle)" />
                 <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.PreReqDlgBannerBitmap)" />
                 <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
-                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+                <Control Id="BottomLine" Type="Line" X="0" Y="279" Width="370" Height="0" />
 
                 <Control Id="FileLabel1" Type="Text" X="20" Y="60" Width="200" Height="15" NoPrefix="yes" Text="!(loc.PreReqDlgFileLabel1)" />
                 <Control Id="File1" Type="Edit" X="20" Y="75" Width="320" Height="18" Property="GITPATH" Indirect="no" />
@@ -33,6 +33,10 @@
                 <Control Id="FileLabel4" Type="Text" X="20" Y="195" Width="200" Height="15" NoPrefix="yes" Text="!(loc.PreReqDlgFileLabel4)" />
                 <Control Id="File4" Type="Edit" X="20" Y="210" Width="320" Height="18" Property="NANTPATH" Indirect="no" />
                 <Control Id="ChangeFile4" Type="PushButton" X="270" Y="190" Width="56" Height="17" Text="!(loc.PreReqDlgChange)" />
+
+                <Control Id="FileLabel5" Type="Text" X="20" Y="240" Width="200" Height="15" NoPrefix="yes" Text="!(loc.PreReqDlgFileLabel5)" />
+                <Control Id="File5" Type="Edit" X="20" Y="255" Width="320" Height="18" Property="MSBUILDPATH" Indirect="no" />
+                <Control Id="ChangeFile5" Type="PushButton" X="270" Y="235" Width="56" Height="17" Text="!(loc.PreReqDlgChange)" />
 			</Dialog>
         </UI>
     </Fragment>

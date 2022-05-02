@@ -5,9 +5,9 @@
         <SourceDirectory>$(AutoPkgDir)</SourceDirectory>
         <WixDirForNANT>$(SourceNANTDll)</WixDirForNANT>	
 		<LightSrcDir>-dAPSourceDir=$(DestinationDirectory)</LightSrcDir>
-		<MsiOut>..\Release\AutoPkgWin.msi</MsiOut>
+		<!-- <MsiOut>..\Release\AutoPkgWin.msi</MsiOut> -->
 		<CandleRTF>-dReadmeRtf="..\sourcepkt\Readme-AutoPkg.rtf"</CandleRTF>
-		<MsiOut>..\Release\$(BuildName)_$(version)_ML.msi</MsiOut>
+		<MsiOut>..\Release\$(BuildName)_$(version)_EN.msi</MsiOut>
     </PropertyGroup>
   <!-- The list of WIX input files -->
   <ItemGroup>

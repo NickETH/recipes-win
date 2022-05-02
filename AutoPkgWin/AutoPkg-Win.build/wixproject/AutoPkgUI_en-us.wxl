@@ -20,7 +20,8 @@
     <String Id="PreReqDlgFileLabel2" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel2" _locComment="PreReqDlgFileLabel2" -->Path to the CURL command line tool:</String>
     <String Id="PreReqDlgFileLabel3" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel3" _locComment="PreReqDlgFileLabel3" -->Path to the 7ZIP command line tool:</String>
     <String Id="PreReqDlgFileLabel4" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel4" _locComment="PreReqDlgFileLabel4" -->Path to the NANT command line tool:</String>
-
+    <String Id="PreReqDlgFileLabel5" Overridable="yes"><!-- _locID_text="PreReqDlgFileLabel5" _locComment="PreReqDlgFileLabel5" -->Path to the MSBUILD command line tool:</String>
+	
     <String Id="ReqDirDlg_Title" Overridable="yes"><!-- _locID_text="ReqDirDlg_Title" _locComment="ReqDirDlg_Title" -->[ProductName] Setup</String>
     <String Id="ReqDirDlgChange" Overridable="yes"><!-- _locID_text="ReqDirDlgChange" _locComment="ReqDirDlgChange" -->&amp;Change...</String>
     <String Id="ReqDirDlgTitle" Overridable="yes"><!-- _locID_text="ReqDirDlgTitle" _locComment="ReqDirDlgTitle" -->{\WixUI_Font_Title}Set paths, that AutoPkg utilizes</String>

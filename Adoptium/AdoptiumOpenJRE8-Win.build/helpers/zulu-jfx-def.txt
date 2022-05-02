@@ -1,9 +1,11 @@
 OPENJFX_LICENSE
 OPENJFX_THIRD_PARTY_README
 bin\api-ms-win-core-console-l1-1-0.dll
+bin\api-ms-win-core-console-l1-2-0.dll
 bin\api-ms-win-core-datetime-l1-1-0.dll
 bin\api-ms-win-core-debug-l1-1-0.dll
 bin\api-ms-win-core-errorhandling-l1-1-0.dll
+bin\api-ms-win-core-fibers-l1-1-0.dll
 bin\api-ms-win-core-file-l1-1-0.dll
 bin\api-ms-win-core-file-l1-2-0.dll
 bin\api-ms-win-core-file-l2-1-0.dll
@@ -25,6 +27,7 @@ bin\api-ms-win-core-synch-l1-2-0.dll
 bin\api-ms-win-core-sysinfo-l1-1-0.dll
 bin\api-ms-win-core-timezone-l1-1-0.dll
 bin\api-ms-win-core-util-l1-1-0.dll
+bin\API-MS-Win-core-xstate-l2-1-0.dll
 bin\api-ms-win-crt-conio-l1-1-0.dll
 bin\api-ms-win-crt-convert-l1-1-0.dll
 bin\api-ms-win-crt-environment-l1-1-0.dll
@@ -40,7 +43,6 @@ bin\api-ms-win-crt-stdio-l1-1-0.dll
 bin\api-ms-win-crt-string-l1-1-0.dll
 bin\api-ms-win-crt-time-l1-1-0.dll
 bin\api-ms-win-crt-utility-l1-1-0.dll
-bin\concrt140.dll
 bin\decora_sse.dll
 bin\fxplugins.dll
 bin\glass.dll
@@ -48,10 +50,10 @@ bin\glib-lite.dll
 bin\gstreamer-lite.dll
 bin\javafx_font.dll
 bin\javafx_iio.dll
+bin\jfr.exe
 bin\jfxmedia.dll
 bin\jfxwebkit.dll
 bin\msvcp140.dll
-bin\msvcr100.dll
 bin\prism_common.dll
 bin\prism_d3d.dll
 bin\prism_es2.dll
@@ -62,7 +64,9 @@ lib\javafx.properties
 lib\jfr.jar
 lib\jfxswt.jar
 lib\ext\jfxrt.jar
+lib\ext\legacy8ujsse.jar
 lib\ext\openjsse.jar
 lib\jfr\default.jfc
 lib\jfr\profile.jfc
 lib\security\openjsse.security
+lib\security\legacy8ujsse.security

@@ -19,10 +19,11 @@
 	<CustomAction Id="SetWIXBINDIR" Directory="WIXBINDIR" Value="[WIXSEARCHDIRBIN]"/>
 	
     <CustomAction Id='InstallMslLoadlib' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install msl.loadlib' Return='check' />
-    <CustomAction Id='InstallPythonnet' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pythonnet' Return='check' />
+    <CustomAction Id='InstallPythonnet' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pythonnet --pre' Return='check' />
     <CustomAction Id='InstallComtypes' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install comtypes' Return='check' />
     <CustomAction Id='InstallMslPywin32' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pywin32' Return='check' />
 	<CustomAction Id='InstallPyYAML' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install pyyaml' Return='check' />
+	<CustomAction Id='InstallCertifi' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install certifi' Return='check' />
 	<CustomAction Id='InstallAppDirs' Directory='INSTALLDIR' Execute='immediate' Impersonate='yes' ExeCommand='"[PIPPATH]" install appdirs' Return='check' />
 	<!-- Not really the best approach... Quick and dirty, but shouldn't be a problem here, because this COM Server will be installed very unlikely by another application too. -->
 	<CustomAction Id="MergeModRegister"   Directory="INSTALLDIR" Execute='deferred' Impersonate='no' ExeCommand='regsvr32.exe /s "[MERGEMODPATH]"' />
@@ -36,6 +37,7 @@
 	
 	<CustomAction Id="JSONSetCURLPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[CURLPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; CURL_PATH" Execute="deferred" Impersonate="no" />
 	<CustomAction Id="JSONSetNANTPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[NANTPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; NANT_PATH" Execute="deferred" Impersonate="no" />
+	<CustomAction Id="JSONSetMSBUILDPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[MSBUILDPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; MSBUILD_PATH" Execute="deferred" Impersonate="no" />
 	<CustomAction Id="JSONSetZIPPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[ZIPPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; 7ZIP_PATH" Execute="deferred" Impersonate="no" />
 	<CustomAction Id="JSONSetDTFPATH" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[DTFPATH]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; DTF_PATH" Execute="deferred" Impersonate="no" />
 	<CustomAction Id="JSONSetRECIPEREPODIR" BinaryKey="JSONStreamEditor" ExeCommand="-p -v &quot;[RECIPEREPODIR]&quot; -i &quot;[CONFIGDIR]config.json&quot; -o &quot;[CONFIGDIR]config.json&quot; RECIPE_REPO_DIR" Execute="deferred" Impersonate="no" />
@@ -234,6 +236,11 @@
         <FileSearch Name="NAnt.exe" />
       </DirectorySearch>
     </Property>
+    <Property Id="MSBUILDPATH" Secure="yes">
+      <DirectorySearch Id="MSBuildDir" Path="[WindowsVolume]\Program Files (x86)\Microsoft Visual Studio" Depth="10" AssignToProperty="no" >
+        <FileSearch Name="MSBuild.exe" />
+      </DirectorySearch>
+    </Property>
     <Property Id="DTFPATH" Secure="yes">
       <DirectorySearch Id="DTFDir" Path="[WindowsVolume]" Depth="5" AssignToProperty="yes" >
         <FileSearch Id="MDW_xml" Name="Microsoft.Deployment.WindowsInstaller.xml" />
@@ -302,6 +309,9 @@
       <Custom Action='InstallPyYAML' After='InstallFinalize'>
 	      NOT Installed AND PIPPATH
 	  </Custom>
+      <Custom Action='InstallCertifi' After='InstallFinalize'>
+	      NOT Installed AND PIPPATH
+	  </Custom>
       <Custom Action='InstallAppDirs' After='InstallFinalize'>
 	      NOT Installed AND PIPPATH
 	  </Custom>
@@ -319,6 +329,9 @@
 	  </Custom>
 	  <Custom Action="JSONSetNANTPATH" After="InstallFiles">
 		  NOT Installed AND NANTPATH
+	  </Custom>
+	  <Custom Action="JSONSetMSBUILDPATH" After="InstallFiles">
+		  NOT Installed AND MSBUILDPATH
 	  </Custom>
 	  <Custom Action="JSONSetZIPPATH" After="InstallFiles">
 		  NOT Installed AND ZIPPATH

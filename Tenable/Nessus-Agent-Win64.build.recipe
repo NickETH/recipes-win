@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Alters latest Nessus-Agent x64 Install-file for Windows.</string>
+    <key>Identifier</key>
+	<string>com.github.autopkg-win.build.NessusAgent-Win64</string>
+    <key>Input</key>
+    <dict>
+		<key>VENDOR</key>
+		<string>Tenable</string>
+        <key>NAME</key>
+        <string>NessusAgent</string>
+		<key>URL</key>
+        <string>https://www.tenable.com/downloads/nessus-agents?loginAttempted=true</string>
+        <key>PLATFORM</key>
+        <string>x64</string>
+        <key>PF_STRING</key>
+        <string>_64</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>1.0.5</string>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg-win.download.NessusAgent-Win64</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/CreateNextBuild</string>
+			<key>Comment</key>
+            <string>Create a build enviroment to store the package</string>
+            <key>Arguments</key>
+            <dict>
+                <key>build_dir</key>
+                <string>%BUILD_DIR%</string>
+                <key>recipe_dir</key>
+                <string>%RECIPE_DIR%</string>
+                <key>recipe_path</key>
+                <string>%RECIPE_PATH%</string>
+                <key>org_ver</key>
+                <string>%version%</string>
+                <key>ver_fields</key>
+                <string>3</string>
+                <key>pkg_dir</key>
+                <!-- <string>%VENDOR%_%NAME%%PF_STRING%_::VVeerrssiioonn::_ML</string> -->
+				<string>%NAME%%PF_STRING%_::VVeerrssiioonn::_ML</string>
+                <key>folder_list</key>
+				<string>helpers:sourceunzipped:release:read</string>
+                <key>BuildFiles</key>
+                <string>NextVerFiles.txt</string>
+			</dict>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%NAME%%PF_STRING%_%version%_ML</string>
+                <key>rename_var</key>
+                <string>pkg_dir</string>
+            </dict>
+		</dict>
+<!--         <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the Git install exe file to the sourceunzipped dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\sourceunzipped\%NAME%%PF_STRING%_%version%_ML.MSI</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>Copier</string>
+			<key>Comment</key>
+            <string>Copy the MSI-file to the release dir</string>
+            <key>Arguments</key>
+            <dict>
+                <key>source_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\release\%NAME%%PF_STRING%_%version%_ML.msi</string>
+                <key>overwrite</key>
+                <string>true</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\create-log-%NAME%%PF_STRING%_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+        <dict>
+            <key>Arguments</key>
+            <dict>
+                <key>file_path</key>
+                <string>%BUILD_DIR%\%pkg_dir%\read\readme-%NAME%%PF_STRING%_%version%_ML.txt</string>
+                <key>new_ver</key>
+                <string>%version%</string>
+                <key>re_pattern</key>
+                <string>[0-9]+\.[0-9]+\.[0-9]+</string>				
+            </dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/FileDateVersionSubst</string>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
+		</dict>
+        <dict>
+            <key>Processor</key>
+            <string>EndOfCheckPhase</string>
+        </dict>
+    </array>
+</dict>
+</plist>

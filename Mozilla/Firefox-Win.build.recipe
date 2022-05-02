@@ -144,29 +144,40 @@
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.autopkg-win.SharedProcessors/MozillaOmniUpdate</string>
+            <string>com.github.autopkg-win.SharedProcessors/MozillaAddonIntegrator</string>
 			<key>Comment</key>
-			<string>Update the omni.ja file in Mozilla products to allow certain extensions as features</string>
+			<string>Integrate Addons into the install. Enable Sideloading in omni.ja</string>
             <key>Arguments</key>
             <dict>
+			application_name
+				<key>application_name</key>
+                <string>Mozilla Firefox</string>
                 <key>install_exe</key>
                 <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%-Setup-%PLATFORM_STR%.exe</string>
-                <key>new_features</key>
+                <key>new_extensions</key>
 				<array>
-					<string>langpack-de@firefox.mozilla.org</string>
-					<string>langpack-fr@firefox.mozilla.org</string>
-					<string>langpack-it@firefox.mozilla.org</string>
-					<string>langpack-rm@firefox.mozilla.org</string>
-					<string>de_CH@dicts.j3e.de</string>
-					<string>fr-dicollecte@dictionaries.addons.mozilla.org</string>
-					<string>it-IT@dictionaries.addons.mozilla.org</string>
-					<string>{73a6fe31-595d-460b-a920-fcc0f8843232}</string>
-					<string>{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}</string>
+					<string>de.xpi|||https://ftp.mozilla.org/pub/firefox/releases/%version%/win64/xpi/de.xpi|||ExtlpDEFiles</string>
+					<string>fr.xpi|||https://ftp.mozilla.org/pub/firefox/releases/%version%/win64/xpi/fr.xpi|||ExtlpFRFiles</string>
+					<string>it.xpi|||https://ftp.mozilla.org/pub/firefox/releases/%version%/win64/xpi/it.xpi|||ExtlpITFiles</string>
+					<string>rm.xpi|||https://ftp.mozilla.org/pub/firefox/releases/%version%/win64/xpi/rm.xpi|||ExtlpRMFiles</string>
+					<string>dict-de.xpi|||https://addons.mozilla.org/firefox/downloads/latest/german-dictionary-de_ch-for-sp/|||ExtdicDEFiles</string>
+					<string>dict-fr.xpi|||https://addons.mozilla.org/firefox/downloads/file/3581786/|||ExtdicFRFiles</string>
+					<string>dict-it.xpi|||https://addons.mozilla.org/firefox/downloads/latest/dizionario-italiano/|||ExtdicITFiles</string>
+					<string>noscript.xpi|||https://addons.mozilla.org/firefox/downloads/latest/noscript/|||ExtNoscriptFiles</string>
+					<string>adblock.xpi|||https://addons.mozilla.org/firefox/downloads/latest/adblock-plus/|||ExtAdblockFiles</string>
 				</array>
+                <key>omni_path</key>
+				<string>omni.ja</string>
+                <key>config_file_path</key>
+				<string>modules\AppConstants.jsm</string>
                 <key>temp_path</key>
 				<string>%BUILD_DIR%\%pkg_dir%\adm</string>
-                <key>output_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt</string>
+                <key>ext_install_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\wixproject\Mozilla Firefox\browser\extensions</string>
+                <key>app_build_path</key>
+				<string>%BUILD_DIR%\%pkg_dir%\wixproject</string>
+                <key>ext_install_xslt</key>
+				<string>%BUILD_DIR%\%pkg_dir%\wixproject\GUID-Preserve.xslt</string>
             </dict>
 		</dict>
         <dict>								

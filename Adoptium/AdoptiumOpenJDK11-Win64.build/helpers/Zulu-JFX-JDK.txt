@@ -1,4 +1,5 @@
-bin\concrt140.dll
+bin\api-ms-win-core-console-l1-2-0.dll
+bin\api-ms-win-core-fibers-l1-1-0.dll
 bin\decora_sse.dll
 bin\fxplugins.dll
 bin\glass.dll
@@ -11,11 +12,9 @@ bin\jfxwebkit.dll
 bin\prism_common.dll
 bin\prism_d3d.dll
 bin\prism_sw.dll
-conf\security\openjsse.security
-demo\jfc\Font2DTest\Font2DTest.html
-demo\jfc\Font2DTest\Font2DTest.jar
-demo\jfc\Font2DTest\README.txt
-demo\jfc\Font2DTest\src.zip
+bin\vcruntime140_1.dll
+jmods\com.azul.crs.client.jmod
+jmods\com.azul.tooling.jmod
 jmods\javafx.base.jmod
 jmods\javafx.controls.jmod
 jmods\javafx.fxml.jmod
@@ -38,10 +37,9 @@ legal\javafx.graphics\ASSEMBLY_EXCEPTION
 legal\javafx.graphics\jpeg_fx.md
 legal\javafx.graphics\LICENSE
 legal\javafx.graphics\mesa3d.md
-legal\javafx.graphics\opengl_fx.md
 legal\javafx.media\ADDITIONAL_LICENSE_INFO
-legal\javafx.media\applecoreaudio.md
 legal\javafx.media\ASSEMBLY_EXCEPTION
+legal\javafx.media\directshow.md
 legal\javafx.media\glib.md
 legal\javafx.media\gstreamer.md
 legal\javafx.media\libffi.md

@@ -1,9 +1,12 @@
 bin\javafxpackager.exe
 bin\javapackager.exe
+bin\vcruntime140.dll
 jre\bin\api-ms-win-core-console-l1-1-0.dll
+jre\bin\api-ms-win-core-console-l1-2-0.dll
 jre\bin\api-ms-win-core-datetime-l1-1-0.dll
 jre\bin\api-ms-win-core-debug-l1-1-0.dll
 jre\bin\api-ms-win-core-errorhandling-l1-1-0.dll
+jre\bin\api-ms-win-core-fibers-l1-1-0.dll
 jre\bin\api-ms-win-core-file-l1-1-0.dll
 jre\bin\api-ms-win-core-file-l1-2-0.dll
 jre\bin\api-ms-win-core-file-l2-1-0.dll
@@ -40,7 +43,6 @@ jre\bin\api-ms-win-crt-stdio-l1-1-0.dll
 jre\bin\api-ms-win-crt-string-l1-1-0.dll
 jre\bin\api-ms-win-crt-time-l1-1-0.dll
 jre\bin\api-ms-win-crt-utility-l1-1-0.dll
-jre\bin\concrt140.dll
 jre\bin\decora_sse.dll
 jre\bin\fxplugins.dll
 jre\bin\glass.dll
@@ -48,6 +50,7 @@ jre\bin\glib-lite.dll
 jre\bin\gstreamer-lite.dll
 jre\bin\javafx_font.dll
 jre\bin\javafx_iio.dll
+jre\bin\jfr.exe
 jre\bin\jfxmedia.dll
 jre\bin\jfxwebkit.dll
 jre\bin\msvcp140.dll
@@ -57,6 +60,7 @@ jre\bin\prism_es2.dll
 jre\bin\prism_sw.dll
 jre\bin\ucrtbase.dll
 jre\bin\vcruntime140.dll
+jre\bin\vcruntime140_1.dll
 jre\lib\ext\jfxrt.jar
 jre\lib\javafx.properties
 jre\lib\jfxswt.jar

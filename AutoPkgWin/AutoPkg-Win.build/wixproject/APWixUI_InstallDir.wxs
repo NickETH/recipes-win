@@ -65,6 +65,9 @@ Patch dialog sequence:
       <Publish Dialog="PreReqDlg" Control="ChangeFile4" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
       <Publish Dialog="PreReqDlg" Control="ChangeFile4" Property="PATHTOFILE" Value="[NANTPATH]" Order="0">1</Publish>
       <Publish Dialog="PreReqDlg" Control="ChangeFile4" Property="NANTPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile5" Event="DoAction" Value="BrowseForFile" Order="1">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile5" Property="PATHTOFILE" Value="[MSBUILDPATH]" Order="0">1</Publish>
+      <Publish Dialog="PreReqDlg" Control="ChangeFile5" Property="MSBUILDPATH" Value="[PATHTOFILE]" Order="2">1</Publish>
 
       <Publish Dialog="ReqDirDlg" Control="Back" Event="NewDialog" Value="PreReqDlg">1</Publish>
       <Publish Dialog="ReqDirDlg" Control="Next" Event="SetTargetPath" Value="[WIXUI_INSTALLDIR]" Order="1">1</Publish>

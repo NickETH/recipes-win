@@ -35,7 +35,7 @@
                   <string>"id":([\d]*)(?=,"file":"NessusAgent-[\d\.]*\-x64.msi)</string>
               </dict>
             </dict>
-           <dict>
+            <dict>
               <key>Processor</key>
               <string>URLTextSearcher</string>
               <key>Arguments</key>
@@ -56,25 +56,34 @@
                     <key>url</key>
                     <string>https://www.tenable.com/downloads/api/v1/public/pages/nessus-agents/downloads/%download_id%/download?i_agree_to_tenable_license_agreement=true</string>
                     <key>CHECK_FILESIZE_ONLY</key>
-                    <false />
+                    <true />
                     <key>filename</key>
                     <string>%NAME%-x64.msi</string>
                 </dict>
             </dict>
-        <dict>
-            <key>Processor</key>
-            <string>WindowsSignatureVerifier</string>
-            <key>Arguments</key>
-            <dict>
-                <key>input_path</key>
-                <string>%pathname%</string>
-                <key>expected_subject</key>
-                <string>CN=Tenable Inc., O=Tenable Inc., L=Columbia, S=Maryland, C=US</string>
-            </dict>
-        </dict>
             <dict>
                 <key>Processor</key>
-                <string>EndOfCheckPhase</string>
+                <string>StopProcessingIf</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>predicate</key>
+                    <string>download_changed == False</string>
+                </dict>
+            </dict>
+            <dict>
+                <key>Processor</key>
+                <string>WindowsSignatureVerifier</string>
+                <key>Arguments</key>
+                <dict>
+                    <key>input_path</key>
+                    <string>%pathname%</string>
+                    <key>expected_subject</key>
+                    <string>CN=Tenable Inc., O=Tenable Inc., L=Columbia, S=Maryland, C=US</string>
+                </dict>
+            </dict>
+                <dict>
+                    <key>Processor</key>
+                    <string>EndOfCheckPhase</string>
             </dict>
         </array>
     </dict>

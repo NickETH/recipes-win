@@ -42,7 +42,7 @@
 			<key>Processor</key>
 			<string>EndOfCheckPhase</string>
 		</dict>
-        <dict>
+        <!-- <dict>
             <key>Processor</key>
             <string>WindowsSignatureVerifier</string>
             <key>Arguments</key>
@@ -52,7 +52,7 @@
                 <key>expected_subject</key>
                 <string>CN=Jeroen Ooms, OU=IT, O=Jeroen Ooms, STREET=Rolderiephof 211, L=Utrecht, S=Utrecht, PostalCode=3521DD, C=NL</string>
             </dict>
-        </dict>
+        </dict> -->
 	</array>
 </dict>
 </plist>

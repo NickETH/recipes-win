@@ -22,7 +22,7 @@
                     <Text SourceFile="!(wix.WixUIReadmeRtf=$(var.ReadmeRtf))" />
                 </Control>
 				<Control Id="Link1" Type="Hyperlink" X="20" Y="207" Width="320" Height="17" Transparent="no">
-					<Text>{\WixUI_Font_Title}<![CDATA[<a href="https://github.com/NickETH/autopkg">AutoPkg for Windows instructions and download links for helpers</a>]]></Text>
+					<Text>{\WixUI_Font_Title}<![CDATA[<a href="https://github.com/NickETH/autopkg/tree/win">AutoPkg for Windows instructions and download links for helpers</a>]]></Text>
 				</Control>
             </Dialog>
         </UI>

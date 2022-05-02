@@ -3,9 +3,11 @@ OPENJFX_LICENSE
 readme.txt
 Welcome.html
 bin\api-ms-win-core-console-l1-1-0.dll
+bin\api-ms-win-core-console-l1-2-0.dll
 bin\api-ms-win-core-datetime-l1-1-0.dll
 bin\api-ms-win-core-debug-l1-1-0.dll
 bin\api-ms-win-core-errorhandling-l1-1-0.dll
+bin\api-ms-win-core-fibers-l1-1-0.dll
 bin\api-ms-win-core-file-l1-1-0.dll
 bin\api-ms-win-core-file-l1-2-0.dll
 bin\api-ms-win-core-file-l2-1-0.dll
@@ -42,7 +44,6 @@ bin\api-ms-win-crt-stdio-l1-1-0.dll
 bin\api-ms-win-crt-string-l1-1-0.dll
 bin\api-ms-win-crt-time-l1-1-0.dll
 bin\api-ms-win-crt-utility-l1-1-0.dll
-bin\concrt140.dll
 bin\decora_sse.dll
 bin\fxplugins.dll
 bin\glass.dll
@@ -50,15 +51,11 @@ bin\glib-lite.dll
 bin\gstreamer-lite.dll
 bin\javafx_font.dll
 bin\javafx_iio.dll
-bin\jfr.exe
 bin\jfxmedia.dll
 bin\jfxwebkit.dll
-bin\msvcp140.dll
 bin\prism_common.dll
 bin\prism_d3d.dll
 bin\prism_sw.dll
-bin\ucrtbase.dll
-bin\vcruntime140.dll
 legal\javafx.base\ADDITIONAL_LICENSE_INFO
 legal\javafx.base\ASSEMBLY_EXCEPTION
 legal\javafx.base\LICENSE
@@ -72,6 +69,7 @@ legal\javafx.graphics\ADDITIONAL_LICENSE_INFO
 legal\javafx.graphics\ASSEMBLY_EXCEPTION
 legal\javafx.graphics\LICENSE
 legal\javafx.graphics\jpeg_fx.md
+legal\javafx.graphics\mesa3d.md
 legal\javafx.media\ADDITIONAL_LICENSE_INFO
 legal\javafx.media\ASSEMBLY_EXCEPTION
 legal\javafx.media\LICENSE

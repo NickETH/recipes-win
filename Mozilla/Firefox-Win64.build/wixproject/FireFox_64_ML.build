@@ -5,41 +5,11 @@
 	Lot of variables (property).
 	-->
 	<include buildfile="global.prop"/>
-	<!--
-	Die folgenden 3 properties werden neu in "global.prop" gesetzt.
-	<property name="download-component" value="no" />
-	Hier brauchen wir die originale Versions-Nr wie 20.0 oder 20.0.1
-	<property name="FFVersion" value="48.0.2" />
-	<property name="xpi-maxversion" value="48.*" />
-	-->
+
 	<property name="FFVersion" value="${RealVersion}" />
 	<property name="FFexe" value="Firefox-Setup-x64" />
 	<property name="FFmsi" value="FireFox_64_${FFVersion}_ML.msi" />
 	<property name="FFdir" value="Mozilla Firefox" />
-	<property name="FirefoxSRC" value="http://ftp.mozilla.org/pub/firefox/releases/${FFVersion}/win64/en-US/Firefox%20Setup%20${FFVersion}.exe" />
-	<property name="FFlpDEsrc" value="http://ftp.mozilla.org/pub/firefox/releases/${FFVersion}/win64/xpi/de.xpi" />
-	<property name="FFlpDExpi" value="de.xpi" />
-	<property name="FFlpFRsrc" value="http://ftp.mozilla.org/pub/firefox/releases/${FFVersion}/win64/xpi/fr.xpi" />
-	<property name="FFlpFRxpi" value="fr.xpi" />
-	<property name="FFlpITsrc" value="http://ftp.mozilla.org/pub/firefox/releases/${FFVersion}/win64/xpi/it.xpi" />
-	<property name="FFlpITxpi" value="it.xpi" />
-	<property name="FFlpRMsrc" value="http://ftp.mozilla.org/pub/firefox/releases/${FFVersion}/win64/xpi/rm.xpi" />
-	<property name="FFlpRMxpi" value="rm.xpi" />
-
-	<property name="FFdicDESRC" value="https://addons.mozilla.org/firefox/downloads/latest/german-dictionary-de_ch-for-sp/" />
-	<property name="FFdicDEXPI" value="woerterbuch_deutsch_de_ch_neue_rechtschreibung.xpi" />
-	<property name="FFdicFRSRC" value="https://addons.mozilla.org/firefox/downloads/latest/dictionnaire-français1/" />
-	<property name="FFdicFRXPI" value="dictionnaire_francais_classique_reforme_1990.xpi" />
-	<property name="FFdicITSRC" value="https://addons.mozilla.org/firefox/downloads/latest/dizionario-italiano/" />
-	<property name="FFdicITXPI" value="dizionario_italiano.xpi" />
-	<!-- 
-	-->
-	<property name="NoScriptSRC" value="https://addons.mozilla.org/firefox/downloads/latest/noscript/" />
-	<property name="NoScriptXPI" value="noscript.xpi" />
-	<property name="AdblockSRC" value="https://addons.mozilla.org/firefox/downloads/latest/adblock-plus/" />
-	<property name="AdblockXPI" value="adblock.xpi" />
-	<!--	
-	-->
 
 	<property name="current.dir" value="${directory::get-current-directory()}" />
 	<property name="project.dir" value="${directory::get-parent-directory(current.dir)}" />
@@ -50,11 +20,13 @@
 	<loadtasks assembly="${wix.dir}\Microsoft.Tools.WindowsInstallerXml.NAntTasks.dll" />
 
 	<!-- Tools folder -->
-	<readregistry property="TOOLS_DIR" key="SOFTWARE\AutoPkg\TOOLS_DIR" hive="CurrentUser" />
+	<property name="TOOLS_DIR" value="${arg.ToolsDir}" />
 	<echo message="Tools Dir: ${TOOLS_DIR}" />
+	
 	<!-- 7zip path -->
-	<readregistry property="FULL_7Z_PATH" key="SOFTWARE\AutoPkg\7ZIP_PATH" hive="CurrentUser" />
+	<property name="FULL_7Z_PATH" value="${arg.7ZipCmd}" />
 	<echo message="7zip path: ${FULL_7Z_PATH}" />
+
     <target name="build-all">
 		<!-- 
 		Build the hole Firefox MSI.
@@ -62,14 +34,8 @@
 
 		-->
 		<call target="instFFmain" />
-		<call target="installFFlp" />
-		<call target="install-NoScript" />
-		<call target="install-AdBlock" />
 		<call target="Search-CH-harv" />
 		<call target="Search-ETH-harv" />
-		<!--
-		<call target="Dis-Ext-FirstRun" />
-		-->
 		<call target="cck2-byteshift" />
 		<call target="FFcandle" />
 		<call target="FFlight" />
@@ -108,16 +74,20 @@
 			OUT - DownloadSRC
 			OUT - SourceFILE
 		-->
+		<!--
+		The exe of the main app is taken from the AP download recipe
 		<property name="DownloadSRC" value="${FirefoxSRC}" />
 		<property name="SourceFILE" value="${FFexe}" />
 		<if test="${string::contains(download-component, 'yes')}" >
 			<call target="DL-File" />
 		</if>
-        <!-- 
+ -->        <!-- 
             unzip, install and harvest the Firefox main EXE file.
         -->
 
-        <exec program="${FULL_7Z_PATH}">
+		<!--
+		This is now done by the AP shared processor "MozillaAddonIntegrator".
+		<exec program="${FULL_7Z_PATH}">
 
 			<arg value="x" />
 			<arg value="-y" />
@@ -131,10 +101,10 @@
 
 		<delete dir="core" />
 		<delete file="setup.exe" />
-
+ -->
 		<!-- 
-		Ab V57.x notwendig für Noscript default whitelist.
-		Default profile wird von CCK2 kopiert.
+		Starting with V57.x used to copy the extended Noscript default whitelist.
+		Default profile is being copied by CCK2.
         -->		
 		<copy todir=".\${FFdir}\defaults\profile">
 			<fileset basedir=".\..\sourcepkt\ETH\profile">
@@ -146,12 +116,9 @@
 		<copy file="..\sourcepkt\ETH\Firefox.adm.zip" tofile=".\${FFdir}\Firefox.adm.zip" />
 		<copy file="..\sourcepkt\ETH\Firefox.admx.zip" tofile=".\${FFdir}\Firefox.admx.zip" />
 		<!-- 
-		<copy file="..\sourcepkt\np-mswmp.dll" tofile=".\${FFdir}\plugins\np-mswmp.dll" />
-
-		Ab V47.x setzen wir die Default Settings mit dem CCK2
+		Include CCK2
         -->
 		<copy file="..\sourcepkt\ETH\autoconfig.js" tofile=".\${FFdir}\defaults\pref\autoconfig.js" />
-		<!-- Nur notwendig, damit es von heat eingebunden wird. -->
 		<copy file="..\sourcepkt\ETH\cck2.cfg" tofile=".\${FFdir}\cck2.cfg" />
 		<copy todir=".\${FFdir}\cck2">
 			<fileset basedir=".\..\sourcepkt\ETH\cck2">
@@ -162,288 +129,6 @@
 		<call target="FF-harv" />
 	</target>
 
-
-
-
-
-
-	
-	<target name="install-NoScript">    
-		<!-- 
-		Install the "NoScript" Extension.
-		Properties:
-			IN - ExtNoscriptFiles
-			IN - NoScriptSRC
-			IN - NoScriptXPI
-			IN - download-component
-			OUT - CGextXPI
-			OUT - DownloadSRC
-			OUT - SourceFILE
-		-->
-		<property name="CGextXPI" value="ExtNoscriptFiles" />
-		<property name="DownloadSRC" value="${NoScriptSRC}" />
-		<property name="SourceFILE" value="${NoScriptXPI}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-    </target>
-	
-	<target name="install-AdBlock">
-		<!-- 
-		Install the "Adblock plus" Extension.
-		Properties:
-			IN - ExtAdblockFiles
-			IN - AdblockSRC
-			IN - AdblockXPI
-			IN - download-component
-			OUT - CGextXPI
-			OUT - DownloadSRC
-			OUT - SourceFILE
-		-->
-		<property name="CGextXPI" value="ExtAdblockFiles" />
-		<property name="DownloadSRC" value="${AdblockSRC}" />
-		<property name="SourceFILE" value="${AdblockXPI}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-    </target>
-
-	<target name="installFFlp">
-        <!-- 
-		Install the LanguagePack and Dictionary Extensions.
-		Properties:
-			IN - ExtlpDEFiles, ExtlpFRFiles, ExtlpITFiles, ExtlpRMFiles
-			IN - FFlpDEsrc, FFlpFRsrc, FFlpITsrc, FFlpRMsrc
-			IN - FFlpDExpi, FFlpFRxpi, FFlpITxpi, FFlpRMxpi
-			IN - ExtdicDEFiles, ExtdicFRFiles, ExtdicITFiles
-			IN - FFdicDESRC, FFdicFRSRC, FFdicITSRC
-			IN - FFdicDEXPI, FFdicFRXPI, FFdicITXPI
-			IN - download-component
-			OUT - CGextXPI
-			OUT - DownloadSRC
-			OUT - SourceFILE
-		-->
-
-		<!-- 
-            Install the Firefox DE Langpack file.
-        -->
-		<property name="CGextXPI" value="ExtlpDEFiles" />
-		<property name="DownloadSRC" value="${FFlpDEsrc}" />
-		<property name="SourceFILE" value="${FFlpDExpi}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-		
-		<property name="CGextXPI" value="ExtdicDEFiles" />
-		<property name="DownloadSRC" value="${FFdicDESRC}" />
-		<property name="SourceFILE" value="${FFdicDEXPI}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-		
-         <!-- 
-            Install the Firefox FR Langpack file.
-        -->
-		<property name="CGextXPI" value="ExtlpFRFiles" />
-		<property name="DownloadSRC" value="${FFlpFRsrc}" />
-		<property name="SourceFILE" value="${FFlpFRxpi}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-		
-		<property name="CGextXPI" value="ExtdicFRFiles" />
-		<property name="DownloadSRC" value="${FFdicFRSRC}" />
-		<property name="SourceFILE" value="${FFdicFRXPI}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<!--
-		<call target="update-extension-maxversion" />
-        -->
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-
-        <!-- 
-            Install the Firefox IT Langpack file.
-        -->
-		<property name="CGextXPI" value="ExtlpITFiles" />
-		<property name="DownloadSRC" value="${FFlpITsrc}" />
-		<property name="SourceFILE" value="${FFlpITxpi}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-		
-		<property name="CGextXPI" value="ExtdicITFiles" />
-		<property name="DownloadSRC" value="${FFdicITSRC}" />
-		<property name="SourceFILE" value="${FFdicITXPI}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<!--
-		<call target="update-extension-maxversion" />
-        -->
-		<call target="install-extension" />
-		<call target="Ext-harv" />
-
-        <!-- 
-            Install the Firefox RM Langpack file.
-        -->
-		<property name="CGextXPI" value="ExtlpRMFiles" />
-		<property name="DownloadSRC" value="${FFlpRMsrc}" />
-		<property name="SourceFILE" value="${FFlpRMxpi}" />
-		<if test="${string::contains(download-component, 'yes')}" >
-			<call target="DL-File" />
-		</if>
-		<call target="install-extension" />
-		<call target="Ext-harv" />		
-	</target>
-	
-	<target name="install-extension">
-		<!-- 
-		Installs an Extension to its place in the extension folder.
-		It decides if the XPI has to be unpacked or not and behaves acordingly.
-		Properties:
-			IN - SourceFILE
-			OUT - xpi-unpack
-			OUT - xpi-name
-		-->
-        <exec program="${FULL_7Z_PATH}">
-			<arg value="x" />
-			<arg file="..\sourcepkt\${SourceFILE}" />
-			<arg value="manifest.json" />
-			<arg value="-y" />
-		</exec>
-		<property name="xpi-name" value="" />
-		<property name="xpi-name.file" value="XPI-temp.txt" />
-		<property name="xpi-unpack" value="" />
-
-		<exec program="powershell.exe" workingdir="." verbose="true" output="${xpi-name.file}">
-			<arg line="-NoProfile" />
-			<arg line="-ExecutionPolicy" />
-			<arg line="Bypass" />
-			<arg line="-Command" />
-			<arg line="&#038; ..\helpers\GetXPIVersion.ps1 'manifest.json'" />
-		</exec>
-		<loadfile file="${xpi-name.file}" property="xpi-name" />
-		<property name="xpi-name" value="${string::trim(xpi-name)}" />
-		<if test="${property::exists('xpi-name') and not string::contains(xpi-unpack, 'true')}">
-
-			<!-- 
-				copy (install) an Extension.
-			-->
-			<echo message="${xpi-name}"/>
-			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${FFdir}\browser\Extensions\${xpi-name}.xpi" />
-			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
-		</if>
-		<if test="${string::contains(xpi-unpack, 'true')}" >
-			<!-- 
-				unzip (install) an Extension.
-			-->
-			<echo message="${xpi-name}"/>
-			<exec program="${FULL_7Z_PATH}">
-				<arg value="x" />
-				<arg value="-y" />
-				<arg value="-o.\${FFdir}\browser\Extensions\${xpi-name}\${xpi-name}" />
-				<arg file="..\sourcepkt\${SourceFILE}" />
-			</exec>
-			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
-		</if>
-		<delete file="manifest.json" />
-		<delete file="XPI-temp.txt" />
-    </target>
-
-	<target name="install-extension-old">
-		<!-- 
-		Installs an Extension to its place in the extension folder.
-		It decides if the XPI has to be unpacked or not and behaves acordingly.
-		Properties:
-			IN - SourceFILE
-			OUT - xpi-unpack
-			OUT - xpi-name
-		-->
-        <exec program="${FULL_7Z_PATH}">
-			<arg value="x" />
-			<arg file="..\sourcepkt\${SourceFILE}" />
-			<arg value="install.rdf" />
-			<arg value="-y" />
-		</exec>
-		<property name="xpi-name" value="" />
-		<property name="xpi-unpack" value="" />
-		<xmlpeek file="install.rdf"
-                xpath="x:RDF/x:Description/@em:unpack"
-                property="xpi-unpack"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-		</xmlpeek>
-		<if test="${string::get-length(xpi-unpack) == 0}">
-			<xmlpeek file="install.rdf"
-                xpath="x:RDF/x:Description/em:unpack"
-                property="xpi-unpack"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-			</xmlpeek>
-		</if>
-		<xmlpeek file="install.rdf"
-                xpath="x:RDF/x:Description/@em:id"
-                property="xpi-name"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-		</xmlpeek>
-		<if test="${string::get-length(xpi-name) == 0}">
-			<xmlpeek file="install.rdf"
-                xpath="x:RDF/x:Description/em:id"
-                property="xpi-name"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-			</xmlpeek>
-		</if>
-		<if test="${property::exists('xpi-name') and not string::contains(xpi-unpack, 'true')}">
-			<!-- 
-				copy (install) an Extension.
-			-->
-			<echo message="${xpi-name}"/>
-			<copy file="..\sourcepkt\${SourceFILE}" tofile=".\${FFdir}\browser\Extensions\${xpi-name}.xpi" />
-			<echo message="${SourceFILE} nach ${xpi-name}.xpi installiert"/>
-		</if>
-		<if test="${string::contains(xpi-unpack, 'true')}" >
-			<!-- 
-				unzip (install) an Extension.
-			-->
-			<echo message="${xpi-name}"/>
-			<exec program="${FULL_7Z_PATH}">
-				<arg value="x" />
-				<arg value="-y" />
-				<arg value="-o.\${FFdir}\browser\Extensions\${xpi-name}\${xpi-name}" />
-				<arg file="..\sourcepkt\${SourceFILE}" />
-			</exec>
-			<echo message="${SourceFILE} in Verzeichnis ${xpi-name} installiert"/>
-		</if>
-		<delete file="install.rdf" />
-    </target>
 
 	<target name="FF-harv">
 		<!-- 
@@ -459,6 +144,12 @@
 			[HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\Windows Error Reporting]
 			"DontShowUI"=dword:00000001
 		-->
+		<!-- Exclude the extensions. They are harvested by the "MozillaAddonIntegrator" processor. -->
+		<move todir=".\Extensions\">
+			<fileset basedir=".\${FFdir}\browser\Extensions\">
+				<include name="**/*" />
+			</fileset>
+		</move>
 		<copy
 			file="Prev_Ver_FFfiles.wxs"
 			tofile="Snapshot.xml"
@@ -487,16 +178,17 @@
 			<arg value="-t" />
 			<arg file="GUID-Preserve-x64.xslt" />
 
-			<!--			
-			<arg value="-t" />
-			<arg file="Comp-x64.xslt" />
-
-			-->
 		</exec>
 		<property name="source.file" value=".\FFfiles.wxs" />	
 		<property name="dest.file" value=".\-FFfiles.wxs" />
 		<property name="search.line" value="1BAA303D-B4B9" />
 
+		<!-- Move back the excluded extensions to its folder. -->
+		<move todir=".\${FFdir}\browser\Extensions\">
+			<fileset basedir=".\Extensions\">
+				<include name="**/*" />
+			</fileset>
+		</move>
     </target>
 	
 	<target name="Ext-harv">
@@ -539,41 +231,6 @@
 				<arg value="-t" />
 				<arg file="GUID-Preserve-x64.xslt" />
 			</exec>
-		</if>
-		<if test="${string::contains(xpi-unpack, 'true')}" >
-			<exec program="${wix.dir}\heat.exe">
-				<arg value="dir" />
-				<arg file=".\${FFdir}\browser\Extensions\${xpi-name}" />
-				<arg value="-gg" />
-				<arg value="-sfrag" />
-				<arg value="-srd" />
-				<!-- 
-				wir brauchen das Root Dir + Unique identifiers sonst geht nichts.
-				<arg value="-srd" />
-				<arg value="-suid" />
-				-->
-				<arg value="-dr" />
-				<arg value="EXTENSIONS" />
-				<arg value="-cg" />
-				<arg value="${CGextXPI}" />
-				<arg value="-var" />
-				<arg value="wix.FFExtDir" />
-				<arg value="-out" />
-				<arg file="FF${SourceFILE}.wxs" />
-				<!--				
-				<arg value="-t" />
-				<arg file="Comp-x64.xslt" />
-				-->			
-				<arg value="-t" />
-				<arg file="GUID-Preserve-x64.xslt" />
-
-			</exec>
-			<move todir=".\${FFdir}\browser\Extensions\${xpi-name}">
-				<fileset basedir=".\${FFdir}\browser\Extensions\${xpi-name}\${xpi-name}">
-					<include name="**/*" />
-				</fileset>
-			</move>
-			<delete dir=".\${FFdir}\browser\Extensions\${xpi-name}\${xpi-name}" />
 		</if>
 	</target>
 	
@@ -686,10 +343,10 @@
 		<property name="lightFFSourceDirVAR" value="${'-dFFSourceDir=' + quote + Current.Dir + '\' + FFdir + quote}" />
 		<echo message="${lightFFSourceDirVAR}"/>
 
-		<property name="lightFFExtDirVAR" value="${'-dFFExtDir=' + quote + Current.Dir + '\' + FFdir + '\browser\extensions' + quote}" />
+		<property name="lightFFExtDirVAR" value="${'-dMozExtDir=' + quote + Current.Dir + '\' + FFdir + '\browser\extensions' + quote}" />
 		<echo message="${lightFFExtDirVAR}"/>
 
-        <!-- Geaendert ab V40.x Searchpluging koennen nur noch via distribution Verzeichnis hinzgefuegt werden.  -->
+        <!-- Todo: XML Search plugins do not work anymore.  -->
 		<property name="lightFFSearchDirVAR" value="${'-dFFSearchDir=' + quote + Current.Dir + '\' + FFdir + '\distribution\searchplugins' + quote}" />
 		<echo message="${lightFFSearchDirVAR}"/>
 
@@ -718,101 +375,11 @@
 				<include name="FireFox_64_ML.wixobj" />
 				<include name="FireFoxReg_ML.wixobj" />
 				<include name="FF*.wixobj" />
+				<include name="MozExt_*.wixobj" />
 			</sources>
 		</light>
     </target>
-	
-	<target name="FFlight-DFI">
-        <!-- 
-		Builds (link) the Firefox Project with German, French, Italian Interface.
-		Properties:
-			IN - FFmsi
-			IN - FFVersion
-       -->
-		<property name="quote" value='"' />
-		<property name="Current.Dir" value="${directory::get-current-directory()}" />
-
-		<property name="lightFFSourceDirVAR" value="${'-dFFSourceDir=' + quote + Current.Dir + '\' + FFdir + quote}" />
-		<echo message="${lightFFSourceDirVAR}"/>
-
-		<property name="lightFFExtDirVAR" value="${'-dFFExtDir=' + quote + Current.Dir + '\' + FFdir + '\extensions' + quote}" />
-		<echo message="${lightFFExtDirVAR}"/>
-
-		<property name="lightFFSearchDirVAR" value="${'-dFFSearchDir=' + quote + Current.Dir + '\' + FFdir + '\searchplugins' + quote}" />
-		<echo message="${lightFFSearchDirVAR}"/>
-
-        <!-- 
-		<property name="lightCHSearchDirVAR" value="${'-dFFSearchDir=' + quote + directory::get-parent-directory(Current.Dir) + '\sourcepkt\Search_CH' + quote}" />
-		<echo message="${lightCHSearchDirVAR}"/>
-		        -->
-		<light
-			exedir="${wix.dir}"
-			out="DE_${FFmsi}"
-			warningsaserrors="false"
-			suppressices="ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
-			cultures="de-de"
-			extensions="WixUIExtension"
-			rebuild="true"
-			suppresspdb="true">
-			<!-- Specify additional options -->
-			<arg line="-sval" />
-			<arg line="${lightFFSourceDirVAR}" />
-			<arg line="${lightFFExtDirVAR}" />
-			<arg line="${lightFFSearchDirVAR}" />
-			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
-			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
-			<sources basedir=".\.">
-				<include name="FireFox_64_ML.wixobj" />
-				<include name="FireFoxReg_ML.wixobj" />
-				<include name="FF*.wixobj" />
-			</sources>
-		</light>
-		<light
-			exedir="${wix.dir}"
-			out="FR_${FFmsi}"
-			warningsaserrors="false"
-			suppressices="ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
-			cultures="fr-fr"
-			extensions="WixUIExtension"
-			rebuild="true"
-			suppresspdb="true">
-			<!-- Specify additional options -->
-			<arg line="-sval" />
-			<arg line="${lightFFSourceDirVAR}" />
-			<arg line="${lightFFExtDirVAR}" />
-			<arg line="${lightFFSearchDirVAR}" />
-			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
-			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
-			<sources basedir=".\.">
-				<include name="FireFox_64_ML.wixobj" />
-				<include name="FireFoxReg_ML.wixobj" />
-				<include name="FF*.wixobj" />
-			</sources>
-		</light>
-		<light
-			exedir="${wix.dir}"
-			out="IT_${FFmsi}"
-			warningsaserrors="false"
-			suppressices="ICE57;ICE27;ICE64;ICE69;ICE90;ICE91"
-			cultures="it-it"
-			extensions="WixUIExtension"
-			rebuild="true"
-			suppresspdb="true">
-			<!-- Specify additional options -->
-			<arg line="-sval" />
-			<arg line="${lightFFSourceDirVAR}" />
-			<arg line="${lightFFExtDirVAR}" />
-			<arg line="${lightFFSearchDirVAR}" />
-			<arg line="-dWixUIBannerBmp=..\sourcepkt\TopImage.bmp" />
-			<arg line="-dWixUIDialogBmp=..\sourcepkt\SideImage.bmp" />
-			<sources basedir=".\.">
-				<include name="FireFox_64_ML.wixobj" />
-				<include name="FireFoxReg_ML.wixobj" />
-				<include name="FF*.wixobj" />
-			</sources>
-		</light>
-    </target>
-	
+		
 	<target name="FFcandle">
         <!-- 
 		Compiles the Firefox Project files
@@ -833,126 +400,15 @@
 				<include name="FireFox_64_ML.wxs" />
 				<include name="FireFoxReg_ML.wxs" />
 				<include name="FF*.wxs" />
+				<include name="MozExt_*.wxs" />
 			</sources>
 		</candle>
     </target>
 
-	<target name="Dis-Ext-FirstRun" description="Disable Firstrun for Noscript in CCK2.cfg">
-		<!--
-		Schreibt eine Prefs-Zeile mit der Version der Extension in CCK2.cfg.txt
-		Damit wird der Firstrun der Extension unterbunden.
-		Wenn die Zeile schon vorhanden ist, wird sie aktualisiert.
-		Sub-Targets: get-ext-Ver, cck2-line-change
-		Properties:
-			OUT - EXT.file
-			OUT - source.file
-			OUT - dest.file
-			OUT - search.line
-		-->
-		<property name="source.file" value="..\sourcepkt\ETH\cck2.cfg.txt" />	
-		<property name="dest.file" value="..\sourcepkt\ETH\-cck2.cfg.txt" />
-
-		<property name="EXT.file" value="..\sourcepkt\noscript.xpi" />
-		<property name="search.line" value="pref(&quot;noscript.version&quot;" />
-
-		<call target="get-ext-Ver" />
-		<call target="cck2-line-change" />
-		<move file="${dest.file}" tofile="${source.file}" overwrite = "true"/>
-		<!--
-		-->
-		<property name="EXT.file" value="..\sourcepkt\adblock.xpi" />
-		<property name="search.line" value="pref(&quot;extensions.adblockplus.currentVersion&quot;" />
-
-		<call target="get-ext-Ver" />
-		<call target="cck2-line-change" />
-		<move file="${dest.file}" tofile="${source.file}" overwrite = "true"/>
-	</target>
-	
-	<target name="get-ext-Ver" description="Read an Ext Version ">
-		<!--
-		Laedt die Extensions in 7zip und extrahiert "install.rdf"
-		Extrahiert den Version String aus "install.rdf"
-		Properties:
-			IN - EXT.file
-			OUT - xpi-version
-		-->
-        <exec program="${FULL_7Z_PATH}">
-			<arg value="x" />
-			<arg file="${EXT.file}" />
-			<arg value="install.rdf" />
-			<arg value="-y" />
-		</exec>
-		<property name="xpi-version" value="" />
-		<xmlpeek file="install.rdf"
-                xpath="x:RDF/x:Description/em:version"
-                property="xpi-version"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-		</xmlpeek>
-		<delete file="install.rdf" />
-	</target>
-
-	<target name="FFfiles-line-move" description="Moves a line in FFfiles.wxs file">
-		<!--
-		Sucht die gewuenschte Zeile in "FFfiles.wxs"
-		Die Zeile wird mit der neuen Version in "-CCK2.cfg.txt" geschrieben.
-		Notwendige Properties:
-			- source.file
-			- dest.file
-			- search.line
-			- Searchline: <Class Id="{1BAA303D-B4B9-45E5-9CCB-E3FCA3E274B6}" Handler="2" />
-					<if test="${string::contains(download-component, '1BAA303D-B4B9')}" >
-			<call target="DL-File" />
-		</if>
-		-->
-		<echo>${search.line}</echo>
-		<property name="i" value="0"/>
-		<foreach item="Line" in="${source.file}" property="iLine">
-			<if test="${string::contains(iLine, search.line)}">
-				<echo message="Such Zeile: ${iLine}"/>
-				<echo message="Neue Zeile: ${iLine}"/>
-			</if>
-			<echo
-				file="${dest.file}"
-				message="${iLine}&#xa;"
-				append="true" 
-			/>
-		</foreach>
-	</target>
-	<target name="cck2-line-change" description="Changes a line in cck2.cfg file">
-		<!--
-		Sucht die gewuenschte Zeile in "CCK2.cfg.txt"
-		Die Zeile wird mit der neuen Version in "-CCK2.cfg.txt" geschrieben.
-		Notwendige Properties:
-			- source.file
-			- dest.file
-			- search.line
-			- xpi-version
-		-->
-		<echo>${search.line}</echo>
-		<property name="i" value="0"/>
-		<foreach item="Line" in="${source.file}" property="iLine">
-			<if test="${string::starts-with(iLine, search.line)}">
-				<echo message="Alte Zeile: ${iLine}"/>
-				<property name="iLine" value="${search.line}, &quot;${xpi-version}&quot;);" />
-				<echo message="Neue Zeile: ${iLine}"/>
-			</if>
-			<echo
-				file="${dest.file}"
-				message="${iLine}&#xa;"
-				append="true" 
-			/>
-		</foreach>
-	</target>
-
 	<target name="cck2-byteshift" description="apply byteshift to cck2.cfg file">
 		<!--
-		Sucht die gewuenschte Zeile in "CCK2.cfg.txt"
-		Die Zeile wird mit der neuen Version in "-CCK2.cfg.txt" geschrieben.
-		Notwendige Properties:
+		Byteshift "CCK2.cfg.txt" to cck2.cfg
+		Used properties:
 			IN - current.dir
 			IN - project.dir
 			IN - FFdir
@@ -973,47 +429,6 @@
 		</exec>
 		<copy file="..\sourcepkt\ETH\cck2.cfg" tofile=".\${FFdir}\cck2.cfg"  overwrite = "true"/>
 	</target>
-
-	<target name="update-extension-maxversion">
-		<!-- 
-		Setzt das "maxVersion" Attribut in "install.rdf" einer Extension auf die Major-Version von Firefox.
-		Set the readonly attribute on the MSI File
-		Notwendige Properties:
-			IN - SourceFILE
-        -->
-        <exec program="${FULL_7Z_PATH}">
-			<arg value="x" />
-			<arg file="..\sourcepkt\${SourceFILE}" />
-			<arg value="install.rdf" />
-			<arg value="-y" />
-		</exec>
-		<xmlpoke file="install.rdf"
-				xpath="x:RDF/x:Description/@em:targetApplication/x:Description/em:maxVersion"
-                value="${xpi-maxversion}"
-				failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-		</xmlpoke>
-		<xmlpoke file="install.rdf"
-			xpath="x:RDF/x:Description/em:targetApplication/x:Description/em:maxVersion"
-			value="${xpi-maxversion}"
-			failonerror = "false">
-                <namespaces>
-                    <namespace prefix="x" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
-					<namespace prefix="em" uri="http://www.mozilla.org/2004/em-rdf#" />
-	            </namespaces>
-		</xmlpoke>
-        <exec program="${FULL_7Z_PATH}">
-			<arg value="u" />
-			<arg file="..\sourcepkt\${SourceFILE}" />
-			<arg value="install.rdf" />
-			<arg value="-y" />
-		</exec>
-		<delete file="install.rdf" />
-		<echo message="${SourceFILE} fuer Versionen bis: ${xpi-maxversion} aktualisiert" />
-    </target>
 
 	<target name="PostChanges">
         <!-- 
@@ -1070,9 +485,9 @@
 	</target>
 	<target name="makeGPVersion">
 		<!--
-		Erstellt die Group-Policy kompatible Version.
-		Dabei wird das MSI-Schema auf V2 geaendert.
-		Notwendige Properties:
+		Generate an MSI file, which can be installed by AD Group-Policy software install.
+		This changes the  MSI-Schema to V200.
+		Used properties:
 			IN - PackageVersion
 			IN - ShortVersion
 		-->
