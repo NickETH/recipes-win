@@ -17,7 +17,7 @@
     <string>0.2.9</string>
     <key>Process</key>
     <array>
-        <dict>
+        <!-- <dict>
             <key>Processor</key>
             <string>URLTextSearcher</string>
             <key>Arguments</key>
@@ -38,27 +38,28 @@
                 <key>re_pattern</key>
                 <string><![CDATA[<Location>(?P<url>http.*)Installer.exe<\/Location>]]></string>
             </dict>
-        </dict>
+        </dict> -->
+        <dict>
+            <key>Processor</key>
+            <string>GitHubReleasesInfoProvider</string>
+            <key>Arguments</key>
+            <dict>
+                <key>github_repo</key>
+                <string>notepad-plus-plus/notepad-plus-plus</string>
+				<key>include_prereleases</key>
+				<string>false</string>
+				<key>asset_regex</key>
+				<string>npp.([0-9]+\.)*[0-9]+.Installer.x64.exe</string>
+			</dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>URLDownloader</string>
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <!-- <string>%url%x64.exe</string> -->
-				<string>%url%portable.x64.zip</string>
-                <key>filename</key>
-                <string>%NAME%.zip</string>
-            </dict>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>URLDownloader</string>
-            <key>Arguments</key>
-            <dict>
-                <key>url</key>
-                <string>%match%Installer.x64.exe</string>
-				<!-- <string>%url%portable.x64.zip</string> -->
+                <!-- <string>%match%Installer.x64.exe</string> -->
+				<string>%url%</string>
                 <key>filename</key>
                 <string>%NAME%.exe</string>
             </dict>
@@ -72,6 +73,18 @@
                 <string>%pathname%</string>
                 <key>expected_subject</key>
                 <string>CN="Notepad++", O="Notepad++", L=Saint Cloud, S=Ile-de-France, C=FR</string>
+            </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>URLDownloader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>url</key>
+                <string>https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v%version%/npp.%version%.portable.x64.zip</string>
+				<!-- <string>%url%portable.x64.zip</string> -->
+                <key>filename</key>
+                <string>%NAME%.zip</string>
             </dict>
         </dict>
         <dict>

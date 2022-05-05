@@ -74,9 +74,9 @@
             <key>Arguments</key>
             <dict>
                 <key>source_path</key>
-                <string>%RECIPE_CACHE_DIR%\downloads\%filename%</string>
+                <string>%RECIPE_CACHE_DIR%\downloads\%NAME%.exe</string>
                 <key>destination_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%filename%</string>
+                <string>%BUILD_DIR%\%pkg_dir%\sourcepkt\%NAME%.exe</string>
                 <key>overwrite</key>
                 <string>true</string>
             </dict>
@@ -290,6 +290,8 @@
                 <string>chcg/NPP_HexEdit</string>
 				<key>include_prereleases</key>
 				<string>true</string>
+				<key>asset_regex</key>
+				<string>HexEditor_([0-9]+\.)*[0-9]+_x64.zip</string>
             </dict>
         </dict>
         <dict>
@@ -333,37 +335,6 @@
                 <string></string>
             </dict>
         </dict>
-<!--         <dict>
-            <key>Processor</key>
-            <string>Copier</string>
-			<key>Comment</key>
-            <string>Copy the Notepad++ language files to the build dir</string>
-            <key>Arguments</key>
-            <dict>
-                <key>source_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\$PLUGINSDIR\nppLocalization</string>
-                <key>destination_path</key>
-                <string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\localization</string>
-                <key>overwrite</key>
-                <string>true</string>
-            </dict>
-        </dict> -->
-<!--         <dict>
-            <key>Processor</key>
-            <string>PathDeleter</string>
-			<key>Comment</key>
-            <string>Delete unnesessary folders from the Notepad++ installer files</string>
-            <key>Arguments</key>
-            <dict>
-                <key>path_list</key>
-				<array>
-                    <string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\$PLUGINSDIR</string>
-					<string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\$_14_</string>
-					<string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\$_15_</string>
-					<string>%BUILD_DIR%\%pkg_dir%\wixproject\%NAME%\$_17_</string>
-				</array>
-            </dict>
-        </dict> -->
         <dict>
             <key>Arguments</key>
             <dict>
@@ -425,10 +396,6 @@
         <dict>
             <key>Processor</key>
             <string>com.github.autopkg-win.SharedProcessors/DateTimeStamps</string>
-        </dict>
-        <dict>
-            <key>Processor</key>
-            <string>EndOfCheckPhase</string>
         </dict>
 	</array>
 </dict>

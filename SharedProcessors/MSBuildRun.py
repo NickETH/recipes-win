@@ -8,6 +8,7 @@
 # MSBuild.exe [Optionen] [Projektdatei]
 # MSBuild MyApp.csproj -t:Clean -p:Configuration=Debug;TargetFrameworkVersion=v3.5
 # 20210517 Nick Heim: Python v3 changes
+# 20220504 Nick Heim: Insert MSBUILD_PATH variable
 
 import os
 import sys
@@ -53,9 +54,9 @@ class MSBuildRun(Processor):
         ignore_errors = self.env.get('ignore_errors', True)
         verbosity = self.env.get('verbose', 1)
 
-        # msbuild_cmd = self.env.get('TOOLS_PATH')
+        msbuild_cmd = self.env.get('MSBUILD_PATH', "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe")
         #msbuild_cmd = 'msbuild.exe'
-        msbuild_cmd = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe"
+        # msbuild_cmd = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Current\\Bin\\amd64\\MSBuild.exe"
 
         self.output("Building in: %s" % build_folder)
         os.chdir(build_folder)
