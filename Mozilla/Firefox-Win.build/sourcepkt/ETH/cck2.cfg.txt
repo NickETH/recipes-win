@@ -18,7 +18,9 @@ pref("plugin.state.nppdf", 2);
 pref("plugin.state.np-mswmp", 2);
 pref("browser.selfsupport.url","");
 pref("browser.search.widget.inNavBar", true);
+pref("pdfjs.enableScripting", false);
 pref("extensions.adblockplus.currentVersion", "");
+pref("browser.privateWindowSeparation.enabled", false);
 var config = {
   "cckVersion": "2.4.5",
   "name": "ETHZ ID",

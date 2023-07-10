@@ -20,7 +20,10 @@
 		<string>(/release/(?P&lt;version&gt;[0-9]{1,3}.[0-9]{0,3}.[0-9]{0,3})/windows/)</string>
         <key>SEARCH_PATTERN2</key>
 		<!-- https://inkscape.org/gallery/item/21592/inkscape-1.0.1-x64.msi -->
-        <string>(?P&lt;fullurl&gt;\/gallery\/.*\/inkscape-.*-x[\d]*\.msi)</string>    
+		<!-- https://inkscape.org/gallery/item/33463/inkscape-1.2_2022-05-15_dc2aedaf03-x64_5iRsplS.msi -->
+		<!-- /gallery/item/37366/inkscape-1.2.2_2022-12-09_732a01da63-x64.msi -->
+        <!-- <string>(?P&lt;fullurl&gt;\/gallery\/.*\/inkscape-.*-%PLATFORM%_.*\.msi)</string> -->
+		<string>(?P&lt;fullurl&gt;\/gallery\/.*\/inkscape-.*-%PLATFORM%.*\.msi)</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.2.9</string>
@@ -37,6 +40,10 @@
                 <string>%SEARCH_PATTERN1%</string>
                 <key>result_output_var_name</key>
                 <string>release_page_match</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
             </dict>
         </dict>
         <dict>
@@ -59,8 +66,13 @@
             <dict>
                 <key>url</key>
                 <string>%SEARCH_URL%%gallery_download_match%</string>
+				<!-- <string>%SEARCH_URL%%release_page_match%%PF_DIGIT%-bit/msi/dl/</string> -->
                 <key>filename</key>
                 <string>%NAME%.msi</string>
+				<key>curl_opts</key>
+                    <array>
+                       <string>-L</string>
+                    </array>
             </dict>
         </dict>
 <!--         <dict>

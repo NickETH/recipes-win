@@ -1,0 +1,8 @@
+
+200113	Packaging WinSCP for Windows
+	We download and use the setup.exe unaltered.
+	Desktop shortcut will not be installed.
+	For the download links, see the recipe.
+	WinSCP_5.19.1_ML.exe /ALLUSERS /VERYSILENT /TASKS="sendtohook,urlhandler"
+
+200113	Version 1.0.0, by AutoPkg

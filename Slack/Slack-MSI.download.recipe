@@ -56,7 +56,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN="Slack Technologies, Inc.", O="Slack Technologies, Inc.", L=San Francisco, S=California, C=US</string>
+                <string>CN="Slack Technologies, LLC", O="Slack Technologies, LLC", L=San Francisco, S=California, C=US</string>
             </dict>
         </dict>
         <dict>

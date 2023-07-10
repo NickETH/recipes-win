@@ -3,13 +3,21 @@
 <plist version="1.0">
 <dict>
     <key>Description</key>
-    <string>Downloads the latest version of VLC MSI for Windows.</string>
+    <string>Downloads the latest version of VLC for Windows.</string>
     <key>Identifier</key>
     <string>com.github.autopkg-win.download.VLCMSI-Win</string>
     <key>Input</key>
     <dict>
+		<key>VLCPLATFORM</key>
+		<string>win64</string>
+		<key>PKGFORMAT</key>
+		<string>msi</string>
+		<key>MIRRORSRV</key>
+		<string>https://mirror.solnet.ch/videolan</string>
         <key>SEARCH_URL</key>
         <string>https://www.videolan.org/vlc/download-windows.html</string>
+		<key>SEARCH_PATTERN</key>
+		<string>(get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.%PKGFORMAT%)</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.2.9</string>
@@ -32,9 +40,12 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://download.videolan.org/vlc/%version%/%PLATFORM%/vlc-%version%-%PLATFORM%.msi</string>
+                <string>https://download.videolan.org/vlc/%version%/%VLCPLATFORM%/vlc-%version%-%VLCPLATFORM%.%PKGFORMAT%</string>
+				<!-- <string>https://get.videolan.org/vlc/%version%/%VLCPLATFORM%/vlc-%version%-%VLCPLATFORM%.%PKGFORMAT%</string> -->
+				<!-- <string>%MIRRORSRV%/vlc/%version%/%VLCPLATFORM%/vlc-%version%-%VLCPLATFORM%.%PKGFORMAT%</string> -->
+				<!-- https://mirror.solnet.ch/videolan/vlc/3.0.17.4/win64/vlc-3.0.17.4-win64.msi -->
                 <key>filename</key>
-                <string>vlc-%version%-%PLATFORM%.msi</string>
+                <string>vlc-%VLCPLATFORM%.%PKGFORMAT%</string>
             </dict>
         </dict>
         <dict>

@@ -41,13 +41,16 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-				<string>https://webdownloads2.ts.fujitsu.com/deskupdate_5_1/data/api/v1/update/5.01.0064.0</string>
+				<!-- <string>https://webdownloads2.ts.fujitsu.com/deskupdate_5_1/data/api/v1/update/5.01.0064.0</string> -->
+				<string>https://webdownloads.ts.fujitsu.com/deskupdate_5_1/data/api/v1/update/5.02.0056.0</string>
                 <key>re_pattern</key>
                 <string>%SOFTWARE_GUID%</string>
 				<key>curl_opts</key>
 				<array>
 					<string>--request</string>
 					<string>GET</string>
+					<!-- <string>-c</string>
+					<string>%RECIPE_CACHE_DIR%\cookie.txt</string> -->
 				</array>
             </dict>
         </dict>
@@ -57,24 +60,12 @@
             <key>Arguments</key>
             <dict>
                 <key>url</key>
-                <string>https://support.ts.fujitsu.com/Download/Download.asp</string>
-                <key>request_headers</key>
-                <dict>
-                    <key>user-agent</key>
-                    <string>%USER_AGENT%</string>
-                </dict>
-				<key>curl_opts</key>
-				<array>
-					<string>--data-raw</string>
-					<!-- <string>SoftwareGUID=5345FCD8-3F02-4199-90AD-22269D958EF8</string> -->
-					<string>SoftwareGUID=%SW_GUID%</string>
-					<string>-c</string>
-					<string>%RECIPE_CACHE_DIR%\cookie.txt</string>
-				</array>
-			    <key>filename</key>
+				<!-- <string>https://webdownloads.ts.fujitsu.com/download/FileDownload/fileDownload.aspx?SoftwareGUID=%SW_GUID%&amp;FileFolder=Downloadfiles&amp;FileTypeExtension=EXE&amp;FileNameClient=FTS_DeskUpdateSetup.EXE</string> -->
+				<string>https://webdownloads.ts.fujitsu.com/download/FileDownload/fileDownload.aspx?SoftwareGUID=%SW_GUID%&amp;FileFolder=Downloadfiles&amp;FileTypeExtension=EXE</string>
+ 			    <key>filename</key>
                 <string>%NAME%.exe</string>
             </dict>
-        </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>WindowsSignatureVerifier</string>

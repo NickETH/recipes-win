@@ -12,9 +12,13 @@
         <string>Thunderbird_64</string>
         <key>SEARCH_URL</key>
         <string><![CDATA[https://download.mozilla.org/?product=thunderbird-latest&amp;os=win64&amp;lang=en-US]]></string>
+		<!-- <string><![CDATA[https://download.mozilla.org/?product=thunderbird-91.13.0-SSL&amp;os=win64&amp;lang=en-US]]></string> -->
+		<!-- <string><![CDATA[https://download.mozilla.org/?product=thunderbird-91.13.1-SSL&amp;os=win64&amp;lang=en-US]]></string> -->
 		<!-- <string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win64/en-US/</string> -->
+		<!-- https://download.mozilla.org/?product=thunderbird-91.13.0-SSL&os=win64&lang=de -->
         <key>DOWNLOAD_URL</key>
-        <string>https://download.mozilla.org/?product=thunderbird-latest&amp;os=win64&amp;lang=en-US</string>
+        <!-- <string>https://download.mozilla.org/?product=thunderbird-latest&amp;os=win64&amp;lang=en-US</string> -->
+		<string>https://download.mozilla.org/?product=thunderbird-91.13.0-SSL&amp;os=win64&amp;lang=en-US</string>
 		<!-- <string>https://releases.mozilla.org/pub/thunderbird/releases/68.12.1/win64/en-US/Thunderbird%20Setup%2068.12.1.exe</string> -->
         <key>PLATFORM_STR</key>
         <string>x64</string>
@@ -171,6 +175,7 @@
 			<string>Integrate Addons into the install. Enable Sideloading in omni.ja</string>
             <key>Arguments</key>
             <dict>
+			application_name
 				<key>application_name</key>
                 <string>Mozilla Thunderbird</string>
                 <key>install_exe</key>
@@ -184,7 +189,8 @@
 					<string>dict-de.xpi|||https://addons.mozilla.org/firefox/downloads/latest/german-dictionary-de_ch-for-sp/|||ExtdicDEFiles</string>
 					<string>dict-fr.xpi|||https://addons.mozilla.org/firefox/downloads/file/3581786/|||ExtdicFRFiles</string>
 					<string>dict-it.xpi|||https://addons.mozilla.org/firefox/downloads/latest/dizionario-italiano/|||ExtdicITFiles</string>
-					<string>sieve.xpi|||https://addons.thunderbird.net/thunderbird/downloads/latest/sieve/addon-2548-latest.xpi|||ExtSieveFiles</string>
+					<!-- <string>sieve.xpi|||https://addons.thunderbird.net/thunderbird/downloads/latest/sieve/addon-2548-latest.xpi|||ExtSieveFiles</string> -->
+					<string>sieve.xpi|||https://polybox.ethz.ch/index.php/s/7TV2haOK7SGGdhX/download?path=%2F&amp;files=sieve-0.6.1.xpi|||ExtSieveFiles</string>
 					<string>tbsync.xpi|||https://addons.thunderbird.net/thunderbird/downloads/latest/tbsync/addon-773590-latest.xpi|||ExtTBSyncFiles</string>
 					<string>dav-4-tbsync.xpi|||https://addons.thunderbird.net/thunderbird/downloads/latest/dav-4-tbsync/addon-986258-latest.xpi|||ExtDAV4TBSyncFiles</string>
 					<string>google-4-tbsync.xpi|||https://addons.thunderbird.net/thunderbird/downloads/latest/provider-for-google-calendar/addon-4631-latest.xpi|||ExtGoogle4TBSyncFiles</string>

@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Download recipe for Python x64.</string>
+	<string>Download recipe for WinSCP.</string>
 	<key>Identifier</key>
-	<string>com.github.autopkg-win.download.Python-Win64</string>
+	<string>com.github.autopkg-win.download.WinSCP-Win</string>
 	<key>Input</key>
 	<dict>
 		<key>NAME</key>
-		<string>Python</string>
+		<string>WinSCP</string>
 		<key>URL</key>
-        <string>https://www.python.org/downloads/windows/</string>
+        <string>https://winscp.net/eng/download.php</string>
+		 <key>SF_DL_SRV</key>
+        <string>netix</string>
         <key>PLATFORM</key>
-        <string>x64</string>
+        <string>x86</string>
         <key>PF_STRING</key>
-        <string>_64</string>
-        <key>MAIN_VER</key>
-        <string>3.10</string>		
+        <string></string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.3.1</string>
@@ -27,26 +27,30 @@
 			<key>Arguments</key>
 			<dict>
 				<key>re_pattern</key>
-				<!-- https://www.python.org/ftp/python/3.10.4/python-3.10.4-amd64.exe -->
-				<string>(https://www.python.org/.*python-(?P&lt;version&gt;%MAIN_VER%\.[0-9]+)-amd64\.exe?)</string>
+				<!-- https://winscp.net/download/WinSCP-5.19.1-Setup.exe -->
+				<string>(?P&lt;filetosearch&gt;WinSCP-(?P&lt;version&gt;([0-9]+\.)*[0-9]+)-Setup\.exe?)</string>
 				<key>url</key>
 				<string>%URL%</string>
 			</dict>
 			<key>Processor</key>
 			<string>URLTextSearcher</string>
 		</dict>
-        <dict>
-            <key>Processor</key>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+                <key>url</key>
+				<!-- <string>https://winscp.net/download/%filetosearch%</string> -->
+				<string>https://%SF_DL_SRV%.dl.sourceforge.net/project/winscp/WinSCP/%version%/WinSCP-%version%-Setup.exe</string>
+				<key>filename</key>
+				<string>%NAME%.exe</string>
+			</dict>
+			<key>Processor</key>
 			<string>URLDownloader</string>
-            <key>Arguments</key>
-            <dict>
-				<key>url</key>
-				<string>%match%</string>
-			    <!-- <key>filename</key> -->
-				<key>prefetch_filename</key>
-                <string>%NAME%-x64.exe</string>
-            </dict>
-        </dict>
+		</dict>
+		<dict>
+			<key>Processor</key>
+			<string>EndOfCheckPhase</string>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>WindowsSignatureVerifier</string>
@@ -55,7 +59,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=Python Software Foundation, O=Python Software Foundation, L=Beaverton, S=Oregon, C=US</string>
+                <string>CN=Martin Prikryl, O=Martin Prikryl, L=Prague, C=CZ, SERIALNUMBER=87331519, OID.2.5.4.15=Private Organization, OID.1.3.6.1.4.1.311.60.2.1.3=CZ</string>
             </dict>
         </dict>
         <dict>

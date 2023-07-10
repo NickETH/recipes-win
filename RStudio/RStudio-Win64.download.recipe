@@ -11,12 +11,14 @@
         <key>NAME</key>
         <string>RStudio</string>
         <key>SEARCH_URL</key>
-        <string>https://www.rstudio.com/products/rstudio/download/</string>
+        <!-- <string>https://www.rstudio.com/products/rstudio/download/</string> -->
+		<string>https://www.rstudio.com/products/rstudio/download/#download</string>
+		
         <key>SEARCH_PATTERN</key>
-        <string>(?P&lt;exe&gt;RStudio-(?P&lt;version&gt;[0-9.]+)\.exe)</string>
+        <string>(?P&lt;exe&gt;RStudio-20(?P&lt;versionraw&gt;[0-9.]+)-(?P&lt;buildraw&gt;[0-9]+)\.exe)</string>
         <key>DOWNLOAD_MIRROR</key>
 		<!-- https://download1.rstudio.org/desktop/windows/RStudio-1.4.1106.exe -->
-        <string>https://download1.rstudio.org/desktop/windows</string>
+        <string>https://download1.rstudio.org/electron/windows</string>
     </dict>
     <key>MinimumVersion</key>
     <string>0.5.1</string>
@@ -52,9 +54,20 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN="RStudio, Inc.", O="RStudio, Inc.", L=Boston, S=Massachusetts, C=US</string>
+                <string>CN=RStudio PBC, O=RStudio PBC, L=Boston, S=Massachusetts, C=US</string>
             </dict>
         </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.sebtomasi.SharedProcessors/RenameVar</string>
+            <key>Arguments</key>
+            <dict>
+                <key>input_var</key>
+                <string>%versionraw%.%buildraw%</string>
+                <key>rename_var</key>
+                <string>version</string>
+            </dict>
+		</dict>
         <dict>
             <key>Processor</key>
             <string>EndOfCheckPhase</string>

@@ -277,7 +277,8 @@
                 <key>file_to_open</key>
                 <string>%BUILD_DIR%\%pkg_dir%\helpers\%msi_value%</string>
 				<key>pattern</key>			
-                <string>\\\n(?P&lt;eulastring&gt;.*)\\\n\d+(\.\d*){2,}\}$</string>
+                <!-- <string>\\\n(?P&lt;eulastring&gt;.*)\\\n\d+(\.\d*){2,}\}$</string> -->
+				<string>\\cf2.(?P&lt;eulastring&gt;[EA]{2}[0-9]{4})\\cf2</string>
             </dict>
 		</dict>
         <dict>

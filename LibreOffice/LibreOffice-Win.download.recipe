@@ -60,7 +60,7 @@ LibreOffice Fresh is the stable version with the most recent features. Users int
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>E=info@documentfoundation.org, CN=The Document Foundation, O=The Document Foundation, OU=LibreOffice Build Team, L=Berlin, S=Berlin, C=DE</string>
+				<string>E=info@documentfoundation.org, CN=The Document Foundation, O=The Document Foundation, OU=LibreOffice Build Team, L=Berlin, S=Berlin, C=DE</string>
             </dict>
         </dict>
 	</array>

@@ -44,7 +44,7 @@
                 <key>input_path</key>
                 <string>%pathname%</string>
                 <key>expected_subject</key>
-                <string>CN=Johannes Schindelin, O=Johannes Schindelin, STREET=Raderberger Str. 178, L=Köln, S=North Rhine-Westphalia, PostalCode=50968, C=DE</string>
+                <string>CN=Johannes Schindelin, O=Johannes Schindelin, S=Nordrhein-Westfalen, C=DE</string>
             </dict>
         </dict>
         <dict>

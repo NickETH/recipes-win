@@ -184,6 +184,7 @@
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\DisExeLaunch.mst</string>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\MUI.mst</string>
                     <string>%BUILD_DIR%\%pkg_dir%\helpers\AcroRdrDC15UI1.mst</string>
+					<string>%BUILD_DIR%\%pkg_dir%\helpers\NoPDFOwnership.mst</string>
                 </array>
                 <key>mode</key>
                 <string>-a</string>

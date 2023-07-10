@@ -6,6 +6,7 @@ helpers\DisExeLaunch.mst
 helpers\DisJavaScript.mst
 helpers\EnableSysCert.mst
 helpers\MUI.mst
+helpers\NoPDFOwnership.mst
 read\create-log-AdobeReaderDC_VVeerrssiioonn_deu.txt
 read\readme-AdobeReaderDC_VVeerrssiioonn_deu.txt
 sourceunzipped\AcroRdrDC1500720033_de_DE.msi

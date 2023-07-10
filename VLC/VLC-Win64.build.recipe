@@ -10,10 +10,10 @@
 	<dict>
 		<key>NAME</key>
 		<string>VLC</string>
-		<key>PLATFORM</key>
+		<key>VLCPLATFORM</key>
 		<string>win64</string>
 		<key>SEARCH_PATTERN</key>
-		<string>get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.exe</string>
+		<string>(get\.videolan\.org\/vlc\/(?P&lt;version&gt;[0-9.]+)\/win64\/vlc-[0-9.]+-win64\.msi)</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>1.0.5</string>
